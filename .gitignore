@@ -1,0 +1,5 @@
+# local secrets, never commit
+26-10-12 canvas api token/
+secrets.json
+.env
+__pycache__/

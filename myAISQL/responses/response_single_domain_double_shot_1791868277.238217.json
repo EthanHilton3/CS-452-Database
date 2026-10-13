@@ -1,0 +1,87 @@
+{
+  "strategy": "single_domain_double_shot",
+  "model": "gpt-5.6-luna",
+  "prompt_prefix": "-- Chick-fil-A restaurant database (SQLite)\n\ncreate table address (\n    address_id integer primary key,\n    street varchar(100) not null,\n    city varchar(50) not null,\n    state char(2) not null,\n    zip_code varchar(10) not null,\n    country varchar(50) not null default 'USA'\n);\n\ncreate table person (\n    person_id integer primary key,\n    first_name varchar(50) not null,\n    last_name varchar(50) not null,\n    email varchar(100) unique,\n    phone_number varchar(15),\n    address_id integer,\n    foreign key (address_id) references address (address_id)\n);\n\n-- companies that supply ingredients to locations\ncreate table supplier (\n    supplier_id integer primary key,\n    name varchar(100) not null,\n    phone_number varchar(15),\n    email varchar(100),\n    address_id integer,\n    foreign key (address_id) references address (address_id)\n);\n\n-- manager_id is nullable because location and employee reference each other\ncreate table location (\n    location_id integer primary key,\n    name varchar(100) not null,\n    address_id integer not null,\n    phone_number varchar(15),\n    manager_id integer,\n    owner_id integer,\n    foreign key (address_id) references address (address_id),\n    foreign key (manager_id) references employee (person_id),\n    foreign key (owner_id) references person (person_id)\n);\n\n-- opening hours per day of the week (0 = Sunday ... 6 = Saturday)\n-- no row for a day means the location is closed that day\ncreate table location_hours (\n    location_id integer not null,\n    day_of_week integer not null check (day_of_week between 0 and 6),\n    open_time time not null,\n    close_time time not null,\n    primary key (location_id, day_of_week),\n    foreign key (location_id) references location (location_id)\n);\n\ncreate table employee (\n    person_id integer primary key,\n    location_id integer not null,\n    hourly_wage decimal(5,2) not null,\n    start_date date not null,\n    manager_id integer,\n    foreign key (person_id) references person (person_id),\n    foreign key (location_id) references location (location_id),\n    foreign key (manager_id) references employee (person_id)\n);\n\n-- each hourly shift an employee works\ncreate table shift (\n    shift_id integer primary key,\n    employee_id integer not null,\n    location_id integer not null,\n    start_time datetime not null,\n    end_time datetime not null,\n    foreign key (employee_id) references employee (person_id),\n    foreign key (location_id) references location (location_id)\n);\n\ncreate table customer (\n    person_id integer primary key,\n    loyalty_points integer not null default 0,\n    loyalty_status varchar(10) not null default 'Member'\n        check (loyalty_status in ('Member', 'Silver', 'Red', 'Signature')),\n    fav_location_id integer,\n    foreign key (person_id) references person (person_id),\n    foreign key (fav_location_id) references location (location_id)\n);\n\n-- price is the current menu price; order_item stores the price actually charged\ncreate table menu_item (\n    menu_item_id integer primary key,\n    name varchar(100) not null unique,\n    price decimal(6,2) not null,\n    calories integer\n);\n\n-- e.g. milk, wheat, soy, egg, peanut, tree nut\ncreate table allergen (\n    allergen_id integer primary key,\n    name varchar(50) not null unique\n);\n\ncreate table ingredient (\n    ingredient_id integer primary key,\n    name varchar(100) not null unique\n);\n\n-- which allergens each ingredient contains\ncreate table ingredient_allergen (\n    ingredient_id integer not null,\n    allergen_id integer not null,\n    primary key (ingredient_id, allergen_id),\n    foreign key (ingredient_id) references ingredient (ingredient_id),\n    foreign key (allergen_id) references allergen (allergen_id)\n);\n\n-- which ingredients go into each menu item (a menu item's allergens come through its ingredients)\ncreate table menu_item_ingredient (\n    menu_item_id integer not null,\n    ingredient_id integer not null,\n    primary key (menu_item_id, ingredient_id),\n    foreign key (menu_item_id) references menu_item (menu_item_id),\n    foreign key (ingredient_id) references ingredient (ingredient_id)\n);\n\n-- stock of each ingredient at each location, and who supplies it\ncreate table inventory (\n    location_id integer not null,\n    ingredient_id integer not null,\n    supplier_id integer,\n    quantity_on_hand decimal(10,2) not null default 0,\n    unit varchar(15) not null,\n    primary key (location_id, ingredient_id),\n    foreign key (location_id) references location (location_id),\n    foreign key (ingredient_id) references ingredient (ingredient_id),\n    foreign key (supplier_id) references supplier (supplier_id)\n);\n\n-- customer_id is null for guest orders (drive-thru or counter, no loyalty account)\ncreate table customer_order (\n    order_id integer primary key,\n    customer_id integer,\n    location_id integer not null,\n    order_time datetime not null,\n    order_type varchar(15) not null\n        check (order_type in ('drive-thru', 'dine-in', 'mobile-pickup', 'delivery')),\n    status varchar(10) not null default 'placed'\n        check (status in ('placed', 'preparing', 'ready')),\n    payment_method varchar(10) not null\n        check (payment_method in ('cash', 'credit', 'debit', 'gift_card', 'app')),\n    sales_tax decimal(6,2) not null,\n    total_cost decimal(8,2) not null,\n    foreign key (customer_id) references customer (person_id),\n    foreign key (location_id) references location (location_id)\n);\n\n-- menu items in an order; price_charged is the unit price at the time of the order\ncreate table order_item (\n    order_id integer not null,\n    menu_item_id integer not null,\n    quantity integer not null default 1 check (quantity > 0),\n    price_charged decimal(6,2) not null,\n    primary key (order_id, menu_item_id),\n    foreign key (order_id) references customer_order (order_id),\n    foreign key (menu_item_id) references menu_item (menu_item_id)\n);\n\n-- a customer's saved favorite orders (replaces customer.fav_order_id, which made a circular reference)\ncreate table customer_favorite_order (\n    customer_id integer not null,\n    order_id integer not null,\n    primary key (customer_id, order_id),\n    foreign key (customer_id) references customer (person_id),\n    foreign key (order_id) references customer_order (order_id)\n);\n Which customers have never placed an order?  \nSELECT p.first_name, p.last_name\nFROM customer c\nJOIN person p ON p.person_id = c.person_id\nLEFT JOIN customer_order o ON o.customer_id = c.person_id\nWHERE o.order_id IS NULL;\n  Give me a sqlite select statement that answers the question. Only respond with sqlite syntax. If there is an error do not explain it!",
+  "questionResults": [
+    {
+      "question": "Which menu items contain milk?",
+      "sql": "SELECT DISTINCT mi.name\nFROM menu_item mi\nJOIN menu_item_ingredient mii ON mii.menu_item_id = mi.menu_item_id\nJOIN ingredient_allergen ia ON ia.ingredient_id = mii.ingredient_id\nJOIN allergen a ON a.allergen_id = ia.allergen_id\nWHERE lower(a.name) = 'milk';",
+      "queryRawResponse": "[('Chick-fil-A Chicken Sandwich',), ('Spicy Chicken Sandwich',), ('Chick-fil-A Nuggets (8 ct)',), ('Chick-n-Strips (3 ct)',), ('Chicken Biscuit',), ('Mac & Cheese (Medium)',), ('Market Salad',), ('Cookies & Cream Milkshake',), ('Chocolate Chunk Cookie',)]",
+      "friendlyResponse": "Menu items containing milk:\n\n- Chick-fil-A Chicken Sandwich\n- Spicy Chicken Sandwich\n- Chick-fil-A Nuggets (8 ct)\n- Chick-n-Strips (3 ct)\n- Chicken Biscuit\n- Mac & Cheese (Medium)\n- Market Salad\n- Cookies & Cream Milkshake\n- Chocolate Chunk Cookie",
+      "error": "None",
+      "tokens": 1863
+    },
+    {
+      "question": "Which menu items are free of all allergens?",
+      "sql": "SELECT mi.name\nFROM menu_item AS mi\nWHERE NOT EXISTS (\n    SELECT 1\n    FROM menu_item_ingredient AS mii\n    JOIN ingredient_allergen AS ia\n        ON ia.ingredient_id = mii.ingredient_id\n    WHERE mii.menu_item_id = mi.menu_item_id\n);",
+      "queryRawResponse": "[('Chick-fil-A Lemonade (Medium)',), ('Fruit Cup (Medium)',), ('Grilled Nuggets (8 ct)',), ('Waffle Potato Fries (Medium)',)]",
+      "friendlyResponse": "The menu items free of all listed allergens are:\n\n- Chick-fil-A Lemonade (Medium)\n- Fruit Cup (Medium)\n- Grilled Nuggets (8 ct)\n- Waffle Potato Fries (Medium)",
+      "error": "None",
+      "tokens": 1800
+    },
+    {
+      "question": "Who are our top 3 customers by total amount spent?",
+      "sql": "SELECT\n    p.first_name,\n    p.last_name,\n    SUM(o.total_cost) AS total_spent\nFROM customer AS c\nJOIN person AS p\n    ON p.person_id = c.person_id\nJOIN customer_order AS o\n    ON o.customer_id = c.person_id\nGROUP BY c.person_id, p.first_name, p.last_name\nORDER BY total_spent DESC\nLIMIT 3;",
+      "queryRawResponse": "[('Ethan', 'Walker', 71.85), ('Benjamin', 'King', 57.739999999999995), ('Lily', 'Green', 51.39)]",
+      "friendlyResponse": "Our top 3 customers by total amount spent are:\n\n1. Ethan Walker \u2014 $71.85  \n2. Benjamin King \u2014 $57.74  \n3. Lily Green \u2014 $51.39",
+      "error": "None",
+      "tokens": 1858
+    },
+    {
+      "question": "Which location made the most money from mobile-pickup orders?",
+      "sql": "SELECT l.location_id, l.name, SUM(o.total_cost) AS total_mobile_pickup_revenue\nFROM location AS l\nJOIN customer_order AS o\n  ON o.location_id = l.location_id\nWHERE o.order_type = 'mobile-pickup'\nGROUP BY l.location_id, l.name\nORDER BY total_mobile_pickup_revenue DESC\nLIMIT 1;",
+      "queryRawResponse": "[(2, 'Chick-fil-A Orem University Pkwy', 49.47)]",
+      "friendlyResponse": "Chick-fil-A Orem University Pkwy made the most from mobile-pickup orders, with $49.47 in revenue.",
+      "error": "None",
+      "tokens": 1813
+    },
+    {
+      "question": "Who worked the most hours during the week of October 5, 2026?",
+      "sql": "SELECT\n    p.first_name,\n    p.last_name,\n    SUM((julianday(s.end_time) - julianday(s.start_time)) * 24) AS total_hours\nFROM shift s\nJOIN employee e ON e.person_id = s.employee_id\nJOIN person p ON p.person_id = e.person_id\nWHERE date(s.start_time) >= '2026-10-05'\n  AND date(s.start_time) < '2026-10-12'\nGROUP BY s.employee_id, p.first_name, p.last_name\nORDER BY total_hours DESC\nLIMIT 1;",
+      "queryRawResponse": "[('Sofia', 'Ramirez', 33.49999999254942)]",
+      "friendlyResponse": "Sofia Ramirez worked the most hours, totaling 33.5 hours during the week of October 5, 2026.",
+      "error": "None",
+      "tokens": 1903
+    },
+    {
+      "question": "Which orders are still being prepared or waiting to be started?",
+      "sql": "SELECT order_id, customer_id, location_id, order_time, order_type, status, payment_method, sales_tax, total_cost\nFROM customer_order\nWHERE status IN ('placed', 'preparing');",
+      "queryRawResponse": "[(23, 15, 1, '2026-10-10 18:20:00', 'delivery', 'preparing', 'app', 2.38, 31.23), (24, None, 1, '2026-10-10 18:25:00', 'drive-thru', 'preparing', 'credit', 1.25, 16.45), (25, 24, 2, '2026-10-10 18:28:00', 'mobile-pickup', 'placed', 'app', 1.1, 14.48), (26, None, 2, '2026-10-10 18:30:00', 'drive-thru', 'placed', 'cash', 0.68, 8.96), (27, 17, 2, '2026-10-10 18:31:00', 'delivery', 'placed', 'credit', 0.86, 11.3)]",
+      "friendlyResponse": "Orders still being prepared or waiting to be started:\n\n- Order 23 \u2014 Preparing; delivery; Location 1; placed at 6:20 PM\n- Order 24 \u2014 Preparing; drive-thru; Location 1; placed at 6:25 PM\n- Order 25 \u2014 Waiting to start; mobile pickup; Location 2; placed at 6:28 PM\n- Order 26 \u2014 Waiting to start; drive-thru; Location 2; placed at 6:30 PM\n- Order 27 \u2014 Waiting to start; delivery; Location 2; placed at 6:31 PM",
+      "error": "None",
+      "tokens": 2057
+    },
+    {
+      "question": "Which ingredients are running low (under 15 units) at the Orem location?",
+      "sql": "SELECT i.name, inv.quantity_on_hand, inv.unit\nFROM inventory AS inv\nJOIN ingredient AS i\n  ON i.ingredient_id = inv.ingredient_id\nJOIN location AS l\n  ON l.location_id = inv.location_id\nWHERE l.name = 'Orem'\n  AND inv.quantity_on_hand < 15;",
+      "queryRawResponse": "[]",
+      "friendlyResponse": "Nothing matched\u2014no ingredients at the Orem location are under 15 units.",
+      "error": "None",
+      "tokens": 1770
+    },
+    {
+      "question": "Which menu items have been sold for a different price than they cost today?",
+      "sql": "SELECT DISTINCT\n    m.name\nFROM menu_item AS m\nJOIN order_item AS oi\n    ON oi.menu_item_id = m.menu_item_id\nWHERE oi.price_charged <> m.price;",
+      "queryRawResponse": "[('Chick-fil-A Chicken Sandwich',), ('Cookies & Cream Milkshake',)]",
+      "friendlyResponse": "The menu items sold for a different price than their current cost are:\n\n- Chick-fil-A Chicken Sandwich\n- Cookies & Cream Milkshake",
+      "error": "None",
+      "tokens": 1733
+    },
+    {
+      "question": "Do guests spend more or less per order on average than loyalty members?",
+      "sql": "SELECT\n    CASE\n        WHEN o.customer_id IS NULL THEN 'Guest'\n        ELSE 'Loyalty member'\n    END AS customer_type,\n    AVG(o.total_cost) AS average_order_cost\nFROM customer_order AS o\nGROUP BY customer_type;",
+      "queryRawResponse": "[('Guest', 10.801428571428572), ('Loyalty member', 18.1305)]",
+      "friendlyResponse": "Guests spend less per order on average: $10.80 compared with $18.13 for loyalty members.",
+      "error": "None",
+      "tokens": 1761
+    },
+    {
+      "question": "Which locations are open on Saturday, and what are their hours?",
+      "sql": "SELECT l.name, lh.open_time, lh.close_time\nFROM location AS l\nJOIN location_hours AS lh\n  ON lh.location_id = l.location_id\nWHERE lh.day_of_week = 6;",
+      "queryRawResponse": "[('Chick-fil-A Provo University Ave', '06:30', '22:00'), ('Chick-fil-A Orem University Pkwy', '06:30', '22:00')]",
+      "friendlyResponse": "- Chick-fil-A Provo University Ave: 6:30 AM\u201310:00 PM\n- Chick-fil-A Orem University Pkwy: 6:30 AM\u201310:00 PM",
+      "error": "None",
+      "tokens": 1776
+    }
+  ]
+}
