@@ -2,3 +2,5 @@
 secrets.json
 .env
 __pycache__/
+.venv/
+data/
