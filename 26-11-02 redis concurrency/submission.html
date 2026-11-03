@@ -1,0 +1,417 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Redis Work Queue</title>
+<style>
+	:root {
+		--ink: #1d2433;
+		--muted: #5b6475;
+		--line: #d7dce5;
+		--panel: #f5f7fa;
+		--accent: #2a5bd7;
+		--good: #1d8a4e;
+		--good-bg: #e3f4ea;
+		--bad: #c2372b;
+		--bad-bg: #fbe6e3;
+		--warn: #b26a00;
+		--warn-bg: #fff1d6;
+	}
+	* { box-sizing: border-box; }
+	body {
+		margin: 0;
+		background: #fff;
+		color: var(--ink);
+		font: 15px/1.55 -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+	}
+	main { max-width: 860px; margin: 0 auto; padding: 32px 16px 64px; }
+	h1 { font-size: 26px; margin: 0 0 4px; }
+	.byline { color: var(--muted); margin: 0 0 28px; }
+	h2 {
+		font-size: 19px;
+		margin: 40px 0 10px;
+		padding-top: 14px;
+		border-top: 2px solid var(--line);
+	}
+	h3 { font-size: 15px; margin: 22px 0 6px; }
+	p, li { max-width: 72ch; }
+	code { font: 13px/1.4 Consolas, "Courier New", monospace; background: var(--panel); padding: 1px 4px; border-radius: 3px; }
+	pre {
+		font: 12.5px/1.45 Consolas, "Courier New", monospace;
+		background: var(--panel);
+		border: 1px solid var(--line);
+		border-radius: 6px;
+		padding: 10px 12px;
+		overflow-x: auto;
+		white-space: pre;
+		tab-size: 4;
+	}
+	pre code { background: none; padding: 0; }
+	.del { color: var(--bad); }
+	.add { color: var(--good); }
+	table { border-collapse: collapse; margin: 8px 0 12px; font-size: 14px; }
+	th, td { border: 1px solid var(--line); padding: 5px 9px; text-align: left; vertical-align: top; }
+	th { background: var(--panel); }
+	figure { margin: 14px 0; }
+	figcaption { color: var(--muted); font-size: 13px; margin-top: 4px; }
+	svg { width: 100%; height: auto; display: block; }
+	svg text { font-family: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+	.two { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+	@media (max-width: 640px) { .two { grid-template-columns: 1fr; } }
+	.card { border: 1px solid var(--line); border-radius: 8px; padding: 10px 12px; }
+	.card h4 { margin: 0 0 6px; font-size: 14px; }
+	.callout { border-left: 4px solid var(--accent); background: var(--panel); padding: 8px 12px; margin: 12px 0; }
+	.cells { display: inline-flex; gap: 3px; flex-wrap: wrap; }
+	.c {
+		display: inline-block; min-width: 22px; text-align: center;
+		border: 1px solid var(--line); border-radius: 3px;
+		font: 12px/20px Consolas, monospace; background: #fff;
+	}
+	.c.dup { background: var(--warn-bg); border-color: var(--warn); }
+	.c.lost { background: var(--bad-bg); border-color: var(--bad); text-decoration: line-through; }
+	.c.ok { background: var(--good-bg); border-color: var(--good); }
+	.race td { font-size: 13px; }
+	.tag { font-size: 11px; font-weight: 600; padding: 1px 6px; border-radius: 10px; }
+	.tag.bad { background: var(--bad-bg); color: var(--bad); }
+	.tag.warn { background: var(--warn-bg); color: var(--warn); }
+	.tag.good { background: var(--good-bg); color: var(--good); }
+	img.shot { max-width: 420px; width: 100%; border: 1px solid var(--line); border-radius: 4px; }
+	@media print {
+		main { padding-top: 0; }
+		h2 { break-after: avoid; }
+		figure, pre, table, .card { break-inside: avoid; }
+	}
+</style>
+</head>
+<body>
+<main>
+
+<h1>Redis Work Queue: Concurrency, Notifications, Logging</h1>
+<p class="byline">Ethan Hilton · CS 452 · Redis Project (Concurrency) · 11/2/2026</p>
+
+<h2>How the system works</h2>
+<p>A Flask web server accepts an image, and a separate worker process classifies it with ResNet50. The two processes never talk to each other directly. <b>Redis sits between them:</b> a list is the work queue, and a string key named after a random UUID is the "return address" for the answer.</p>
+
+<figure>
+<svg viewBox="0 0 760 250" role="img" aria-label="Architecture: client, web server, Redis queue and result keys, two workers">
+	<defs>
+		<marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+			<path d="M0,0 L10,5 L0,10 z" fill="#5b6475"/>
+		</marker>
+		<marker id="arb" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+			<path d="M0,0 L10,5 L0,10 z" fill="#2a5bd7"/>
+		</marker>
+	</defs>
+	<!-- client -->
+	<rect x="10" y="95" width="115" height="62" rx="8" fill="#f5f7fa" stroke="#d7dce5"/>
+	<text x="67" y="121" text-anchor="middle" font-size="14" font-weight="600" fill="#1d2433">Client</text>
+	<text x="67" y="139" text-anchor="middle" font-size="10.5" fill="#5b6475">simple_request.py</text>
+	<!-- web -->
+	<rect x="175" y="95" width="130" height="62" rx="8" fill="#f5f7fa" stroke="#d7dce5"/>
+	<text x="240" y="121" text-anchor="middle" font-size="14" font-weight="600" fill="#1d2433">Web server</text>
+	<text x="240" y="139" text-anchor="middle" font-size="10.5" fill="#5b6475">run_web_server.py</text>
+	<!-- redis -->
+	<rect x="355" y="12" width="200" height="226" rx="10" fill="#fff" stroke="#c2372b" stroke-width="1.5"/>
+	<text x="455" y="34" text-anchor="middle" font-size="14" font-weight="700" fill="#c2372b">Redis</text>
+	<rect x="370" y="46" width="170" height="74" rx="6" fill="#f5f7fa" stroke="#d7dce5"/>
+	<text x="455" y="64" text-anchor="middle" font-size="12" font-weight="600" fill="#1d2433">image_queue (list)</text>
+	<rect x="384" y="76" width="30" height="26" rx="3" fill="#fff" stroke="#5b6475"/>
+	<rect x="420" y="76" width="30" height="26" rx="3" fill="#fff" stroke="#5b6475"/>
+	<rect x="456" y="76" width="30" height="26" rx="3" fill="#fff" stroke="#5b6475"/>
+	<rect x="492" y="76" width="30" height="26" rx="3" fill="#fff" stroke="#5b6475"/>
+	<text x="455" y="115" text-anchor="middle" font-size="9.5" fill="#5b6475">each item: {"id": uuid, "image": base64}</text>
+	<rect x="370" y="140" width="170" height="74" rx="6" fill="#f5f7fa" stroke="#d7dce5"/>
+	<text x="455" y="160" text-anchor="middle" font-size="12" font-weight="600" fill="#1d2433">&lt;uuid&gt; (string)</text>
+	<text x="455" y="180" text-anchor="middle" font-size="10" fill="#5b6475">[{"label": "church",</text>
+	<text x="455" y="194" text-anchor="middle" font-size="10" fill="#5b6475">"probability": 0.41}, …]</text>
+	<!-- workers -->
+	<rect x="615" y="40" width="135" height="58" rx="8" fill="#f5f7fa" stroke="#d7dce5"/>
+	<text x="682" y="64" text-anchor="middle" font-size="13" font-weight="600" fill="#1d2433">Worker 1</text>
+	<text x="682" y="81" text-anchor="middle" font-size="10.5" fill="#5b6475">ResNet50</text>
+	<rect x="615" y="152" width="135" height="58" rx="8" fill="#f5f7fa" stroke="#d7dce5"/>
+	<text x="682" y="176" text-anchor="middle" font-size="13" font-weight="600" fill="#1d2433">Worker 2</text>
+	<text x="682" y="193" text-anchor="middle" font-size="10.5" fill="#5b6475">ResNet50</text>
+	<!-- arrows -->
+	<line x1="125" y1="112" x2="173" y2="112" stroke="#5b6475" stroke-width="1.5" marker-end="url(#ar)"/>
+	<text x="149" y="105" text-anchor="middle" font-size="10" fill="#1d2433">① POST</text>
+	<line x1="175" y1="142" x2="127" y2="142" stroke="#5b6475" stroke-width="1.5" marker-end="url(#ar)"/>
+	<text x="151" y="156" text-anchor="middle" font-size="10" fill="#1d2433">⑥ JSON</text>
+	<line x1="305" y1="108" x2="368" y2="86" stroke="#5b6475" stroke-width="1.5" marker-end="url(#ar)"/>
+	<text x="318" y="86" text-anchor="middle" font-size="10" fill="#1d2433">② RPUSH</text>
+	<line x1="540" y1="76" x2="613" y2="66" stroke="#5b6475" stroke-width="1.5" marker-end="url(#ar)"/>
+	<text x="578" y="62" text-anchor="middle" font-size="10" fill="#1d2433">③ LPOP</text>
+	<line x1="540" y1="100" x2="613" y2="168" stroke="#5b6475" stroke-width="1.5" marker-end="url(#ar)"/>
+	<line x1="615" y1="90" x2="542" y2="160" stroke="#5b6475" stroke-width="1.5" marker-end="url(#ar)"/>
+	<line x1="615" y1="190" x2="542" y2="186" stroke="#5b6475" stroke-width="1.5" marker-end="url(#ar)"/>
+	<text x="585" y="232" text-anchor="middle" font-size="10" fill="#1d2433">④ SET &lt;uuid&gt;</text>
+	<line x1="370" y1="172" x2="307" y2="146" stroke="#2a5bd7" stroke-width="1.5" marker-end="url(#arb)"/>
+	<text x="322" y="190" text-anchor="middle" font-size="10" fill="#2a5bd7">⑤ notify,</text>
+	<text x="322" y="203" text-anchor="middle" font-size="10" fill="#2a5bd7">GET + DEL</text>
+</svg>
+<figcaption>① The client posts an image. ② The web server pushes <code>{id, image}</code> onto the queue. ③ A worker pops a batch. ④ The worker writes each result to a key named with the UUID. ⑤ Redis notifies the waiting web server, which reads and deletes the result. ⑥ The web server returns JSON to the client.</figcaption>
+</figure>
+
+<h2>1. Redis key structure</h2>
+<table>
+	<tr><th>Key</th><th>Type</th><th>Value</th><th>Written by</th></tr>
+	<tr><td><code>image_queue</code></td><td>list (FIFO: <code>RPUSH</code> in, <code>LPOP</code> out)</td><td>One JSON string per request: <code>{"id": "&lt;uuid4&gt;", "image": "&lt;base64&gt;"}</code></td><td>web server</td></tr>
+	<tr><td><code>&lt;uuid&gt;</code><br>e.g. <code>8e029f38-…</code></td><td>string</td><td>JSON list of the top 5 predictions: <code>[{"label": …, "probability": …}, …]</code></td><td>worker</td></tr>
+</table>
+<p>The user's image is in the <code>"image"</code> field of a queue item. It's the preprocessed NumPy array (<code>float32</code>, shape <code>1×224×224×3</code>, 602,112 bytes), base64-encoded so it fits in JSON. That comes to about 803 KB per queued image, which is why a free 30 MB Redis database only holds about 30 at once. The result comes back in the key named after the request's UUID.</p>
+
+<h2>2. Web server ↔ worker communication</h2>
+<p>The web server makes up a UUID, pushes the job, and keeps the HTTP request open until a result shows up under that UUID. Here is the original polling version, captured with <code>MONITOR</code>:</p>
+<pre>815.056  web     RPUSH image_queue {id, image}       hand off the work
+815.066  web     GET 8e02 → nil                      start polling
+815.085  worker  LRANGE image_queue 0 31             read up to 32 items
+         web     GET 8e02 ×8, all nil                still waiting (every 0.25 s)
+817.163  worker  SET 8e02 [{"label": "church" …}]    write the result
+817.165  worker  LTRIM image_queue 1 -1              remove the processed item
+817.333  web     GET 8e02 → result                   found it
+817.334  web     DEL 8e02                            clean up</pre>
+<p>Both sides poll. The worker runs <code>LRANGE</code> every 0.25 s even when idle (about 14,400 empty commands an hour), and each waiting request runs <code>GET</code> 4 times a second. The Flask handler thread blocks in that loop, so the HTTP connection stays open until the result arrives.</p>
+
+<h2>3. Model output for <code>castle_image.jpg</code></h2>
+<table>
+	<tr><th>#</th><th>Label</th><th>Probability</th></tr>
+	<tr><td>1</td><td>church</td><td>0.4136</td></tr>
+	<tr><td>2</td><td>castle</td><td>0.3930</td></tr>
+	<tr><td>3</td><td>monastery</td><td>0.1733</td></tr>
+	<tr><td>4</td><td>palace</td><td>0.0041</td></tr>
+	<tr><td>5</td><td>vault</td><td>0.0034</td></tr>
+</table>
+
+<h2>4. Concurrency: the two-worker bug</h2>
+<p>The original worker <b>reads</b> the queue with <code>LRANGE</code>, which removes nothing. It runs ResNet for about 1–2 s and only then <b>removes</b> items with <code>LTRIM image_queue N -1</code>, meaning "delete the first N items." That's two separate commands with a gap between them, and <code>LTRIM</code> deletes by <b>position</b>, not by which items this worker actually processed. With two workers:</p>
+
+<table class="race">
+	<tr><th>Step</th><th>Queue</th><th>Worker A</th><th>Worker B</th></tr>
+	<tr>
+		<td>1</td>
+		<td><span class="cells"><span class="c">1</span><span class="c">2</span><span class="c">3</span></span></td>
+		<td><code>LRANGE</code> → 1 2 3</td>
+		<td><code>LRANGE</code> → 1 2 3 <span class="tag warn">same items</span></td>
+	</tr>
+	<tr>
+		<td>2</td>
+		<td><span class="cells"><span class="c">1</span><span class="c">2</span><span class="c">3</span><span class="c">4</span><span class="c">5</span><span class="c">6</span><span class="c">7</span></span><br><small>4–7 arrive meanwhile</small></td>
+		<td>running ResNet…</td>
+		<td>running ResNet…</td>
+	</tr>
+	<tr>
+		<td>3</td>
+		<td><span class="cells"><span class="c">4</span><span class="c">5</span><span class="c">6</span><span class="c">7</span></span></td>
+		<td><code>SET</code> 1,2,3 · <code>LTRIM 3 -1</code></td>
+		<td></td>
+	</tr>
+	<tr>
+		<td>4</td>
+		<td><span class="cells"><span class="c lost">4</span><span class="c lost">5</span><span class="c lost">6</span><span class="c">7</span></span></td>
+		<td></td>
+		<td><code>SET</code> 1,2,3 again <span class="tag warn">orphan keys</span><br><code>LTRIM 3 -1</code> deletes 4, 5, 6 <span class="tag bad">lost</span></td>
+	</tr>
+</table>
+
+<div class="two">
+	<div class="card">
+		<h4>Symptom 1: lost requests</h4>
+		<p>With 2 workers and 20 requests (<code>SLEEP_COUNT = 0.2</code>), threads 10, 13, 17 and 19 never returned. The queue was empty, but <code>MONITOR</code> showed the web server polling 4 UUIDs forever, 12 <code>GET</code>s each in 3 s. Those images had been trimmed away unprocessed.</p>
+	</div>
+	<div class="card">
+		<h4>Symptom 2: orphan result keys</h4>
+		<p>Worker A <code>SET</code> a result, and the web server read it and <code>DEL</code>eted it. Then worker B <code>SET</code> it <i>again</i>, and nobody was left to read it.</p>
+		<img class="shot" src="orphan_keys.png" alt="redis-cli KEYS * showing 6 leftover UUID keys">
+	</div>
+</div>
+
+<div class="callout">This is a <b>check-then-act race</b>. Both symptoms have one root cause: there's a gap between reading an item and removing it, and another worker can act in that gap.</div>
+
+<h3>The fix: an atomic pop</h3>
+<p>Redis runs commands one at a time on a single thread, so <b>every single command is atomic</b>. <code>LPOP</code> with a count reads <i>and</i> removes up to 32 items in one step. Two workers can never get the same item, and nothing is removed that nobody took.</p>
+<pre><code><span class="del">- queue = db.lrange(settings.IMAGE_QUEUE, 0, settings.BATCH_SIZE - 1)</span>
+<span class="add">+ queue = db.lpop(settings.IMAGE_QUEUE, settings.BATCH_SIZE) or []</span>
+  ...
+<span class="del">- db.ltrim(settings.IMAGE_QUEUE, len(imageIDs), -1)</span></code></pre>
+<p><code>lpop</code> returns <code>None</code> on an empty queue. My first version handled that with <code>if queue is None: continue</code>, but <code>continue</code> skipped the <code>sleep</code> at the bottom of the loop, which turned the worker into a <b>busy loop</b> sending thousands of <code>LPOP</code>s a second. <code>or []</code> lets the empty case fall through to the normal sleep.</p>
+<p><span class="tag good">result</span> With 2 workers, every stress test run returned 20/20, and <code>KEYS *</code> was empty afterward.</p>
+
+<h3>Are multiple web servers safe?</h3>
+<p><b>Yes.</b> A web server only does <code>RPUSH</code> (a single atomic command) and <code>GET</code>/<code>DEL</code> on <b>its own</b> UUID key. Web servers share nothing with each other except Redis and never touch each other's keys, so there's no read-then-act gap. In practice they'd sit behind a load balancer.</p>
+
+<h3>Conflicting UUIDs?</h3>
+<p>Practically never. <code>uuid4()</code> has 122 random bits, so there are 2<sup>122</sup> ≈ 5.3 × 10<sup>36</sup> possible values. By the birthday problem, you'd need about <b>2.7 × 10<sup>18</sup></b> IDs for a 50% chance of a single collision, which is about 86 years at a billion requests per second. The real risk would be a weak random source, but <code>uuid4()</code> uses the operating system's secure random generator (<code>os.urandom</code>).</p>
+
+<h3>Do notifications scale or conflict across web servers?</h3>
+<p><b>No conflicts.</b> Each request subscribes to a channel named after its own UUID, so one server never receives another server's event. <b>Scaling has costs:</b></p>
+<ul>
+	<li><code>notify-keyspace-events KEA</code> publishes events for <i>every</i> change to every key, including all the queue traffic.</li>
+	<li><code>PSUBSCRIBE</code> is pattern matching, so Redis checks every event against every pattern subscriber: O(events × waiting requests). I used exact <code>SUBSCRIBE</code>, which is a hash lookup.</li>
+	<li>Each waiting request holds its own pub/sub connection. At scale, one subscriber per web server that hands events to the right waiting threads is better.</li>
+	<li>Pub/sub is fire-and-forget: if nobody is subscribed when an event fires, it's lost.</li>
+</ul>
+
+<h3>A worker crashes after claiming an item</h3>
+<p>With <code>LPOP</code>, an item leaves the queue <i>before</i> the work is done, so a crash loses it (<b>at-most-once</b> delivery). A <b>reliable queue</b> fixes that:</p>
+<ol>
+	<li><b>Claim atomically:</b> <code>LMOVE image_queue processing LEFT RIGHT</code>. "Copy, then pop" as two separate steps would recreate the original gap.</li>
+	<li><b>Acknowledge:</b> after <code>SET</code>-ing the result, <code>LREM processing 1 &lt;item&gt;</code>.</li>
+	<li><b>Recover:</b> a monitor re-queues items that have been in <code>processing</code> longer than a timeout. Claim times go in a sorted set, scored by timestamp.</li>
+	<li><b>Production option:</b> Redis Streams consumer groups have this built in (<code>XREADGROUP</code>, <code>XACK</code>, <code>XAUTOCLAIM</code>).</li>
+</ol>
+<p>A too-short timeout means a slow but still-running job gets run twice (<b>at-least-once</b> delivery). That's safe here because classification is <b>idempotent</b>: the same image writes the same result to the same key. Leftover results can expire on their own with <code>SET key value EX 60</code>.</p>
+
+<h2>5. Replacing polling with keyspace notifications</h2>
+<p>After <code>CONFIG SET notify-keyspace-events KEA</code>, every change to a key publishes a message on the channel <code>__keyspace@0__:&lt;key&gt;</code>. The web server subscribes to its own result key and waits on the socket instead of asking over and over.</p>
+
+<div class="two">
+<figure>
+<svg viewBox="0 0 340 320" role="img" aria-label="Polling sequence diagram">
+	<defs>
+		<marker id="a2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5b6475"/></marker>
+		<marker id="a2r" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c2372b"/></marker>
+		<marker id="a2g" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#1d8a4e"/></marker>
+	</defs>
+	<text x="170" y="14" text-anchor="middle" font-size="13" font-weight="700" fill="#c2372b">Before: polling</text>
+	<text x="50" y="36" text-anchor="middle" font-size="12" font-weight="600" fill="#1d2433">Web</text>
+	<text x="170" y="36" text-anchor="middle" font-size="12" font-weight="600" fill="#1d2433">Redis</text>
+	<text x="290" y="36" text-anchor="middle" font-size="12" font-weight="600" fill="#1d2433">Worker</text>
+	<line x1="50" y1="42" x2="50" y2="300" stroke="#d7dce5" stroke-dasharray="4 3"/>
+	<line x1="170" y1="42" x2="170" y2="300" stroke="#d7dce5" stroke-dasharray="4 3"/>
+	<line x1="290" y1="42" x2="290" y2="300" stroke="#d7dce5" stroke-dasharray="4 3"/>
+	<line x1="50" y1="62" x2="168" y2="62" stroke="#5b6475" marker-end="url(#a2)"/>
+	<text x="56" y="57" font-size="10" fill="#1d2433">RPUSH job</text>
+	<line x1="290" y1="80" x2="172" y2="80" stroke="#5b6475" marker-end="url(#a2)"/>
+	<text x="284" y="75" text-anchor="end" font-size="10" fill="#1d2433">LRANGE</text>
+	<line x1="50" y1="104" x2="168" y2="104" stroke="#c2372b" marker-end="url(#a2r)"/>
+	<text x="56" y="99" font-size="10" fill="#c2372b">GET → nil</text>
+	<line x1="50" y1="128" x2="168" y2="128" stroke="#c2372b" marker-end="url(#a2r)"/>
+	<text x="56" y="123" font-size="10" fill="#c2372b">GET → nil</text>
+	<line x1="50" y1="152" x2="168" y2="152" stroke="#c2372b" marker-end="url(#a2r)"/>
+	<text x="56" y="147" font-size="10" fill="#c2372b">GET → nil</text>
+	<text x="80" y="172" font-size="12" fill="#c2372b">⋮</text>
+	<line x1="50" y1="192" x2="168" y2="192" stroke="#c2372b" marker-end="url(#a2r)"/>
+	<text x="56" y="187" font-size="10" fill="#c2372b">GET → nil</text>
+	<line x1="290" y1="212" x2="172" y2="212" stroke="#5b6475" marker-end="url(#a2)"/>
+	<text x="284" y="207" text-anchor="end" font-size="10" fill="#1d2433">SET uuid</text>
+	<text x="56" y="232" font-size="9.5" fill="#5b6475">…waits up to 250 ms…</text>
+	<line x1="50" y1="254" x2="168" y2="254" stroke="#1d8a4e" marker-end="url(#a2g)"/>
+	<text x="56" y="249" font-size="10" fill="#1d8a4e">GET → result</text>
+	<line x1="50" y1="276" x2="168" y2="276" stroke="#5b6475" marker-end="url(#a2)"/>
+	<text x="56" y="271" font-size="10" fill="#1d2433">DEL</text>
+</svg>
+<figcaption>9 empty <code>GET</code>s for one request, and about 240 in the 20-request stress test.</figcaption>
+</figure>
+
+<figure>
+<svg viewBox="0 0 340 320" role="img" aria-label="Notification sequence diagram">
+	<defs>
+		<marker id="a3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5b6475"/></marker>
+		<marker id="a3b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2a5bd7"/></marker>
+		<marker id="a3g" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#1d8a4e"/></marker>
+	</defs>
+	<text x="170" y="14" text-anchor="middle" font-size="13" font-weight="700" fill="#1d8a4e">After: notifications</text>
+	<text x="50" y="36" text-anchor="middle" font-size="12" font-weight="600" fill="#1d2433">Web</text>
+	<text x="170" y="36" text-anchor="middle" font-size="12" font-weight="600" fill="#1d2433">Redis</text>
+	<text x="290" y="36" text-anchor="middle" font-size="12" font-weight="600" fill="#1d2433">Worker</text>
+	<line x1="50" y1="42" x2="50" y2="300" stroke="#d7dce5" stroke-dasharray="4 3"/>
+	<line x1="170" y1="42" x2="170" y2="300" stroke="#d7dce5" stroke-dasharray="4 3"/>
+	<line x1="290" y1="42" x2="290" y2="300" stroke="#d7dce5" stroke-dasharray="4 3"/>
+	<line x1="50" y1="62" x2="168" y2="62" stroke="#2a5bd7" marker-end="url(#a3b)"/>
+	<text x="56" y="57" font-size="10" fill="#2a5bd7">1. SUBSCRIBE uuid</text>
+	<line x1="50" y1="86" x2="168" y2="86" stroke="#5b6475" marker-end="url(#a3)"/>
+	<text x="56" y="81" font-size="10" fill="#1d2433">2. RPUSH job</text>
+	<line x1="290" y1="104" x2="172" y2="104" stroke="#5b6475" marker-end="url(#a3)"/>
+	<text x="284" y="99" text-anchor="end" font-size="10" fill="#1d2433">LPOP</text>
+	<rect x="44" y="114" width="12" height="96" rx="3" fill="#e3ebfb" stroke="#2a5bd7"/>
+	<text x="64" y="150" font-size="10" fill="#2a5bd7">blocked on socket:</text>
+	<text x="64" y="164" font-size="10" fill="#2a5bd7">0 commands, 0 CPU</text>
+	<line x1="290" y1="212" x2="172" y2="212" stroke="#5b6475" marker-end="url(#a3)"/>
+	<text x="284" y="207" text-anchor="end" font-size="10" fill="#1d2433">SET uuid</text>
+	<line x1="170" y1="230" x2="52" y2="230" stroke="#2a5bd7" stroke-width="2" marker-end="url(#a3b)"/>
+	<text x="164" y="244" text-anchor="end" font-size="10" fill="#2a5bd7">push "set" (~1.6 ms)</text>
+	<line x1="50" y1="262" x2="168" y2="262" stroke="#1d8a4e" marker-end="url(#a3g)"/>
+	<text x="56" y="257" font-size="10" fill="#1d8a4e">GET → result</text>
+	<line x1="50" y1="284" x2="168" y2="284" stroke="#5b6475" marker-end="url(#a3)"/>
+	<text x="56" y="279" font-size="10" fill="#1d2433">DEL, UNSUBSCRIBE</text>
+</svg>
+<figcaption>0 empty <code>GET</code>s. Subscribing <b>before</b> <code>RPUSH</code> means the event can't fire before we're listening.</figcaption>
+</figure>
+</div>
+
+<pre><code>p = db.pubsub()
+p.subscribe(f"__keyspace@{settings.REDIS_DB}__:{k}")   # subscribe BEFORE pushing
+db.rpush(settings.IMAGE_QUEUE, json.dumps(d))
+
+while True:                                           # first message = subscribe confirmation
+	message = p.get_message(timeout=30.0)
+	if message is None or message["type"] == "message":
+		break
+
+p.unsubscribe()
+p.close()
+
+# the event carries no data; this GET also catches a missed event
+output = db.get(k)
+if output is not None:
+	data["predictions"] = json.loads(output.decode("utf-8"))
+	db.delete(k)
+	data["success"] = True</code></pre>
+
+<table>
+	<tr><th></th><th>Polling</th><th>Notifications</th></tr>
+	<tr><td>Empty <code>GET</code>s, one request</td><td>9</td><td>0</td></tr>
+	<tr><td>Empty <code>GET</code>s, 20-request stress test</td><td>~240</td><td>0</td></tr>
+	<tr><td>Delay from <code>SET</code> to the web server noticing</td><td>up to 250 ms (170 ms measured)</td><td>~1.6 ms</td></tr>
+	<tr><td>Worker crashed</td><td>request hangs forever</td><td>30 s timeout → <code>success: false</code></td></tr>
+</table>
+
+<p><b>Missed notification or crashed worker?</b> Pub/sub doesn't store events, so a missed one is gone. But the <i>data</i> lives in a key, not in the message. The single <code>GET</code> after the timeout still finds the result, so a missed notification costs latency, not correctness. If the worker crashed, the request times out instead of hanging. To make sure no work is lost, add the reliable queue above, and have the web server retry or resubmit after a timeout. Retrying is safe because classification is idempotent.</p>
+<p><b>What's still left:</b> the workers still poll with <code>LPOP</code> 4 times a second (<code>BLPOP</code>, a blocking pop, would fix that), and each request opens its own pub/sub connection (you can see a <code>HELLO</code> handshake per request in <code>MONITOR</code>).</p>
+
+<h2>6. Stress test fix</h2>
+<p>Each request thread is a <b>daemon</b> thread, and Python kills daemon threads as soon as the main thread ends. The original code kept the program alive with <code>time.sleep(300)</code>, which is a guess. When I removed it, the program exited after about 1 s and printed nothing, even though the server still did all 20 classifications for clients that no longer existed. <code>join()</code> waits for each thread, so the program waits exactly as long as the slowest request.</p>
+<pre><code><span class="add">threads = []</span>
+for i in range(0, NUM_REQUESTS):
+	t = Thread(target=call_predict_endpoint, args=(i,))
+<span class="add">	threads.append(t)</span>
+	t.daemon = True
+	t.start()
+	time.sleep(SLEEP_COUNT)
+
+<span class="add">for t in threads:
+	t.join()</span>
+<span class="del">time.sleep(300)      # removed</span></code></pre>
+<p>Joining every thread also made the Deliverable 4 bug visible. Without <code>join()</code>, the lost requests would simply have disappeared when the program exited.</p>
+
+<h2>7. Unified logging: a Redis logger</h2>
+<p><code>redis_logger.py</code> gives every process the same <code>log(action)</code> function. Each entry is JSON with the <b>timestamp, server (hostname:PID), main script name, and action</b>. It prints locally and is pushed onto one shared Redis list, so the whole system reads as one timeline.</p>
+<pre><code>SERVER = f"{socket.gethostname()}:{os.getpid()}"   # PID tells apart two workers on one machine
+SCRIPT = os.path.basename(sys.argv[0])
+
+def log(action):
+	entry = {"time": datetime.datetime.now().isoformat(timespec="milliseconds"),
+		"server": SERVER, "script": SCRIPT, "action": action}
+	# one write per entry, so lines from concurrent threads can't interleave
+	sys.stdout.write("[{time}] {server} {script}: {action}\n".format(**entry))
+	try:
+		pipe = db.pipeline()                       # one round trip, MULTI/EXEC
+		pipe.rpush(LOG_KEY, json.dumps(entry))
+		pipe.ltrim(LOG_KEY, -MAX_ENTRIES, -1)      # keep only the newest 1000
+		pipe.execute()
+	except redis.RedisError as e:                  # logging never crashes the server
+		sys.stdout.write(f"[logger] could not write to Redis: {e}\n")</code></pre>
+<p><code>python view_logs.py &lt;uuid&gt;</code> follows one request across processes:</p>
+<pre>21:56:25.942  LAPTOP-EQBGA00L:4568  run_web_server.py    queued 128b6406…
+21:56:26.813  LAPTOP-EQBGA00L:9456  run_model_server.py  batch of 8
+21:56:29.075  LAPTOP-EQBGA00L:9456  run_model_server.py  set 128b6406…
+21:56:29.100  LAPTOP-EQBGA00L:4568  run_web_server.py    done 128b6406…</pre>
+<ul>
+	<li><b>20 queued, 20 done.</b> Both workers share the load with no losses.</li>
+	<li><b>Big batches can be slow.</b> Worker <code>:9456</code> took a batch of 8 and needed about 2.2 s. Meanwhile worker <code>:8348</code> finished four batches of 2 in about 0.2 s each, so those 8 requests waited while a worker was free.</li>
+	<li><b>The log is in arrival order, not event order.</b> <code>done 128b6406</code> (29.100) is stored after an entry stamped 29.112, because the timestamp is taken before the <code>RPUSH</code> and another thread's push got there first. Across machines with different clocks this gets worse.</li>
+</ul>
+
+</main>
+</body>
+</html>

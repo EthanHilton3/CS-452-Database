@@ -1,0 +1,3579 @@
+
+> ok, folllowing the structure of the previous assignments (AI driven
+  leanring), go look at the Redi project adn help me setit up and get started
+  on it. I only have about 3 hours to work on it so help me get the most out of
+  it. After readin the assignment and getting it all set up, gibve me a list
+  fo the learning objectivesa with the rought timeline of what i'm going to do
+  and where the learning objkectives will show up in the course of the project.
+  (use my canvas key to go see the assignment in my databses class, but dont
+  leak my key or any other secrets)
+
+● I'll start by looking at how the previous assignments are structured.
+
+  Ran 2 shell commands (ctrl+o to expand)
+
+● Now let me check how Canvas was accessed before, without printing the key.
+
+  Searched for 1 pattern, ran 1 shell command (ctrl+o to expand)
+
+● Course 35462 on byu.instructure.com. I'll write a script that reads the token
+  internally and prints only assignment content.
+
+  Made 1 scratchpad edit +38, ran 3 shell commands (ctrl+o to expand)
+
+● Due Tuesday 11/3 at 11:59pm, learning log in class Wed 11/4. Now the actual
+  project instructions from the class repo.
+
+  Ran 3 shell commands (ctrl+o to expand)
+
+● I have the full assignment. Now checking what's on your machine: TensorFlow
+  needs Python 3.11 or 3.12, and we need a Redis server.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+● Only Python 3.13 here, and Docker Desktop is installed but stopped. Checking
+  whether uv is available to pull Python 3.12 quickly.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+● No uv. Plan: local Redis in Docker (no 30 MB cap, and CONFIG SET works, which
+  Redis Cloud's free tier blocks), and Python 3.12 through uv. Starting Docker
+  Desktop and installing uv now.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+● python points at the activated neo4j venv. Using the system Python directly
+  instead.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+● Now I'm creating the project folder, copying the starter code in (without the
+  stray __pycache__), and building a Python 3.12 venv.
+
+  Ran 2 shell commands (ctrl+o to expand)
+
+● Environment is installed. Starting Redis in Docker, with keyspace
+  notifications already turned on for Deliverable 5.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+● Redis is up. Now I'm pointing settings.py at it. Host, port, and password come
+  from env vars, so a cloud password would never get hardcoded or committed.
+
+  Read 1 file (ctrl+o to expand)
+
+● Update(26-11-02 redis concurrency\settings.py)
+  ⎿  Added 7 lines, removed 3 lines
+       1 +import os                                                      
+       2 +                                                               
+       3  # initialize Redis connection settings
+       2 -REDIS_HOST = "somethinglikethis.c1.asia-northeast1-1.gce.cloud.
+         -redislabs.com"                                                 
+       3 -REDIS_PORT = 17561 # <-- likely need to change this too!       
+       4 -REDIS_PASSWORD = "DFDSKLFEI some password LKDJFLSDKFJD"        
+       4 +# defaults point at the local Docker container (docker start re
+         +dis-cs452);                                                    
+       5 +# set REDIS_HOST/REDIS_PORT/REDIS_PASSWORD env vars to use Redi
+         +s Cloud instead                                                
+       6 +REDIS_HOST = os.environ.get("REDIS_HOST", "localhost")         
+       7 +REDIS_PORT = int(os.environ.get("REDIS_PORT", 6379))           
+       8 +REDIS_PASSWORD = os.environ.get("REDIS_PASSWORD") or None      
+       9  REDIS_DB = 0
+      10  
+      11  # initialize constants used to control image spatial dimensions
+           and
+
+● Smoke test: start both servers in the background, then send the castle image.
+  The first run downloads the ResNet50 weights (~100 MB).
+
+  Ran 1 shell command (ctrl+o to expand)
+
+● The whole pipeline works: client → Flask → Redis queue → ResNet worker → Redis
+  key → back. I'll stop my background servers so you can run them yourself in
+  three terminals.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+● Everything is set up and I ran it once end to end. Your Canvas key was only
+  read inside a script and never printed.
+
+  The assignment
+
+  Redis Project (Concurrency), due Tue 11/3, 11:59pm. It has three parts:
+  - Project, 3 pts: a PDF with code, diagrams and explanations, plus a picture
+    or zipped HTML showing how the system works. You also explain it to a real
+    person and write up how that went.
+  - Agent transcript, 6 pts: run /export at the end.
+  - Handwritten learning log, 21 pts: due in class Wed 11/4. This is 70% of the
+    grade, so the aha moments are what matter most.
+
+  The system works like this: a client sends an image to Flask. The web server
+  pushes it onto a Redis list and polls Redis for the answer. A worker runs
+  ResNet50 on it and writes the result to a Redis key.
+
+  What's set up
+
+  - Folder: 26-11-02 redis concurrency/ (26-11-02%20redis%20concurrency/) holds
+    the starter code. reference/ (26-11-02%20redis%20concurrency/reference/) has
+    the professor's intro notebook and three flow animations, which you can use
+    as a model for your HTML deliverable.
+  - Python: TensorFlow needs 3.11 or 3.12, and you only had 3.13. I installed
+    uv, used it to get 3.12, and put it in a new .venv with all the
+    requirements.
+  - Redis: it runs locally in Docker as the container redis-cs452. The readme
+    allows this. It has no 30 MB cap, and keyspace notifications (needed for
+    Deliverable 5) are already on. After a reboot, run docker start redis-cs452.
+  - Settings: settings.py (26-11-02%20redis%20concurrency/settings.py) connects
+    to localhost by default and reads REDIS_* env vars otherwise, so no password
+    ends up in git.
+  - Check: the castle image came back as church 0.41, castle 0.39, monastery
+    0.17, palace 0.004, vault 0.003. That's already the result for
+    Deliverable 3.
+
+  To run it, open 3 terminals in the project folder and activate the venv in
+  each with .venv\Scripts\Activate.ps1. Your terminals currently auto-activate
+  the neo4j venv, so pick .venv as the interpreter in VS Code. A 4th terminal is
+  useful for docker exec -it redis-cs452 redis-cli.
+
+  Learning objectives
+
+  1. Redis data types and key design: a list used as a queue, string keys for
+     results, images stored as base64 inside JSON.
+  2. Producer/consumer work queues: handing work between separate processes.
+  3. Race conditions with multiple consumers: the difference between a
+     non-atomic read-then-delete and an atomic pop.
+  4. Scaling reasoning: stateless web servers, odds of a UUID collision, how
+     pub/sub behaves with many web servers.
+  5. Reliability: lost work, at-most-once vs at-least-once delivery, the
+     reliable-queue pattern (LMOVE into a processing list, then acknowledge).
+  6. Polling vs push: keyspace notifications, and why you must subscribe before
+     pushing work.
+  7. Thread lifecycle: daemon threads and join().
+  8. Logging across several processes.
+  9. Explaining a system design visually to a person.
+
+  Timeline (~3 hrs)
+
+  Time: 0:00–0:15
+  Work: Warm up in redis-cli: RPUSH/LRANGE/LPOP/SET/GET. Leave MONITOR open
+  while
+  sending one request so you see every command. Watch
+  reference/system_flow_animation.html.
+  Objectives: 1, 2
+  ────────────────────────────────────────
+  Time: 0:15–0:35
+  Work: D1–D3: find the key structure, explain how the two servers talk, record
+  the castle results. Mostly writing what you saw in MONITOR.
+  Objectives: 1, 2
+  ────────────────────────────────────────
+  Time: 0:35–0:50
+  Work: D6, stress test fix. Do this before D4, because you need the stress test
+
+  there and right now it sleeps for 300 s.
+  Objectives: 7
+  ────────────────────────────────────────
+  Time: 0:50–1:35
+  Work: D4, concurrency. Run 2 workers plus the stress test, watch requests
+  hang,
+  then find and fix the race in run_model_server.py's queue read. Then answer
+  the questions about multiple web servers, UUIDs and pub/sub, and the
+  crashed-worker question. This is the biggest part and the best source of aha
+  moments.
+  Objectives: 3, 4, 5
+  ────────────────────────────────────────
+  Time: 1:35–2:05
+  Work: D5, notifications. Replace the polling loop in the web server with a
+  pubsub subscription. Optional test: subscribe after pushing and watch it miss
+   the notification.
+  Objectives: 6, 5
+  ────────────────────────────────────────
+  Time: 2:05–2:25
+  Work: D7, logging. I'd do a Redis logger: every server pushes to one Redis
+  list, giving one combined timeline. It reuses the queue idea.
+  Objectives: 8, 1
+  ────────────────────────────────────────
+  Time: 2:25–2:50
+  Work: Explanation HTML/diagram and PDF. Show the bug and the fix with code
+  snippets, explain it to a roommate, and write down how it went.
+  Objectives: 9
+  ────────────────────────────────────────
+  Time: 2:50–3:00
+  Work: /export the transcript and draft your learning-log notes for the
+  handwritten version.
+  Objectives: All
+
+  The deadline is the same day as the "Scaling, Reliability, Security"
+  assignment, and objectives 4 and 5 overlap with it.
+
+  Same arrangement as the neo4j project: I'll do the mechanical parts quickly,
+  and you work out the why and write the reflection. Start with the warm-up and
+  tell me what you see in MONITOR.
+
+> show me the file that lists the project reuqirements (what I actually ahve to
+  do and turn it) and then start walking me through doing this project
+
+  Searched for 1 pattern (ctrl+o to expand)
+
+● The requirements file
+
+  The requirements are in readme.md (26-11-02%20redis%20concurrency/readme.md).
+  Everything you have to turn in is in the Deliverables section, starting at
+  line 69 (26-11-02%20redis%20concurrency/readme.md#L69):
+
+  #: 1
+  Deliverable: Redis key structure
+  Lines: 71 (26-11-02%20redis%20concurrency/readme.md#L71)
+  ────────────────────────────────────────
+  #: 2
+  Deliverable: Web server ↔ model server communication
+  Lines: 76 (26-11-02%20redis%20concurrency/readme.md#L76)
+  ────────────────────────────────────────
+  #: 3
+  Deliverable: Model output (castle top-5)
+  Lines: 80 (26-11-02%20redis%20concurrency/readme.md#L80)
+  ────────────────────────────────────────
+  #: 4
+  Deliverable: Concurrency bug and fix, scaling questions, crashed worker
+  Lines: 84 (26-11-02%20redis%20concurrency/readme.md#L84)
+  ────────────────────────────────────────
+  #: 5
+  Deliverable: Replace polling with notifications
+  Lines: 90 (26-11-02%20redis%20concurrency/readme.md#L90)
+  ────────────────────────────────────────
+  #: 6
+  Deliverable: Stress test thread-join fix
+  Lines: 151 (26-11-02%20redis%20concurrency/readme.md#L151)
+  ────────────────────────────────────────
+  #: 7
+  Deliverable: Unified logging
+  Lines: 156 (26-11-02%20redis%20concurrency/readme.md#L156)
+
+  Canvas adds three things the readme doesn't mention:
+  - A picture or zipped HTML showing how the system works, with code snippets.
+  - A short write-up of how explaining it to a real person went.
+  - The transcript export and the handwritten learning log, due in class Wed
+    11/4.
+
+  All of this goes in one PDF, plus the image or HTML.
+
+  ---
+
+  Step 1: Learn the Redis commands (5 min)
+
+  Open a terminal and start the Redis CLI:
+  docker exec -it redis-cs452 redis-cli
+  Run these one at a time. Before each one, guess what it will return:
+  RPUSH q a b c
+  LRANGE q 0 -1
+  LPOP q
+  LRANGE q 0 -1
+  SET result:123 "hello"
+  GET result:123
+  TYPE q
+  TYPE result:123
+  DEL q result:123
+  Think about these as you go:
+  - Which end does RPUSH add to, and which end does LPOP take from? What kind of
+    queue does that make?
+  - LRANGE reads items, and LPOP reads them and removes them in one step. Keep
+    that difference in mind, because it matters in Deliverable 4.
+
+  Type exit when you're done.
+
+  Step 2: Watch the live traffic (10 min)
+
+  Open 3 terminals. Run these two lines in each:
+  cd "C:\Users\ethan\Documents\GitHub\CS-452 Database\26-11-02 redis
+  concurrency"
+  .venv\Scripts\Activate.ps1
+  Then start one thing in each:
+  - Terminal A: python run_web_server.py
+  - Terminal B: python run_model_server.py. Wait until it prints * Model loaded.
+  - Terminal C: the Redis monitor. It shows every command Redis receives. Each
+    line is cut to 200 characters, because the image data is about 800 KB and
+    would flood the screen:
+  docker exec -it redis-cs452 sh -c "redis-cli monitor | cut -c1-200"
+
+  Watch Terminal C for about 10 seconds before sending anything. Then open a 4th
+  terminal (activate the venv the same way) and run python simple_request.py.
+
+  Come back and tell me:
+  1. What did you see in the monitor while the system was idle, before any
+     request? Who is sending those commands, and how often?
+  2. When the request went through, list the commands in order (RPUSH, GET, SET,
+     and so on). Which process sent each one?
+  3. What did the key name for the result look like?
+
+  Your answers cover most of Deliverables 1 and 2. Question 1 is also the reason
+  Deliverable 5 exists.
+
+> i dont know what these redis commands do, teach them to me:
+  RPUSH q a b c
+  LRANGE q 0 -1
+  LPOP q
+  LRANGE q 0 -1
+  SET result:123 "hello"
+  GET result:123
+  TYPE q
+  TYPE result:123
+  DEL q result:123
+
+● Redis is a dictionary that lives on a server. Every key maps to a value, and
+  any process connected to the server can read or change it. That's how the web
+  server and the worker share data without talking to each other directly.
+
+  Each value has a type. This project uses two:
+  - string: one value, like a Python str
+  - list: an ordered sequence, like a Python list
+
+  The commands, one at a time
+
+  Command: RPUSH q a b c
+  What it does: Adds a, b, c to the right end (tail) of the list at key q.
+  Creates the list if it doesn't exist.
+  Returns: (integer) 3, the new length
+  Python equivalent: r["q"].extend(["a","b","c"])
+  ────────────────────────────────────────
+  Command: LRANGE q 0 -1
+  What it does: Reads items from index 0 to the last one. -1 means "last", same
+  as Python. Doesn't change the list.
+  Returns: a, b, c
+  Python equivalent: r["q"][0:]
+  ────────────────────────────────────────
+  Command: LPOP q
+  What it does: Removes and returns the item on the left end (head).
+  Returns: "a"
+  Python equivalent: r["q"].pop(0)
+  ────────────────────────────────────────
+  Command: LRANGE q 0 -1
+  What it does: Reads again, to show a is gone
+  Returns: b, c
+  Python equivalent:
+  ────────────────────────────────────────
+  Command: SET result:123 "hello"
+  What it does: Stores a string at key result:123. Overwrites whatever was
+  there.
+  Returns: OK
+  Python equivalent: r["result:123"] = "hello"
+  ────────────────────────────────────────
+  Command: GET result:123
+  What it does: Reads that string. Returns (nil) if the key doesn't exist.
+  Returns: "hello"
+  Python equivalent: r.get("result:123")
+  ────────────────────────────────────────
+  Command: TYPE q
+  What it does: Tells you what type of value a key holds
+  Returns: list
+  Python equivalent: type(r["q"])
+  ────────────────────────────────────────
+  Command: TYPE result:123
+  What it does: Same
+  Returns: string
+  Python equivalent:
+  ────────────────────────────────────────
+  Command: DEL q result:123
+  What it does: Deletes those keys
+  Returns: (integer) 2, the number deleted
+  Python equivalent: del r["q"], r["result:123"]
+
+  Things that trip people up
+
+  - The L in a command name doesn't always mean "left". In LPOP and RPUSH, L and
+    R mean left and right. In LRANGE and LTRIM, the L just means List.
+  - Push on the right, pop on the left, and the list works as a FIFO queue.
+    First in, first out, like a line at a store.
+  - The colon in result:123 means nothing to Redis. It's only a naming habit for
+    grouping keys. To Redis, a key is just a string.
+  - Reading and removing are different. LRANGE reads without removing. LPOP
+    reads and removes in one step, and Redis runs it as one uninterruptible
+    operation. Keep this in mind for Deliverable 4.
+
+  One more command you'll see in the project
+
+  LTRIM q 2 -1 keeps only the items from index 2 to the end and throws away the
+  rest. In effect, it deletes the first 2 items.
+
+  The worker in run_model_server.py
+  (26-11-02%20redis%20concurrency/run_model_server.py) uses LRANGE to read a
+  batch and later uses LTRIM to remove it. Think about this for later: what
+  could happen if two workers do that at the same time?
+
+  ---
+
+  Now run the commands from Step 1 in redis-cli and check that each result
+  matches the table. Then move on to Step 2, the monitor and the three
+  terminals, and tell me what you see.
+
+> cool cool, step one worked out just like you told me:
+  (.venv)
+  Ethan@LAPTOP-EQBGA00L MINGW64 ~/Documents/GitHub/CS-452 Database/26-11-02
+  redis concurrency (main)
+  $ docker exec -it redis-cs452 redis-cli
+  127.0.0.1:6379> RPUSH q a b c
+  (integer) 3
+  127.0.0.1:6379> LRANGE q 0 -1
+  1) "a"
+  2) "b"
+  3) "c"
+     127.0.0.1:6379> LPOP q
+     "a"
+     127.0.0.1:6379> LRANGE q 0 -1
+  1) "b"
+  2) "c"
+     127.0.0.1:6379> SET result:123 "hello"
+     OK
+     127.0.0.1:6379> GET result:123
+     "hello"
+     127.0.0.1:6379> TYPE q
+     list
+     127.0.0.1:6379> TYPE result:123
+     string
+     127.0.0.1:6379> DEL q result:123
+     (integer) 2
+     127.0.0.1:6379> LRANGE q 0 -1
+     (empty array)
+     127.0.0.1:6379> GET result:123
+     (nil)
+
+● Good. Checking LRANGE and GET after the DEL to confirm the keys were really
+  gone was a smart extra step.
+
+  You're in Git Bash, not PowerShell, so the commands for Step 2 are slightly
+  different from what I gave you.
+
+  Step 2 (Git Bash version)
+
+  Open 3 Git Bash terminals. Run these two lines in each:
+  cd ~/Documents/GitHub/CS-452\ Database/26-11-02\ redis\ concurrency
+  source .venv/Scripts/activate
+
+  - Terminal A: python run_web_server.py
+  - Terminal B: python run_model_server.py. Wait for * Model loaded, which takes
+    about 10 to 20 seconds.
+  - Terminal C: the monitor:
+  docker exec -it redis-cs452 sh -c "redis-cli monitor | cut -c1-200"
+    If Git Bash complains about a TTY, put winpty in front: winpty docker exec
+    -it ...
+
+  Watch Terminal C for about 10 seconds before sending anything. Then, in your
+  current terminal (it's already activated), run:
+  python simple_request.py
+
+  Paste in a chunk of the monitor output: some from while it was idle, and some
+  from around the request. Then tell me what you think these mean:
+  1. Idle: what command repeats, how often, and which process is sending it?
+  2. During the request: what commands appear, in what order, and who sent each
+     one?
+  3. What does the result key name look like?
+
+> this is from terminal c, the monitor:
+  1793669814.328513 [0 172.17.0.1:35734] "LRANGE" "image_queue" "0" "31"
+  1793669814.580325 [0 172.17.0.1:35734] "LRANGE" "image_queue" "0" "31"
+  1793669814.832517 [0 172.17.0.1:35734] "LRANGE" "image_queue" "0" "31"
+  1793669815.006333 [0 172.17.0.1:57602] "HELLO" "3"
+  1793669815.008461 [0 172.17.0.1:57602] "CLIENT" "SETINFO" "LIB-NAME"
+  "redis-py"
+  1793669815.009182 [0 172.17.0.1:57602] "CLIENT" "SETINFO" "LIB-VER" "8.1.0"
+  1793669815.055888 [0 172.17.0.1:57602] "RPUSH" "image_queue" "{\"id\":
+  \"8e029f38-1583-4901-ba23-9d8d83116222\", \"image\":
+  \"Ox+aQk7iKEJcj7pBOx+cQk7iLEJcj8JBOx+iQk7iOEJcj9pBOx+mQk7iQEJcj+pBOx+cQk7iNE
+  1793669815.066160 [0 172.17.0.1:57602] "GET"
+  "8e029f38-1583-4901-ba23-9d8d83116222"
+  1793669815.084920 [0 172.17.0.1:35734] "LRANGE" "image_queue" "0" "31"
+  1793669815.317844 [0 172.17.0.1:57602] "GET"
+  "8e029f38-1583-4901-ba23-9d8d83116222"
+  1793669815.569854 [0 172.17.0.1:57602] "GET"
+  "8e029f38-1583-4901-ba23-9d8d83116222"
+  1793669815.821797 [0 172.17.0.1:57602] "GET"
+  "8e029f38-1583-4901-ba23-9d8d83116222"
+  1793669816.073584 [0 172.17.0.1:57602] "GET"
+  "8e029f38-1583-4901-ba23-9d8d83116222"
+  1793669816.325266 [0 172.17.0.1:57602] "GET"
+  "8e029f38-1583-4901-ba23-9d8d83116222"
+  1793669816.576966 [0 172.17.0.1:57602] "GET"
+  "8e029f38-1583-4901-ba23-9d8d83116222"
+  1793669816.828872 [0 172.17.0.1:57602] "GET"
+  "8e029f38-1583-4901-ba23-9d8d83116222"
+  1793669817.080719 [0 172.17.0.1:57602] "GET"
+  "8e029f38-1583-4901-ba23-9d8d83116222"
+  1793669817.163122 [0 172.17.0.1:35734] "SET"
+  "8e029f38-1583-4901-ba23-9d8d83116222" "[{\"label\": \"church\",
+  \"probability\": 0.41362300515174866}, {\"label\": \"castle\",
+  \"probability\": 0.39298868
+  1793669817.164730 [0 172.17.0.1:35734] "LTRIM" "image_queue" "1" "-1"
+  1793669817.332665 [0 172.17.0.1:57602] "GET"
+  "8e029f38-1583-4901-ba23-9d8d83116222"
+  1793669817.334013 [0 172.17.0.1:57602] "DEL"
+  "8e029f38-1583-4901-ba23-9d8d83116222"
+  1793669817.416667 [0 172.17.0.1:35734] "LRANGE" "image_queue" "0" "31"
+  1793669817.668982 [0 172.17.0.1:35734] "LRANGE" "image_queue" "0" "31"
+  1793669817.921132 [0 172.17.0.1:35734] "LRANGE" "image_queue" "0" "31"
+  1793669818.172796 [0 172.17.0.1:35734] "LRANGE" "image_queue" "0" "31"
+  1793669818.424395 [0 172.17.0.1:35734] "LRANGE" "image_queue" "0" "31"
+  1793669818.676127 [0 172.17.0.1:35734] "LRANGE" "image_queue" "0" "31"
+  1793669818.928085 [0 172.17.0.1:35734] "LRANGE" "image_queue" "0" "31"
+  1793669819.179907 [0 172.17.0.1:35734] "LRANGE" "image_queue" "0" "31"
+  1793669819.431891 [0 172.17.0.1:35734] "LRANGE" "image_queue" "0" "31"
+  1793669819.683712 [0 172.17.0.1:35734] "LRANGE" "image_queue" "0" "31"
+  1793669819.935362 [0 172.17.0.1:35734] "LRANGE" "image_queue" "0" "31"
+  1793669820.186972 [0 172.17.0.1:35734] "LRANGE" "image_queue" "0" "31"
+  1793669820.438490 [0 172.17.0.1:35734] "LRANGE" "image_queue" "0" "31"
+  1793669820.690745 [0 172.17.0.1:35734] "LRANGE" "image_queue" "0" "31"
+  1793669820.942784 [0 172.17.0.1:35734] "LRANGE" "image_queue" "0" "31"
+  1793669821.194501 [0 172.17.0.1:35734] "LRANGE" "image_queue" "0" "31"
+  1793669821.446187 [0 172.17.0.1:35734] "LRANGE" "image_queue" "0" "31"
+  1793669821.698656 [0 172.17.0.1:35734] "LRANGE" "image_queue" "0" "31"
+  1793669821.950325 [0 172.17.0.1:35734] "LRANGE" "image_queue" "0" "31"
+  1793669822.202055 [0 172.17.0.1:35734] "LRANGE" "image_queue" "0" "31"
+  1793669822.453975 [0 172.17.0.1:35734] "LRANGE" "image_queue" "0" "31"
+  1793669822.705836 [0 172.17.0.1:35734] "LRANGE" "image_queue" "0" "31"
+  1793669822.957452 [0 172.17.0.1:35734] "LRANGE" "image_queue" "0" "31"
+  1793669823.208962 [0 172.17.0.1:35734] "LRANGE" "image_queue" "0" "31"
+  1793669823.461088 [0 172.17.0.1:35734] "LRANGE" "image_queue" "0" "31"
+  1793669823.713031 [0 172.17.0.1:35734] "LRANGE" "image_queue" "0" "31"
+  1793669823.964953 [0 172.17.0.1:35734] "LRANGE" "image_queue" "0" "31"
+  1793669824.216282 [0 172.17.0.1:35734] "LRANGE" "image_queue" "0" "31"
+  1793669824.468234 [0 172.17.0.1:35734] "LRANGE" "image_queue" "0" "31"
+  1793669824.719981 [0 172.17.0.1:35734] "LRANGE" "image_queue" "0" "31"
+  1793669824.971885 [0 172.17.0.1:35734] "LRANGE" "image_queue" "0" "31"
+  1793669825.222980 [0 172.17.0.1:35734] "LRANGE" "image_queue" "0" "31"
+  1793669825.474122 [0 172.17.0.1:35734] "LRANGE" "image_queue" "0" "31"
+  1793669825.725763 [0 172.17.0.1:35734] "LRANGE" "image_queue" "0" "31"
+  1793669825.977999 [0 172.17.0.1:35734] "LRANGE" "image_queue" "0" "31"
+  1793669826.229238 [0 172.17.0.1:35734] "LRANGE" "image_queue" "0" "31"
+  1793669826.481586 [0 172.17.0.1:35734] "LRANGE" "image_queue" "0" "31"
+  This is from my other terminal (not a b or c):
+  $ python simple_request.py
+  1. church: 0.4136
+  2. castle: 0.3930
+  3. monastery: 0.1733
+  4. palace: 0.0041
+  5. vault: 0.0034
+  (.venv)
+● Write(26-11-02 redis concurrency\submission_notes.md)
+  ⎿  Wrote 43 lines to 26-11-02 redis concurrency\submission_notes.md
+       1 # Redis Concurrency: submission notes
+       2
+       3 ## 1. Redis key structure
+       4
+       5 **The user's image** is stored in the key `image_queue`.
+       6 - Type: **list**. The web server adds to it with `RPUSH`, so it
+         works as a FIFO queue.
+       7 - Each element is a **JSON string**: `{"id": "<uuid4>", "image":
+          "<base64>"}`.
+       8 - `image` is a preprocessed NumPy array (`float32`, shape `1×224
+     … +36 lines (~2 KB) (ctrl+o to expand)
+
+● That monitor output covers most of Deliverables 1 and 2. Here's how to read
+  it.
+
+  Reading the monitor
+
+  There are two clients, and the port number tells them apart. Both show the
+  same IP (172.17.0.1, Docker's gateway), so the number after the colon is how
+  you tell who's who.
+  - :35734 is the worker. It sends LRANGE image_queue 0 31 every 0.25 s,
+    forever. The 31 is BATCH_SIZE - 1, so it grabs up to 32 images per batch.
+  - :57602 is the web server. It first shows up with HELLO and CLIENT SETINFO.
+    That's redis-py's connection handshake, which only happens on the first
+    command.
+
+  The request, step by step:
+  815.056  web     RPUSH image_queue {id, image}   ← hand off the work
+  815.066  web     GET 8e02…  (nil)                ← start polling for the
+  result
+  815.085  worker  LRANGE image_queue 0 31         ← worker reads the item, but
+  doesn't remove it
+           web     GET ×8 … nil nil nil            ← 2 seconds of polling for
+  nothing
+  817.163  worker  SET 8e02… [church, castle…]     ← result written under the
+  UUID key
+  817.165  worker  LTRIM image_queue 1 -1          ← only now is the item
+  removed from the queue
+  817.333  web     GET 8e02… → found!  then DEL    ← result picked up, key
+  cleaned up
+
+  Three things to notice:
+
+  1. Polling is wasteful. While idle, the worker sends about 4 commands a
+     second, about 14,400 an hour, all doing nothing. Each waiting request adds
+     another 4 GETs a second. Polling also adds delay: the result was ready at
+     .163, but the web server didn't check again until .333, so 170 ms went to
+     waiting for the next poll. That's why Deliverable 5 exists.
+  2. The UUID is the return address. The web server makes up a random ID and
+     puts it in the job. The worker writes the answer to a key with that exact
+     name, so the web server knows where to look. The two servers never talk to
+     each other directly.
+  3. Look at the gap between LRANGE at 815.085 and LTRIM at 817.165. For about 2
+     seconds the item has been read but is still in the queue. Remember that
+     window for Deliverable 4. What would a second worker see if it ran its own
+     LRANGE during those 2 seconds?
+
+  I wrote up Deliverables 1–3 from this in submission_notes.md
+  (26-11-02%20redis%20concurrency/submission_notes.md). Read through it, and
+  change anything you'd explain differently.
+
+  ---
+
+  Step 3: Deliverable 6, the stress test fix (~15 min)
+
+  We do this before Deliverable 4, because you need a working stress test to
+  trigger the concurrency bug.
+
+  Open stress_test.py (26-11-02%20redis%20concurrency/stress_test.py) and look
+  at the bottom two sections:
+  - Each thread gets t.daemon = True.
+  - The program ends with time.sleep(300).
+
+  Experiment first: comment out the time.sleep(300) line, then run python
+  stress_test.py with both servers still up. Before you run it, guess what
+  you'll see.
+
+  Then tell me:
+  1. What happened, and why? A hint for looking it up: what does Python do with
+     daemon threads when the main program exits?
+  2. Why is sleep(300) a bad fix? Think about what happens if the requests
+     finish in 20 s, and what happens if they take 400 s.
+
+  Once you've explained it, write the fix yourself. It's about 4 lines: keep a
+  list of the threads, then call .join() on each one. Paste it here and I'll
+  review it.
+
+> <ide_opened_file>The user opened the file
+  c:\Users\ethan\Documents\GitHub\CS-452 Database\26-11-02 redis
+  concurrency\stress_test.py in the IDE. This may or may not be related to the
+  current task.</ide_opened_file>
+
+> Wait, i commented out the sleep(300) and ran the stress_test but nothing
+  happened? Why? was that was you were tryign to show me?
+
+● Yes, that's what I wanted you to see. Here's what happened.
+
+  Why nothing printed
+
+  1. The for loop starts 20 threads, one every 0.05 s, so it finishes in about 1
+     second.
+  2. Without the sleep(300), the main thread hits the end of the file right
+     after that.
+  3. Python doesn't wait for daemon threads when the program exits. It kills
+     them on the spot.
+  4. Each request takes at least 2 seconds (we saw that in the monitor). So all
+     20 threads were still waiting for their HTTP response when they were
+     killed, and none of them got to print.
+
+  A daemon thread is a background helper. Python treats it as not important
+  enough to keep the program running. A normal thread (daemon=False, the
+  default) does keep the program running until it finishes.
+
+  Check Terminal B, the worker
+
+  You'll probably see lines like * Batch size: (N, 224, 224, 3). That's because
+  the requests were actually sent: Flask received them, pushed them onto the
+  queue, and the worker ran ResNet on them. Then the web server polled, found
+  the results, and sent them back to a client that no longer existed.
+
+  All that work was done, and nobody received it. This is a smaller version of
+  the "lost work" problem in Deliverables 4 and 5. Work and the person waiting
+  for it can get disconnected, and nothing in this system notices.
+
+  Why sleep(300) was also wrong
+
+  - If the requests finish in 20 s, you wait 280 s for nothing.
+  - If they take longer than 300 s, the threads get killed anyway, and the
+    results are lost without any error.
+
+  What you want is "wait exactly until every thread is done." That's what
+  .join() does: it pauses the main thread until that specific thread finishes.
+
+  ---
+
+  Your turn
+
+  Write the fix in stress_test.py
+  (26-11-02%20redis%20concurrency/stress_test.py):
+  - Keep a list of the threads as you start them.
+  - After the loop, join() each one.
+  - Delete the sleep(300) line entirely.
+
+  Bonus (1 line): time the whole run with time.time() and print the total at the
+  end. You'll use that number in Deliverable 4 to compare one worker against
+  two.
+
+  Paste your version here when it runs and all 20 threads print OK.
+
+> what does the join function do in this situationa dn how cna i use it?
+
+● t.join() means: "Main thread, stop here and wait until thread t has finished."
+  Once t finishes, the main thread moves on to the next line. If t is already
+  done, join() returns immediately.
+
+  How it works
+
+  Here's a small example that isn't your stress test:
+
+  from threading import Thread
+  import time
+
+  def work(n):
+      time.sleep(n)          # pretend this is a slow HTTP request
+      print(f"worker {n} done")
+
+  t1 = Thread(target=work, args=(2,))
+  t2 = Thread(target=work, args=(1,))
+  t1.start()                 # both start running right away, in parallel
+  t2.start()
+
+  t1.join()                  # main waits here until t1 finishes (~2 s)
+  t2.join()                  # t2 already finished at 1 s, so this returns
+  immediately
+  print("all done")          # always prints LAST
+
+  Output:
+  worker 1 done
+  worker 2 done
+  all done
+
+  The timeline:
+  time:   0s        1s        2s
+  t1:     |=====================|  done
+  t2:     |==========|  done
+  main:   start,start, t1.join() .. waiting .. | t2.join() returns at once |
+  "all done"
+
+  The total time is about 2 s, not 3 s. The threads still run in parallel,
+  because join() doesn't make them take turns. It only makes the main thread
+  wait at that point.
+
+  Three things people get wrong
+
+  1. Call join() after you've started all the threads, not right after each
+     start(). t.start(); t.join() inside the loop would wait for each request
+     before starting the next one, so the threads would run one at a time and
+     the stress test would stop being a stress test.
+  2. Join every thread. If you only join the last thread you started, some
+     earlier ones might still be running when the program exits. In your case,
+     they're daemon threads, so they'd get killed.
+  3. The order you join in doesn't matter. You end up waiting for the slowest
+     thread either way.
+
+  Using it in your stress test
+
+  The pattern is:
+  1. Before the loop, make an empty list.
+  2. Inside the loop, after t.start(), add t to the list.
+  3. After the loop, go through the list and call join() on each thread.
+  4. Delete time.sleep(300).
+
+  That's about 4 lines. Write it, run it, and paste it here.
+
+> why do i have to add the thread after t.start() why cant i add it right after
+  the Thread constrcuotr?
+
+● You can. It makes no difference here, and I shouldn't have said "after."
+
+  The list doesn't store a copy of the thread. It stores a reference to the same
+  Thread object. So whether you append it before or after start(), the list
+  points to the same thread, and join() will work on it later.
+
+  The only rule is about join(), not the list: you can only join a thread that
+  has been started. Calling join() on a thread that was never started raises
+  RuntimeError: cannot join thread before it is started.
+
+  In your loop every thread gets started right away, so both of these work the
+  same:
+  t = Thread(...)
+  threads.append(t)   # fine
+  t.start()
+  t = Thread(...)
+  t.start()
+  threads.append(t)   # also fine
+
+  Use whichever reads better to you.
+
+> here si the monitor (c's) output:
+  1793670710.224356 [0 172.17.0.1:35734] "LRANGE" "image_queue" "0" "31"
+  1793670710.476538 [0 172.17.0.1:35734] "LRANGE" "image_queue" "0" "31"
+  1793670710.729060 [0 172.17.0.1:35734] "LRANGE" "image_queue" "0" "31"
+  1793670710.981485 [0 172.17.0.1:35734] "LRANGE" "image_queue" "0" "31"
+  1793670711.233322 [0 172.17.0.1:35734] "LRANGE" "image_queue" "0" "31"
+  1793670711.410746 [0 172.17.0.1:57602] "RPUSH" "image_queue" "{\"id\":
+  \"456e2364-b0e7-4c23-9bec-9b5d5f115aa8\", \"image\":
+  \"7HyAQZzEsUGuRz1Cdj4cQk7iPELXo4RC7HzYQU7iCEKuRz1C7HyAQZzEmUGuRzlC7HyYQZzEqU
+  1793670711.423024 [0 172.17.0.1:57602] "GET"
+  "456e2364-b0e7-4c23-9bec-9b5d5f115aa8"
+  1793670711.426083 [0 172.17.0.1:46192] "HELLO" "3"
+  1793670711.428059 [0 172.17.0.1:46192] "CLIENT" "SETINFO" "LIB-NAME"
+  "redis-py"
+  1793670711.428964 [0 172.17.0.1:46192] "CLIENT" "SETINFO" "LIB-VER" "8.1.0"
+  1793670711.475219 [0 172.17.0.1:46192] "RPUSH" "image_queue" "{\"id\":
+  \"cb882985-66f8-4b62-a318-7b8cba858c1f\", \"image\":
+  \"7HyAQZzEsUGuRz1Cdj4cQk7iPELXo4RC7HzYQU7iCEKuRz1C7HyAQZzEmUGuRzlC7HyYQZzEqU
+  1793670711.484373 [0 172.17.0.1:46192] "GET"
+  "cb882985-66f8-4b62-a318-7b8cba858c1f"
+  1793670711.485443 [0 172.17.0.1:35734] "LRANGE" "image_queue" "0" "31"
+  1793670711.513733 [0 172.17.0.1:57602] "RPUSH" "image_queue" "{\"id\":
+  \"8c81e249-8f6f-4df4-8a7c-9e9bac865fb5\", \"image\":
+  \"7HyAQZzEsUGuRz1Cdj4cQk7iPELXo4RC7HzYQU7iCEKuRz1C7HyAQZzEmUGuRzlC7HyYQZzEqU
+  1793670711.523662 [0 172.17.0.1:57602] "GET"
+  "8c81e249-8f6f-4df4-8a7c-9e9bac865fb5"
+  1793670711.545570 [0 172.17.0.1:46192] "RPUSH" "image_queue" "{\"id\":
+  \"64deef82-1942-4a3e-9e91-b5d269216511\", \"image\":
+  \"7HyAQZzEsUGuRz1Cdj4cQk7iPELXo4RC7HzYQU7iCEKuRz1C7HyAQZzEmUGuRzlC7HyYQZzEqU
+  1793670711.556236 [0 172.17.0.1:46192] "GET"
+  "64deef82-1942-4a3e-9e91-b5d269216511"
+  1793670711.622437 [0 172.17.0.1:46192] "RPUSH" "image_queue" "{\"id\":
+  \"7a3aeaba-04e9-4543-adcf-16de3a97851d\", \"image\":
+  \"7HyAQZzEsUGuRz1Cdj4cQk7iPELXo4RC7HzYQU7iCEKuRz1C7HyAQZzEmUGuRzlC7HyYQZzEqU
+  1793670711.632766 [0 172.17.0.1:46192] "GET"
+  "7a3aeaba-04e9-4543-adcf-16de3a97851d"
+  1793670711.653685 [0 172.17.0.1:57602] "RPUSH" "image_queue" "{\"id\":
+  \"8306bb4c-5961-4de4-a08f-c8b1d2b93c05\", \"image\":
+  \"7HyAQZzEsUGuRz1Cdj4cQk7iPELXo4RC7HzYQU7iCEKuRz1C7HyAQZzEmUGuRzlC7HyYQZzEqU
+  1793670711.662523 [0 172.17.0.1:46192] "RPUSH" "image_queue" "{\"id\":
+  \"4bd52f4e-616c-4fe8-b793-b936557ea43d\", \"image\":
+  \"7HyAQZzEsUGuRz1Cdj4cQk7iPELXo4RC7HzYQU7iCEKuRz1C7HyAQZzEmUGuRzlC7HyYQZzEqU
+  179367
+  ──── (297 lines hidden) ─────────────────────────────────────────────────────
+  . beagle: 0.8607
+  2. bluetick: 0.0651
+  3. redbone: 0.0226
+  2. bluetick: 0.0651
+  4. seat_belt: 0.0083
+  5. Greater_Swiss_Mountain_dog: 0.0062
+  3. redbone: 0.0226
+  4. seat_belt: 0.0083
+  5. Greater_Swiss_Mountain_dog: 0.0062
+  [INFO] thread 4 OK
+  1. beagle: 0.8607
+  2. bluetick: 0.0651
+  3. redbone: 0.0226
+  4. seat_belt: 0.0083
+  5. Greater_Swiss_Mountain_dog: 0.0062
+  [INFO] thread 10 OK
+  1. beagle: 0.8607
+  2. bluetick: 0.0651
+  3. redbone: 0.0226
+  4. seat_belt: 0.0083
+  5. Greater_Swiss_Mountain_dog: 0.0062
+  [INFO] thread 5 OK
+  [INFO] thread 6 OK
+  [INFO] thread 15 OK
+  1. beagle: 0.8607
+  1. beagle: 0.8607
+  2. bluetick: 0.0651
+  3. redbone: 0.0226
+  2. bluetick: 0.0651
+  4. seat_belt: 0.0083
+  5. Greater_Swiss_Mountain_dog: 0.0062
+  1. beagle: 0.8607
+  3. redbone: 0.0226
+  2. bluetick: 0.0651
+  4. seat_belt: 0.0083
+  3. redbone: 0.0226
+  5. Greater_Swiss_Mountain_dog: 0.0062
+  4. seat_belt: 0.0083
+  5. Greater_Swiss_Mountain_dog: 0.0062
+  [INFO] thread 16 OK
+  1. beagle: 0.8607
+  2. bluetick: 0.0651
+  3. redbone: 0.0226
+  4. seat_belt: 0.0083
+  5. Greater_Swiss_Mountain_dog: 0.0062
+  [INFO] thread 11 OK
+  1. beagle: 0.8607
+  2. bluetick: 0.0651
+  3. redbone: 0.0226
+  4. seat_belt: 0.0083
+  5. Greater_Swiss_Mountain_dog: 0.0062
+  [INFO] thread 7 OK
+  1. beagle: 0.8607
+  2. bluetick: 0.0651
+  3. redbone: 0.0226
+  4. seat_belt: 0.0083
+  5. Greater_Swiss_Mountain_dog: 0.0062
+  [INFO] thread 18 OK
+  1. beagle: 0.8607
+  [INFO] thread 2 OK
+  [INFO] thread 17 OK
+  1. beagle: 0.8607
+  1. beagle: 0.8607
+  2. bluetick: 0.0651
+  2. bluetick: 0.0651
+  2. bluetick: 0.0651
+  3. redbone: 0.0226
+  3. redbone: 0.0226
+  4. seat_belt: 0.0083
+  4. seat_belt: 0.0083
+  [INFO] thread 12 OK
+  1. beagle: 0.8607
+  3. redbone: 0.0226
+  5. Greater_Swiss_Mountain_dog: 0.0062
+  4. seat_belt: 0.0083
+  5. Greater_Swiss_Mountain_dog: 0.0062
+  5. Greater_Swiss_Mountain_dog: 0.0062
+  2. bluetick: 0.0651
+  3. redbone: 0.0226
+  4. seat_belt: 0.0083
+  5. Greater_Swiss_Mountain_dog: 0.0062
+  [INFO] thread 8 OK
+  [INFO] thread 3 OK
+  1. beagle: 0.8607
+  1. beagle: 0.8607
+  2. bluetick: 0.0651
+  3. redbone: 0.0226
+  2. bluetick: 0.0651
+  4. seat_belt: 0.0083
+  3. redbone: 0.0226
+  5. Greater_Swiss_Mountain_dog: 0.0062
+  4. seat_belt: 0.0083
+  5. Greater_Swiss_Mountain_dog: 0.0062
+  [INFO] thread 14 OK
+  [INFO] thread 13 OK
+  1. beagle: 0.8607
+  1. beagle: 0.8607
+  2. bluetick: 0.0651
+  2. bluetick: 0.0651
+  3. redbone: 0.0226
+  3. redbone: 0.0226
+  4. seat_belt: 0.0083
+  4. seat_belt: 0.0083
+  5. Greater_Swiss_Mountain_dog: 0.0062
+  5. Greater_Swiss_Mountain_dog: 0.0062
+  all done
+  (.venv)
+  Ethan@LAPTOP-EQBGA00L MINGW64 ~/Documents/GitHub/CS-452 Database/26-11-02
+  redis concurrency (main)
+  $
+
+● It works: all 20 threads came back OK and "all done" printed last. Let me look
+  at your code.
+
+  Read 1 file (ctrl+o to expand)
+
+● Update(26-11-02 redis concurrency\submission_notes.md)
+  ⎿  Added 23 lines
+      41  | 3 | monastery | 0.1733 |
+      42  | 4 | palace | 0.0041 |
+      43  | 5 | vault | 0.0034 |
+      44 +                                                               
+      45 +## 6. Stress test fix                                          
+      46 +                                                               
+      47 +**Bug:** each request thread is a **daemon** thread, and Python
+         + kills daemon threads as soon as the main thread ends. The orig
+         +inal code tried to keep the program alive with `time.sleep(300)
+         +`, which is only a guess. When I removed it, the loop started a
+         +ll 20 threads in about 1 s and the program exited before any re
+         +sponse came back, so nothing printed. The server still did all 
+         +20 classifications and sent them to clients that no longer exis
+         +ted. A fixed sleep wastes time when requests are fast, and kill
+         +s them anyway when they take longer than 300 s.                
+      48 +                                                               
+      49 +**Fix:** keep every thread in a list, then `join()` each one. `
+         +join()` blocks the main thread until that thread finishes, so t
+         +he program waits exactly as long as the slowest request and no 
+         +longer.                                                        
+      50 +                                                               
+      51 +```python                                                      
+      52 +threads = []                                                   
+      53 +for i in range(0, NUM_REQUESTS):                               
+      54 +    t = Thread(target=call_predict_endpoint, args=(i,))        
+      55 +    threads.append(t)                                          
+      56 +    t.daemon = True                                            
+      57 +    t.start()                                                  
+      58 +    time.sleep(SLEEP_COUNT)                                    
+      59 +                                                               
+      60 +for t in threads:                                              
+      61 +    t.join()                                                   
+      62 +                                                               
+      63 +print("all done")                                              
+      64 +```                                                            
+      65 +                                                               
+      66 +Result: all 20 threads returned OK, and `all done` printed last
+         +. Total time was about 3.2 s with one worker, from the first `R
+         +PUSH` to the last `DEL` in `MONITOR`.                          
+
+● The fix is correct. You start all 20 threads first, then join every one, and
+  all done prints last. You also did it in one pass, without falling into the
+  start-then-join-inside-the-loop trap. I added Deliverable 6 to
+  submission_notes.md (26-11-02%20redis%20concurrency/submission_notes.md#L60).
+
+  What this run shows (you can use these as learning-log aha moments)
+
+  1. The jumbled output is its own race condition. Look at thread 18: it printed
+  1. beagle and then lines from other threads got mixed in. Each thread calls
+  print 6 separate times, and the threads take turns between those calls. A
+  single print is fine, but 6 in a row aren't printed as one block. Keep this in
+  mind for Deliverable 7, where you need a log line to be one complete unit.
+
+  2. The worker batched the requests. In the monitor:
+  711.485  LRANGE        → only 2 images were queued yet, so it took those 2
+  713.225  SET ×2, LTRIM image_queue 2 -1
+  713.488  LRANGE        → 18 more had piled up meanwhile, so it took all 18
+  714.356  SET ×18, LTRIM image_queue 18 -1
+  Running the model on 18 images at once took about the same time as running it
+  on 2. That's why the worker reads up to 32 items at a time.
+
+  3. Polling gets expensive under load. Between 711.4 and 714.4 the monitor is a
+  wall of GETs: 20 waiting requests × 4 polls a second × about 3 s is around
+  240 GETs that returned nothing. Add that number to Deliverable 5 later.
+
+  4. The web server opened more Redis connections. New ports showed up (46192,
+  46196, 33598). Flask handles each request on its own thread, and redis-py
+  opens extra connections as more threads need one at the same time. That's why
+  the same UUID gets polled from different ports.
+
+  ---
+
+  Step 4: Deliverable 4, the concurrency bug (~45 min)
+
+  This is the most important part of the project.
+
+  Setup:
+  1. Restart the web server: press Ctrl+C in Terminal A, then run python
+     run_web_server.py again. The readme says to do this between runs.
+  2. Open Terminal D, activate the venv, and run a second python
+     run_model_server.py. Wait for * Model loaded.
+  3. You can leave the monitor running.
+
+  Before you run anything, predict: both workers run LRANGE image_queue 0 31
+  every 0.25 s. Look again at the gap between LRANGE and LTRIM that you found
+  earlier. What happens if both workers LRANGE during the same window? What does
+  each one's LTRIM remove?
+
+  Then run python stress_test.py. Because you added join(), the bug will now
+  show up as the program never finishing. Without join(), the program would have
+  exited and you'd never have noticed the missing requests.
+
+  While it hangs, check:
+  - Terminals B and D: did both print Batch size with the same size, at about
+    the same time?
+  - The monitor: is the same UUID being SET twice, by two different ports? How
+    many LTRIMs are there?
+  - Count how many threads printed OK. How many never came back?
+
+  If Ctrl+C doesn't stop the stress test after you've seen the hang, just close
+  that terminal.
+
+  Tell me what you saw, and give me your theory of the bug in one or two
+  sentences before we fix it.
+
+> the porgam finished, but the monoito is going crazy with actvity still. I'm
+  confused
+
+● I'll check Redis directly to see what's causing all that activity.
+
+  Ran 2 shell commands (ctrl+o to expand)
+
+● You didn't break anything. Here's what's going on.
+
+  The "crazy" monitor is just two workers polling
+
+  I recorded 3 seconds of traffic:
+  12  172.17.0.1:38708  LRANGE image_queue   ← worker #2 (Terminal D)
+  12  172.17.0.1:35734  LRANGE image_queue   ← worker #1 (Terminal B)
+  That's all of it. No requests are still waiting. Each worker polls 4 times a
+  second, so the screen now scrolls twice as fast as before. This is the idle
+  cost from Deliverable 5, and it grows with every worker you add: 10 workers
+  would mean 40 empty polls a second.
+
+  But the bug did happen, and it left evidence
+
+  The queue is empty, yet Redis still holds 6 result keys that nobody will ever
+  read:
+  a881acc6-…  string  [{"label": "beagle", ...
+  52df48ce-…  string  [{"label": "beagle", ...
+  ...6 total
+  Normally the web server DELs every result after reading it. So how did 6
+  survive? Work it out from this:
+  - Both workers run LRANGE on the same queue, and LRANGE doesn't remove
+    anything.
+  - So what happens if both workers grab the same image?
+  - Worker A SETs the result, the web server reads it and DELs it… and then what
+    does worker B do?
+
+  Check it yourself: run KEYS * in redis-cli. Also look at Terminals B and D.
+  Did they both print Batch size at about the same time with overlapping sizes?
+
+  Why your stress test still finished this time
+
+  Duplicate work happened 6 times, but no request was lost, and the race doesn't
+  always produce losses. Think about what each worker's LTRIM deletes:
+  - A read N items and trims N from the front. B read M items and trims M from
+    the front. Together they delete N + M items.
+  - But only the union of what they read was actually processed.
+  - If the queue had no other items, the extra trimming deletes nothing and you
+    get lucky.
+  - If new requests arrived during the ~2 s of processing, the extra trimming
+    deletes those new images without anyone processing them. Those requests then
+    hang forever.
+
+  So to see the loss, requests need to keep arriving while the workers are busy.
+
+  Reproduce the loss
+
+  1. In redis-cli, run FLUSHDB to clear out the 6 orphan keys. Take a screenshot
+     of KEYS * first if you want it as evidence for the PDF.
+  2. In stress_test.py (26-11-02%20redis%20concurrency/stress_test.py), change
+     SLEEP_COUNT = 0.05 to 0.2, so the 20 requests arrive over about 4 s instead
+     of 1 s.
+  3. Restart the web server, then run python stress_test.py again. It may take
+     one or two tries.
+
+  You're looking for some threads never printing OK and the program not
+  finishing. In the monitor, look for GETs for the same UUID repeating forever,
+  with no SET for that UUID ever showing up. Tell me which thread numbers never
+  came back.
+
+> tell me the commadn to open the redis-cli again
+
+● Run this in any Git Bash terminal:
+  docker exec -it redis-cs452 redis-cli
+  If Git Bash complains about a TTY, put winpty in front: winpty docker exec -it
+  redis-cs452 redis-cli.
+
+  Type exit to leave.
+
+[Image #1]
+
+> here is the evidence of the orpahn keys:
+
+● That screenshot is good evidence for the PDF. I'll copy it into the project
+  folder.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+● I saved it as orphan_keys.png
+  (26-11-02%20redis%20concurrency/orphan_keys.png).
+
+  Before you clear them, answer this in one sentence, because it's the core of
+  Deliverable 4: how did these 6 keys end up orphaned? Hint: worker A SETs a
+  result, the web server reads it and DELs it… and then what does worker B do
+  with the same image?
+
+  Next, while you're still in redis-cli:
+  1. Run FLUSHDB to clear the orphan keys, then exit.
+  2. In stress_test.py (26-11-02%20redis%20concurrency/stress_test.py), set
+     SLEEP_COUNT = 0.2.
+  3. Restart the web server in Terminal A. Leave both workers running.
+  4. Run python stress_test.py. You're trying to catch threads that never come
+     back.
+
+> <ide_opened_file>The user opened the file
+  c:\Users\ethan\Documents\GitHub\CS-452 Database\26-11-02 redis
+  concurrency\stress_test.py in the IDE. This may or may not be related to the
+  current task.</ide_opened_file>
+
+> its hanging now:
+  Ethan@LAPTOP-EQBGA00L MINGW64 ~/Documents/GitHub/CS-452 Database/26-11-02
+  redis concurrency (main)
+  $ python stress_test.py
+  [INFO] thread 0 OK
+  1. beagle: 0.8607
+  2. bluetick: 0.0651
+  3. redbone: 0.0226
+  4. seat_belt: 0.0083
+  5. Greater_Swiss_Mountain_dog: 0.0062
+     [INFO] thread 1 OK
+  1. beagle: 0.8607
+  2. bluetick: 0.0651
+  3. redbone: 0.0226
+  4. seat_belt: 0.0083
+  5. Greater_Swiss_Mountain_dog: 0.0062
+     [INFO] thread 2 OK
+  1. beagle: 0.8607
+  2. bluetick: 0.0651
+  3. redbone: 0.0226
+  4. seat_belt: 0.0083
+  5. Greater_Swiss_Mountain_dog: 0.0062
+     [INFO] thread 4 OK
+  1. beagle: 0.8607
+  2. bluetick: 0.0651
+  3. redbone: 0.0226
+  4. seat_belt: 0.0083
+  5. Greater_Swiss_Mountain_dog: 0.0062
+     [INFO] thread 3 OK
+  1. beagle: 0.8607
+  2. bluetick: 0.0651
+  3. redbone: 0.0226
+  4. seat_belt: 0.0083
+  5. Greater_Swiss_Mountain_dog: 0.0062
+     [INFO] thread 6 OK
+  1. beagle: 0.8607
+  2. bluetick: 0.0651
+  3. redbone: 0.0226
+  4. seat_belt: 0.0083
+  5. Greater_Swiss_Mountain_dog: 0.0062
+     [INFO] thread 5 OK
+  1. beagle: 0.8607
+  2. bluetick: 0.0651
+  3. redbone: 0.0226
+  4. seat_belt: 0.0083
+  5. Greater_Swiss_Mountain_dog: 0.0062
+     [INFO] thread 7 OK
+  1. beagle: 0.8607
+  2. bluetick: 0.0651
+  3. redbone: 0.0226
+  4. seat_belt: 0.0083
+  5. Greater_Swiss_Mountain_dog: 0.0062
+     [INFO] thread 9 OK
+  1. beagle: 0.8607
+  2. bluetick: 0.0651
+  3. redbone: 0.0226
+  4. seat_belt: 0.0083
+  5. Greater_Swiss_Mountain_dog: 0.0062
+     [INFO] thread 8 OK
+  1. beagle: 0.8607
+  2. bluetick: 0.0651
+  3. redbone: 0.0226
+  4. seat_belt: 0.0083
+  5. Greater_Swiss_Mountain_dog: 0.0062
+     [INFO] thread 12 OK
+  1. beagle: 0.8607
+  2. bluetick: 0.0651
+  3. redbone: 0.0226
+  4. seat_belt: 0.0083
+  5. Greater_Swiss_Mountain_dog: 0.0062
+     [INFO] thread 11 OK
+  1. beagle: 0.8607
+  2. bluetick: 0.0651
+  3. redbone: 0.0226
+  4. seat_belt: 0.0083
+  5. Greater_Swiss_Mountain_dog: 0.0062
+     [INFO] thread 14 OK
+  1. beagle: 0.8607
+  2. bluetick: 0.0651
+  3. redbone: 0.0226
+  4. seat_belt: 0.0083
+  5. Greater_Swiss_Mountain_dog: 0.0062
+     [INFO] thread 15 OK
+  1. beagle: 0.8607
+  2. bluetick: 0.0651
+  3. redbone: 0.0226
+  4. seat_belt: 0.0083
+  5. Greater_Swiss_Mountain_dog: 0.0062
+     [INFO] thread 16 OK
+  1. beagle: 0.8607
+  2. bluetick: 0.0651
+  3. redbone: 0.0226
+  4. seat_belt: 0.0083
+  5. Greater_Swiss_Mountain_dog: 0.0062
+     [INFO] thread 18 OK
+  1. beagle: 0.8607
+  2. bluetick: 0.0651
+  3. redbone: 0.0226
+  4. seat_belt: 0.0083
+  5. Greater_Swiss_Mountain_dog: 0.0062
+
+● You caught it. 16 threads came back, and threads 10, 13, 17 and 19 never did.
+  I'll confirm in Redis what happened to them.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+● Confirmed. Redis shows both symptoms of the bug at once:
+
+  queue length: 0                          ← the 4 lost images aren't in the
+  queue anymore
+  GET cee9e61f…  ×12 in 3 s                ┐
+  GET 9f64186e…  ×12                       │ the web server is polling for 4
+  results
+  GET 9695fe8c…  ×12                       │ that will never exist, and it will
+  GET 44dda5f3…  ×12                       ┘ keep going forever
+  3 keys: 5eefb411…, 0194b200…, 9d25d3fd…  ← orphan results from duplicate work
+
+  What happened
+
+  Here's a small example of the race. Assume [1 2 3] were queued when both
+  workers polled:
+  queue:  [1 2 3]
+  A: LRANGE → [1 2 3]                    B: LRANGE → [1 2 3]       ← same
+  images, read twice
+          ...while both are running ResNet (~1–2 s), requests 4, 5, 6, 7
+  arrive...
+  queue:  [1 2 3 4 5 6 7]
+  A: SET 1,2,3   LTRIM 3 -1 → [4 5 6 7]                          ← correct
+  B: SET 1,2,3 again                                              ← DUPLICATE
+  results → orphan keys
+  B: LTRIM 3 -1 → [7]                                             ← deletes 4,
+  5, 6 unprocessed → LOST
+  There's one root cause behind both symptoms. Reading the queue (LRANGE) and
+  removing from it (LTRIM) are two separate steps, about 2 seconds apart. In
+  between, another worker can read the same items, and the queue can change.
+  LTRIM removes "the first N items." It doesn't remove "the items I processed,"
+  so it deletes whatever happens to be at the front by then.
+
+  This pattern is called a check-then-act (or read-modify-write) race. It's the
+  same kind of problem as two bank transactions both reading a balance of $100
+  and each writing back $100 − $20.
+
+  The fix is to make "take an item" a single atomic step. Then two workers can
+  never get the same item, and nothing is deleted that hasn't been taken.
+
+  ---
+
+  Your turn: fix it
+
+  1. Stop the hung stress test (Ctrl+C, or close the terminal), and restart the
+     web server. Its 4 polling loops will never end on their own.
+  2. In run_model_server.py
+     (26-11-02%20redis%20concurrency/run_model_server.py), change how the worker
+     takes items from the queue. You learned the command that does it at the
+     very start of this session. Hint: in redis-py it can take a count, as in
+     db.lpop(name, count), and it returns None when the queue is empty.
+  3. Once items are removed as they're taken, one other line in that file has no
+     purpose anymore. Find it and delete it.
+
+  Paste your change here. Then FLUSHDB, restart both workers and the web server,
+  and run the stress test 2–3 times. If it finishes every time and KEYS * is
+  empty afterward, the fix works.
+
+> <ide_opened_file>The user opened the file
+  c:\Users\ethan\Documents\GitHub\CS-452 Database\26-11-02 redis
+  concurrency\run_model_server.py in the IDE. This may or may not be related to
+  the current task.</ide_opened_file>
+
+> SO i undertadn that the issue here is race conditions, that since the act of
+  readin work form the queue and removing the worked on item arent atomic,
+  multiple workers can read the same work item, complete it and then remove
+  frommthe queue an item by index, but if the queue has changed since they read
+  it, that index could be wrong, causing jobs to never be completed and the
+  web server to hang. So the answer is to remove the item from the work queue
+  as its being read, right? SO multiple worker serves cannot read it
+  simultaneously> Is pop an atomic function? Pop bnoth deletes and reads, so is
+  that the right next step?
+
+● Yes, you've got it, including the key detail that LTRIM removes by position
+  and not by identity.
+
+  Is LPOP atomic? Yes. Redis runs commands one at a time on a single thread.
+  While one command is running, no other client's command can run in between. So
+  any single Redis command is atomic:
+  - LPOP image_queue 32 reads and removes up to 32 items in one indivisible
+    step.
+  - If two workers send LPOP at the same moment, Redis runs one, then the other.
+    The second one gets whatever is left, so they can never get the same item.
+
+  The catch is that atomicity applies to one command, not to a sequence of
+  commands. Your bug came from LRANGE and LTRIM being two commands with 2
+  seconds of work in between. Redis does have tools to make several commands
+  atomic together (MULTI/EXEC transactions and Lua scripts), but you don't need
+  them here, because one command does the whole job.
+
+  There's a trade-off to note now, because Deliverable 4 asks about it next.
+  With LPOP, the item leaves the queue before the work is done. If a worker
+  crashes halfway through, that image is gone and its request hangs forever.
+  You've traded "duplicate work and lost items" for "lost items only if a worker
+  crashes." Delivering each job at most once is fine for now, and we'll come
+  back to it.
+
+  Go write it. In run_model_server.py:
+  - Replace the lrange call with db.lpop(settings.IMAGE_QUEUE,
+    settings.BATCH_SIZE).
+  - Handle the None it returns when the queue is empty. The for q in queue loop
+    would crash on None.
+  - Delete the line that no longer has a purpose.
+
+  Paste it when you're done.
+
+> <ide_selection>The user selected the lines 1 to 88 from
+  c:\Users\ethan\Documents\GitHub\CS-452 Database\26-11-02 redis
+  concurrency\run_model_server.py:
+  import the necessary packages
+
+  from tensorflow.keras.applications import ResNet50
+  from keras.applications import imagenet_utils
+  import numpy as np
+  import settings
+  import helpers
+  import redis
+  import time
+  import json
+
+  import os
+
+  os.environ['KMP_DUPLICATE_LIB_OK']='True'
+
+  connect to Redis server
+
+  db = redis.StrictRedis(host=settings.REDIS_HOST,
+          port=settings.REDIS_PORT, password=settings.REDIS_PASSWORD,
+  db=settings.REDIS_DB)
+
+  def classify_process():
+          # load the pre-trained Keras model (here we are using a model
+          # pre-trained on ImageNet and provided by Keras, but you can
+          # substitute in your own networks just as easily)
+          print("* Loading model...")
+          model = ResNet50(weights="imagenet")
+          print("* Model loaded")
+
+  # continually pool for new images to classify
+  while True:
+          # attempt to grab a batch of images from the database, then
+          # initialize the image IDs and batch of images themselves
+          queue = db.lpop(settings.IMAGE_QUEUE, settings.BATCH_SIZE)
+          if queue is None:
+                  continue
+
+          imageIDs = []
+          batch = None
+
+          # loop over the queue
+          for q in queue:
+                  # deserialize the object and obtain the input image
+                  q = json.loads(q.decode("utf-8"))
+                  image = helpers.base64_decode_image(q["image"],
+                          settings.IMAGE_DTYPE,
+                          (1, settings.IMAGE_HEIGHT, settings.IMAGE_WIDTH,
+                                  settings.IMAGE_CHANS))
+
+                  # check to see if the batch list is None
+                  if batch is None:
+                          batch = image
+
+                  # otherwise, stack the data
+                  else:
+                          batch = np.vstack([batch, image])
+
+                  # update the list of image IDs
+                  imageIDs.append(q["id"])
+
+          # check to see if we need to process the batch
+          if len(imageIDs) > 0:
+                  # classify the batch
+                  print("* Batch size: {}".format(batch.shape))
+                  preds = model.predict(batch)
+                  results = imagenet_utils.decode_predictions(preds)
+
+                  # loop over the image IDs and their corresponding set of
+                  # results from our model
+                  for (imageID, resultSet) in zip(imageIDs, results):
+                          # initialize the list of output predictions
+                          output = []
+
+                          # loop over the results and add them to the list of
+                          # output predictions
+                          for (imagenetID, label, prob) in resultSet:
+                                  r = {"label": label, "probability":
+  float(prob)}
+                                  output.append(r)
+
+                          # store the output predictions in the database, using
+                          # the image ID as the key so we can fetch the results
+                          db.set(imageID, json.dumps(output))
+
+          # sleep for a small amount
+          time.sleep(settings.SERVER_SLEEP)
+  if this is the main thread of execution start the model server
+
+  process
+
+  if __name__ == "__main__":
+          classify_process()
+
+  This may or may not be related to the current task.</ide_selection>
+
+> read my updated rubn_model_server, how is my solution?
+
+● The core fix is correct. LPOP with a count takes up to 32 items atomically,
+  and you removed the LTRIM. That was the line with no purpose left.
+
+  There's one bug, on line 33:
+  if queue is None:
+      continue
+  continue jumps straight back to the top of the while loop, which skips the
+  time.sleep(settings.SERVER_SLEEP) at the bottom. So when the queue is empty,
+  which is almost all the time, the worker runs LPOP as fast as Python and the
+  network allow. That's thousands of commands a second instead of 4.
+
+  This is called a busy loop. It pins a CPU core and floods Redis. With 2
+  workers it's twice as bad.
+
+  If you want to see it before fixing it, start one worker with your current
+  code and watch the monitor. Instead of 4 LPOPs a second, you'll see a solid
+  flood.
+
+  The fix is a one-line change. Either of these works:
+  if queue is None:
+      time.sleep(settings.SERVER_SLEEP)
+      continue
+  or make None act like an empty list, so the code falls through to the existing
+  sleep:
+  queue = db.lpop(settings.IMAGE_QUEUE, settings.BATCH_SIZE) or []
+  I'd go with the second. It's shorter, and the existing if len(imageIDs) > 0
+  check already handles an empty batch.
+
+  Then test it:
+  1. Run FLUSHDB in redis-cli.
+  2. Restart both workers so they load the new code, and restart the web server.
+  3. Run the stress test 2–3 times (keep SLEEP_COUNT = 0.2).
+  4. After each run, check KEYS * in redis-cli. It should be empty.
+
+  All 20 OK every time and KEYS * empty means the fix works. Paste the result.
+
+  Going further, as a preview of Deliverable 5: Redis also has BLPOP, a blocking
+  pop. The worker's connection waits inside Redis until an item arrives, so the
+  worker doesn't need to poll at all. It doesn't take a count, but a common
+  pattern is BLPOP to wait for the first item, then LPOP with a count to grab
+  the rest of the batch. Keep that in mind when you write up the
+  polling-overhead discussion.
+
+> <ide_opened_file>The user opened the file
+  c:\Users\ethan\Documents\GitHub\CS-452 Database\26-11-02 redis
+  concurrency\run_model_server.py in the IDE. This may or may not be related to
+  the current task.</ide_opened_file>
+
+> the keys were empty eacy time! it worked!
+  Read 2 files (ctrl+o to expand)
+
+● Update(26-11-02 redis concurrency\submission_notes.md)
+  ⎿  Added 41 lines
+      42  | 4 | palace | 0.0041 |
+      43  | 5 | vault | 0.0034 |
+      44  
+      45 +## 4. Concurrency and scaling                                  
+      46 +                                                               
+      47 +### The bug: two workers, read and remove are not atomic       
+      48 +                                                               
+      49 +The original worker reads the queue with `LRANGE` (which doesn'
+         +t remove anything), runs ResNet for about 1–2 s, then removes i
+         +tems with `LTRIM image_queue N -1`, meaning "delete the first N
+         + items." That's two separate commands with a gap between them, 
+         +and `LTRIM` deletes by **position**, not by which items this wo
+         +rker actually processed.                                       
+      50 +                                                               
+      51 +```                                                            
+      52 +queue:  [1 2 3]                                                
+      53 +A: LRANGE → [1 2 3]                    B: LRANGE → [1 2 3]     
+         +  ← same images read twice                                     
+      54 +        ...requests 4, 5, 6, 7 arrive while both run ResNet... 
+      55 +queue:  [1 2 3 4 5 6 7]                                        
+      56 +A: SET 1,2,3   LTRIM 3 -1 → [4 5 6 7]                          
+      57 +B: SET 1,2,3 again                                             
+         + ← duplicate → orphan keys                                     
+      58 +B: LTRIM 3 -1 → [7]                                            
+         + ← 4,5,6 deleted unprocessed → LOST                            
+      59 +```                                                            
+      60 +                                                               
+      61 +**Evidence** (2 workers, 20 requests, `SLEEP_COUNT = 0.2`):    
+      62 +- Threads 10, 13, 17 and 19 never returned, and the stress test
+         + hung on `join()`.                                             
+      63 +- The queue was empty, yet `MONITOR` showed the web server poll
+         +ing 4 UUIDs forever (12 `GET`s each in 3 s). Those images had b
+         +een trimmed away without anyone processing them.               
+      64 +- Redis kept result keys that no one would ever read (6 in an e
+         +arlier run, 3 in this one; screenshot: `orphan_keys.png`). One 
+         +worker `SET` a result, the web server read it and `DEL`ed it, t
+         +hen the second worker `SET` the same result again.             
+      65 +                                                               
+      66 +This is a **check-then-act** race. Both symptoms, the duplicate
+         + work and the lost work, come from the same gap between reading
+         + and removing.                                                 
+      67 +                                                               
+      68 +### The fix: atomic pop                                        
+      69 +                                                               
+      70 +Redis runs commands one at a time on a single thread, so **each
+         + single command is atomic**. `LPOP` with a count reads and remo
+         +ves up to 32 items in one indivisible step, which means two wor
+         +kers can never get the same item, and nothing is removed unless
+         + someone took it.                                              
+      71 +                                                               
+      72 +```python                                                      
+      73 +# before                                                       
+      74 +queue = db.lrange(settings.IMAGE_QUEUE, 0, settings.BATCH_SIZE 
+         +- 1)                                                           
+      75 +...                                                            
+      76 +db.ltrim(settings.IMAGE_QUEUE, len(imageIDs), -1)   # deleted  
+      77 +                                                               
+      78 +# after                                                        
+      79 +queue = db.lpop(settings.IMAGE_QUEUE, settings.BATCH_SIZE) or [
+         +]                                                              
+      80 +```                                                            
+      81 +                                                               
+      82 +`lpop` returns `None` on an empty queue. My first version handl
+         +ed that with `if queue is None: continue`, but `continue` skipp
+         +ed the `sleep` at the bottom of the loop. That would have turne
+         +d the worker into a **busy loop** that sends thousands of `LPOP
+         +`s a second. `or []` lets the empty case fall through to the no
+         +rmal sleep.                                                    
+      83 +                                                               
+      84 +**Result:** with 2 workers, the stress test finished with 20/20
+         + OK on every run, and `KEYS *` was empty afterward (no orphans)
+         +.                                                              
+      85 +                                                               
+      86  ## 6. Stress test fix
+      87  
+      88  **Bug:** each request thread is a **daemon** thread, and Python
+           kills daemon threads as soon as the main thread ends. The orig
+          inal code tried to keep the program alive with `time.sleep(300)
+          `, which is only a guess. When I removed it, the loop started a
+          ll 20 threads in about 1 s and the program exited before any re
+          sponse came back, so nothing printed. The server still did all 
+          20 classifications and sent them to clients that no longer exis
+          ted. A fixed sleep wastes time when requests are fast, and kill
+          s them anyway when they take longer than 300 s.
+
+● The fix works, and I checked your code: lpop(...) or [] on line 31, and
+  SLEEP_COUNT = 0.2. I wrote up the bug, the evidence, the fix and the busy-loop
+  catch in submission_notes.md
+  (26-11-02%20redis%20concurrency/submission_notes.md#L60).
+
+  That's the hardest part of the project done, and you have your best aha
+  moments for the learning log.
+
+  ---
+
+  Step 5: The rest of Deliverable 4 (~15 min)
+
+  These three questions are about reasoning, not code. Answer each in a sentence
+  or two, in your own words. I'll fill in gaps and add them to the notes.
+
+  Q1. Are multiple web servers safe to run?
+  Hint: what does the web server share with other web servers? Look at which
+  Redis commands it uses (RPUSH, GET, DEL) and which keys it touches. Can two
+  web servers step on each other the way the two workers did?
+
+  Q2. Will they ever generate conflicting UUIDs?
+  Hint: the code uses uuid.uuid4(), which is 122 random bits. Give a rough sense
+  of how many IDs you'd need to generate before a collision becomes likely.
+  "Never" isn't quite right. Look up the birthday problem.
+
+  Q3. Will subscribing to notifications scale or conflict across multiple web
+  servers? This one is about Deliverable 5's design, so think ahead.
+  - Each waiting request subscribes to its own key (__keyspace@0__:<uuid>). Can
+    web server #1 receive web server #2's notification by mistake?
+  - For scaling: Redis publishes an event for every key change, and the sample
+    code uses psubscribe, which matches by pattern. With 10,000 requests waiting
+    at once, what does Redis have to do every time any key changes?
+
+  Q4. A worker crashes after LPOP but before SET. The work is lost. How would
+  you prevent that?
+  Hint: read the "Going Further: Reliable Queues" section at the bottom of
+  readme.md (26-11-02%20redis%20concurrency/readme.md#L172) (LMOVE). Also think
+  about the duplicate work you saw earlier. If a job gets retried and runs
+  twice, is that harmful here? Why or why not?
+
+> <ide_opened_file>The user opened the file
+  c:\Users\ethan\Documents\GitHub\CS-452 Database\26-11-02 redis
+  concurrency\run_web_server.py in the IDE. This may or may not be related to
+  the current task.</ide_opened_file>
+
+> 1. Yes, all its doing is pushing item to the sb queue. SO it multiple web
+  serves are pushing to a queue, ther eis no problem.
+  2. no, uuid is astronomically huge so it would take a considerable amount of
+  traffic
+  3. i dont think notificaitons will cause issues with increased scale
+  4. Cna the redis serve have a secondary data structure that holds all the
+  items that are currewntly being worked on? SO right before pop they are
+  copied into the "being worked on" list then they are popped from the queue
+  and then when they are done they are removed form the working on list. And if
+  no porgress has happned on the working onn lists after an arbitary amount of
+  time, they are reinserted back into the real work queue and another worker
+  can use them? Would that work? or whats the best wat to do that?
+
+● Q1, Q2 and Q4 are on the right track. On Q3 I'm going to push back, because
+  "no conflicts" and "scales" are two different claims.
+
+  Q1. Multiple web servers: correct, with one thing to add
+
+  RPUSH is atomic, so many servers can push without problems. The other half of
+  your answer is that each request only ever runs GET and DEL on its own UUID
+  key. Web servers share nothing except Redis, and they never touch each other's
+  keys, so there's no read-then-act gap like the one the workers had.
+
+  One practical note: to actually run several, you'd put them on different ports
+  behind a load balancer.
+
+  Q2. UUIDs: correct, here are the numbers
+
+  - 2¹²² ≈ 5.3 × 10³⁶ possible IDs.
+  - By the birthday problem, you'd need about 2.7 × 10¹⁸ IDs before there's a
+    50% chance of even one collision. At a billion requests per second, that
+    takes about 86 years.
+  - The realistic risk is a bad random source, for example cloned VMs starting
+    with the same seed. uuid4() uses the operating system's secure random
+    generator (os.urandom), so that isn't a concern here.
+
+  Q3. Notifications: right about conflicts, wrong about scaling
+
+  Conflicts: there aren't any. Each request subscribes to a channel named after
+  its own UUID, so server #1 never receives server #2's event.
+
+  Scaling has real costs:
+  1. KEA turns on events for every change to every key. Each RPUSH, LPOP, SET
+     and DEL publishes events, including all the queue traffic, even though
+     nobody cares about most of them.
+  2. psubscribe matches by pattern. For every event, Redis checks it against
+     every pattern subscription. With 10,000 waiting requests, that's 10,000
+     pattern checks for each key change: O(events × subscribers). Plain
+     SUBSCRIBE to an exact channel name is a hash lookup instead, which costs
+     about the same no matter how many subscribers there are.
+  3. There's one pub/sub connection per waiting request. 10,000 waiting requests
+     means 10,000 open connections. The better design is one subscriber
+     connection per web server, which hands each event to whichever request
+     thread is waiting for it.
+  4. Notifications are fire-and-forget. If a subscriber isn't connected at the
+     moment the event fires, the event is gone. This is the "missed
+     notification" question in Deliverable 5.
+
+  Q4. Crashed worker: that's the right design, with one fix
+
+  What you described is the standard reliable queue pattern. It has a flaw
+  you've already seen, though: "copy it to the working list, then pop it" is two
+  steps, so it has a gap just like LRANGE and LTRIM did. If the worker crashes
+  between the two steps, the item exists in both places.
+
+  The fix is again a single atomic command:
+  - Claim: LMOVE image_queue processing LEFT RIGHT moves the item to the
+    processing list in one atomic step.
+  - Acknowledge: after SET-ing the result, LREM processing 1 <item> removes it
+    from the processing list.
+  - Recover: a monitor process re-queues items that have been stuck too long. A
+    list doesn't record when an item arrived, so record the claim time too. The
+    usual way is a sorted set whose score is the timestamp, which lets the
+    monitor ask for everything older than 30 s in one query.
+  - What production systems use: Redis Streams with consumer groups have all of
+    this built in. XREADGROUP claims, XACK acknowledges, and XAUTOCLAIM takes
+    over messages that have been idle too long.
+
+  The trade-off: if the timeout is too short, a slow but still-running worker
+  has its job re-queued, and the job runs twice. That's called at-least-once
+  delivery. Here it's harmless, because classifying the same image twice gives
+  the same result written to the same key; the operation is idempotent. The
+  leftover duplicate result is what caused your orphan keys, and you'd fix that
+  with SET key value EX 60, so results delete themselves after 60 s.
+
+  The web server should also stop polling after a timeout, so the user gets an
+  error instead of a request that never ends.
+
+  I'll add these to the notes.
+
+● Update(26-11-02 redis concurrency\submission_notes.md)
+  ⎿  Added 33 lines
+       83  
+       84  **Result:** with 2 workers, the stress test finished with 20/2
+           0 OK on every run, and `KEYS *` was empty afterward (no orphan
+           s).
+       85  
+       86 +### Are multiple web servers safe?                            
+       87 +                                                              
+       88 +**Yes.** A web server only does two things in Redis:          
+       89 +- `RPUSH` onto the shared queue, which is a single atomic comm
+          +and, so concurrent pushes from many servers never conflict.   
+       90 +- `GET` and `DEL` on **its own** UUID key.                    
+       91 +                                                              
+       92 +Web servers share nothing with each other except Redis, and th
+          +ey never touch each other's keys, so there's no read-then-act 
+          +gap like the workers had. In practice they'd run on different 
+          +ports or machines behind a load balancer.                     
+       93 +                                                              
+       94 +### Will they generate conflicting UUIDs?                     
+       95 +                                                              
+       96 +Practically never. `uuid4()` has 122 random bits, so 2¹²² ≈ 5.
+          +3 × 10³⁶ possible values. By the birthday problem, you'd need 
+          +about **2.7 × 10¹⁸** IDs for a 50% chance of a single collisio
+          +n. That's about 86 years at a billion requests per second. The
+          + real risk would be a weak random source, but `uuid4()` uses t
+          +he operating system's secure random generator (`os.urandom`). 
+       97 +                                                              
+       98 +### Will subscribing to notifications scale or conflict?      
+       99 +                                                              
+      100 +**No conflicts.** Each waiting request subscribes to a channel
+          + named after its own UUID (`__keyspace@0__:<uuid>`), so one se
+          +rver never receives another server's event.                   
+      101 +                                                              
+      102 +**Scaling has costs:**                                        
+      103 +- `notify-keyspace-events KEA` publishes events for *every* ch
+          +ange to *every* key, including all the queue traffic.         
+      104 +- `psubscribe` is pattern matching. Redis checks every event a
+          +gainst every pattern subscriber, so the cost is O(events × wai
+          +ting requests). An exact `SUBSCRIBE` is a hash lookup, so its 
+          +cost stays about the same as subscribers grow.                
+      105 +- There's one pub/sub connection per waiting request. A better
+          + design is one subscriber connection per web server that hands
+          + each event to whichever request thread is waiting.           
+      106 +- Pub/sub is fire-and-forget. If a subscriber isn't connected 
+          +when the event fires, the event is lost.                      
+      107 +                                                              
+      108 +### A worker crashes after claiming an item: a recovery strate
+          +gy                                                            
+      109 +                                                              
+      110 +`LPOP` removes the item *before* the work is done, so a crash 
+          +loses it (**at-most-once** delivery). The fix is a **reliable 
+          +queue**:                                                      
+      111 +                                                              
+      112 +1. **Claim atomically:** `LMOVE image_queue processing LEFT RI
+          +GHT` moves the item to a `processing` list in one command. If 
+          +"copy, then pop" were two separate steps, it would have the sa
+          +me gap as the original bug.                                   
+      113 +2. **Acknowledge:** after `SET`-ing the result, `LREM processi
+          +ng 1 <item>`.                                                 
+      114 +3. **Recover:** a monitor process re-queues items that have be
+          +en in `processing` longer than a timeout. A list doesn't store
+          + timestamps, so track claim times in a sorted set (score = cla
+          +im time).                                                     
+      115 +4. **Production alternative:** Redis Streams with consumer gro
+          +ups have this built in (`XREADGROUP` claims, `XACK` acknowledg
+          +es, `XAUTOCLAIM` takes over idle messages).                   
+      116 +                                                              
+      117 +**Trade-off:** a too-short timeout re-queues a job from a slow
+          + but still-running worker, so the job runs twice (**at-least-o
+          +nce** delivery). That's safe here because classification is **
+          +idempotent**: the same image writes the same result to the sam
+          +e key. Leftover duplicate results can be cleaned up automatica
+          +lly with a TTL (`SET key value EX 60`). The web server should 
+          +also stop polling after a timeout and return an error instead 
+          +of hanging forever.                                           
+      118 +                                                              
+      119  ## 6. Stress test fix
+      120  
+      121  **Bug:** each request thread is a **daemon** thread, and Pytho
+           n kills daemon threads as soon as the main thread ends. The or
+           iginal code tried to keep the program alive with `time.sleep(3
+           00)`, which is only a guess. When I removed it, the loop start
+           ed all 20 threads in about 1 s and the program exited before a
+           ny response came back, so nothing printed. The server still di
+           d all 20 classifications and sent them to clients that no long
+           er existed. A fixed sleep wastes time when requests are fast, 
+           and kills them anyway when they take longer than 300 s.
+
+● I added all four answers to the notes, including the corrections. For your
+  learning log, the big idea is that the same race-condition shape keeps coming
+  back: "copy, then pop" has the same gap as "LRANGE, then LTRIM." The fix is
+  always one atomic command.
+
+  ---
+
+  Step 6: Deliverable 5, notifications instead of polling (~30 min)
+
+  Goal: replace the polling loop in run_web_server.py
+  (26-11-02%20redis%20concurrency/run_web_server.py) (the while True: with
+  db.get(k) and time.sleep) so the web server waits for Redis to tell it the
+  result is ready.
+
+  Your Redis already has notify-keyspace-events KEA turned on. You can check
+  with CONFIG GET notify-keyspace-events in redis-cli. Run CONFIG SET
+  notify-keyspace-events KEA anyway, since the readme asks you to.
+
+  Use the sample in the readme (readme.md line 106 onward
+  (26-11-02%20redis%20concurrency/readme.md#L106)) as your starting point.
+  Before you write anything, understand these four points:
+
+  1. Subscribe before RPUSH. If you subscribe after, a fast worker could SET the
+     result before you're listening, and you'd wait for an event that already
+     happened.
+  2. The first message is always the subscribe confirmation, not the event.
+     That's why the sample loops and checks for type == "pmessage".
+  3. The notification carries no data. It only says "a SET happened on this
+     key," so you still have to GET the result.
+  4. Handle the timeout case. If get_message(timeout=30) returns None, the
+     result might still be there because the notification was missed, or the
+     worker might have crashed. After the loop, GET the key once anyway. If it's
+     still None, return success: False instead of crashing on json.loads(None).
+
+  Optional (counts toward Q3): use p.subscribe(...) instead of
+  p.psubscribe(...). It's an exact channel name, so it's cheaper than pattern
+  matching. The message type then becomes "message" instead of "pmessage".
+
+  Test:
+  1. Restart the web server. You can leave the workers running.
+  2. Run python simple_request.py and watch the monitor. Compare it with the
+     first trace you pasted. You should see the 9 GETs replaced by SUBSCRIBE,
+     RPUSH, one GET, DEL, UNSUBSCRIBE.
+  3. Run python stress_test.py. Before, there was a wall of about 240 GETs. How
+     many are there now?
+
+  Paste your new predict() code and a piece of the monitor output.
+
+> walk me through setting up notifications
+
+● Before I give you code, I'll check that the subscribe pattern works with your
+  redis-py version. It connects using a newer protocol (RESP3), and I want to
+  confirm the message format.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+● That confirms it: first the subscribe confirmation, then a message with data
+  b'set' the moment the key was set (0.517 s, right after my 0.5 s timer).
+  Nothing ran while it waited.
+
+  Part 1: See notifications by hand (5 min)
+
+  Notifications are Redis's pub/sub (publish/subscribe) system pointed at your
+  own data. Once they're turned on, every time a key changes, Redis publishes a
+  small message on a channel named after that key. Anyone subscribed to that
+  channel gets the message right away.
+
+  Terminal X (the listener):
+  docker exec -it redis-cs452 redis-cli
+  CONFIG SET notify-keyspace-events KEA
+  CONFIG GET notify-keyspace-events
+  SUBSCRIBE __keyspace@0__:demo
+  KEA is three flags:
+  - K publishes keyspace events. The channel is named after the key
+    (__keyspace@0__:demo), and the message is the command that changed it (set).
+  - E publishes keyevent events, the reverse: the channel is named after the
+    command (__keyevent@0__:set), and the message is the key.
+  - A means all command types: strings, lists, deletes, and so on.
+
+  The @0 is database number 0, which is the REDIS_DB = 0 in your settings.
+
+  After you run SUBSCRIBE, Terminal X is stuck listening. That's expected.
+
+  Terminal Y (open another redis-cli):
+  SET demo hello
+  SET other world
+  DEL demo
+  Watch Terminal X. You should see set and then del show up the moment you run
+  them, and nothing for other. That's the whole mechanism. The web server will
+  subscribe to its own UUID's channel, so it hears only about its own result.
+
+  Press Ctrl+C in X when you're done.
+
+  Part 2: Change the code (10 min)
+
+  Open run_web_server.py (26-11-02%20redis%20concurrency/run_web_server.py).
+  Inside predict(), select everything from k = str(uuid.uuid4()) down to and
+  including data["success"] = True. That covers the whole polling loop. Replace
+  it with this. The file indents with tabs, and this snippet does too:
+
+                          k = str(uuid.uuid4())
+                          image = helpers.base64_encode_image(image)
+                          d = {"id": k, "image": image}
+
+                          # subscribe to our result key BEFORE pushing the work,
+  so the
+                          # notification can't fire before we're listening
+                          p = db.pubsub()
+                          p.subscribe(f"__keyspace@{settings.REDIS_DB}__:{k}")
+                          db.rpush(settings.IMAGE_QUEUE, json.dumps(d))
+
+                          # block until Redis tells us our key changed (no
+  polling); the
+                          # first message is the subscribe confirmation, so skip
+  it
+                          while True:
+                                  message = p.get_message(timeout=30.0)
+                                  if message is None or message["type"] ==
+  "message":
+                                          break
+
+                          p.unsubscribe()
+                          p.close()
+
+                          # the notification carries no data, so fetch the
+  result; this
+                          # also catches a result whose notification we missed
+                          output = db.get(k)
+                          if output is not None:
+                                  data["predictions"] =
+  json.loads(output.decode("utf-8"))
+                                  db.delete(k)
+                                  data["success"] = True
+
+  Here's how it maps to the four points from before:
+
+  Lines: p = db.pubsub() / p.subscribe(...)
+  What it does: Opens a listening connection and subscribes to this request's
+  key
+  channel. SUBSCRIBE matches the exact name, which is cheaper than the readme's
+   psubscribe pattern (your Q3 answer).
+  ────────────────────────────────────────
+  Lines: subscribe comes before rpush
+  What it does: If it came after, a fast worker could SET the result before
+  you're listening, and you'd wait 30 s for an event that already happened.
+  ────────────────────────────────────────
+  Lines: get_message(timeout=30.0)
+  What it does: Waits inside the network call. No CPU use and no Redis commands
+  until a message arrives or 30 s pass.
+  ────────────────────────────────────────
+  Lines: type == "message" check
+  What it does: The first message is the subscribe confirmation, which isn't the
+
+  event, so the loop skips it.
+  ────────────────────────────────────────
+  Lines: db.get(k) after the loop
+  What it does: The notification only says "set happened," so you still have to
+  fetch the data. It's also a safety net: if the notification was missed, this
+  one GET still finds the result.
+  ────────────────────────────────────────
+  Lines: if output is not None
+  What it does: If 30 s pass and there's still no result (for example, the
+  worker
+  crashed), the request returns success: false instead of hanging forever like
+  the lost requests in Deliverable 4.
+
+  Part 3: Test it and compare
+
+  1. Restart the web server (Ctrl+C, then python run_web_server.py). The workers
+     can keep running.
+  2. Run python simple_request.py and watch the monitor. Compare it with your
+     very first trace, which had 9 GETs in a row.
+  3. Run python stress_test.py. Before, it produced about 240 GETs. Count them
+     now.
+
+  Paste a piece of the monitor output from step 2.
+
+> <ide_opened_file>The user opened the file
+  c:\Users\ethan\Documents\GitHub\CS-452 Database\26-11-02 redis
+  concurrency\run_web_server.py in the IDE. This may or may not be related to
+  the current task.</ide_opened_file>
+
+> this was the simple:
+  1793681042.343812 [0 172.17.0.1:56218] "LPOP" "image_queue" "32"
+  1793681042.343833 [0 172.17.0.1:43316] "LPOP" "image_queue" "32"
+  1793681042.585871 [0 172.17.0.1:40950] "HELLO" "3"
+  1793681042.588745 [0 172.17.0.1:40950] "CLIENT" "SETINFO" "LIB-NAME"
+  "redis-py"
+  1793681042.589762 [0 172.17.0.1:40950] "CLIENT" "SETINFO" "LIB-VER" "8.1.0"
+  1793681042.591100 [0 172.17.0.1:40950] "SUBSCRIBE"
+  "__keyspace@0__:eb7254cd-c24f-4cc0-a8f8-2614a091c8b9"
+  1793681042.592013 [0 172.17.0.1:43316] "LPOP" "image_queue" "32"
+  1793681042.592538 [0 172.17.0.1:56218] "LPOP" "image_queue" "32"
+  1793681042.596787 [0 172.17.0.1:40956] "HELLO" "3"
+  1793681042.598992 [0 172.17.0.1:40956] "CLIENT" "SETINFO" "LIB-NAME"
+  "redis-py"
+  1793681042.599782 [0 172.17.0.1:40956] "CLIENT" "SETINFO" "LIB-VER" "8.1.0"
+  1793681042.663844 [0 172.17.0.1:40956] "RPUSH" "image_queue" "{\"id\":
+  \"eb7254cd-c24f-4cc0-a8f8-2614a091c8b9\", \"image\":
+  \"Ox+aQk7iKEJcj7pBOx+cQk7iLEJcj8JBOx+iQk7iOEJcj9pBOx+mQk7iQEJcj+pBOx+cQk7iNE
+  1793681042.841129 [0 172.17.0.1:43316] "LPOP" "image_queue" "32"
+  1793681042.842332 [0 172.17.0.1:56218] "LPOP" "image_queue" "32"
+  1793681043.090830 [0 172.17.0.1:56218] "LPOP" "image_queue" "32"
+  1793681043.096372 [0 172.17.0.1:43316] "SET"
+  "eb7254cd-c24f-4cc0-a8f8-2614a091c8b9" "[{\"label\": \"church\",
+  \"probability\": 0.41362300515174866}, {\"label\": \"castle\",
+  \"probability\": 0.39298868
+  1793681043.098000 [0 172.17.0.1:40950] "UNSUBSCRIBE"
+  1793681043.102151 [0 172.17.0.1:40960] "HELLO" "3"
+  1793681043.104751 [0 172.17.0.1:40960] "CLIENT" "SETINFO" "LIB-NAME"
+  "redis-py"
+  1793681043.105919 [0 172.17.0.1:40960] "CLIENT" "SETINFO" "LIB-VER" "8.1.0"
+  1793681043.107410 [0 172.17.0.1:40960] "GET"
+  "eb7254cd-c24f-4cc0-a8f8-2614a091c8b9"
+  1793681043.108894 [0 172.17.0.1:40960] "DEL"
+  "eb7254cd-c24f-4cc0-a8f8-2614a091c8b9"
+  1793681043.339005 [0 172.17.0.1:56218] "LPOP" "image_queue" "32"
+  1793681043.345073 [0 172.17.0.1:43316] "LPOP" "image_queue" "32"
+  1793681043.588081 [0 172.17.0.1:56218] "LPOP" "image_queue" "32"
+  1793681043.593203 [0 172.17.0.1:43316] "LPOP" "image_queue" "32"
+  1793681043.836849 [0 172.17.0.1:56218] "LPOP" "image_queue" "32"
+  1793681043.841448 [0 172.17.0.1:43316] "LPOP" "image_queue" "32"
+  1793681044.085826 [0 172.17.0.1:56218] "LPOP" "image_queue" "32"
+  1793681044.089569 [0 172.17.0.1:43316] "LPOP" "image_queue" "32"
+  1793681044.334280 [0 172.17.0.1:56218] "LPOP" "image_queue" "32"
+  1793681044.337659 [0 172.17.0.1:43316] "LPOP" "image_queue" "32"
+  1793681044.582783 [0 172.
+  ──── (215 lines hidden) ─────────────────────────────────────────────────────
+   "SUBSCRIBE" "__keyspace@0__:b2badb91-310f-4706-9de5-91a4faecceaa"
+  1793681094.001766 [0 172.17.0.1:43316] "SET"
+  "6b323226-1bfd-4ae0-89f9-699087f9b4aa" "[{\"label\": \"beagle\",
+  \"probability\": 0.8606592416763306}, {\"label\": \"bluetick\",
+  \"probability\": 0.0651282
+  1793681094.002677 [0 172.17.0.1:37510] "UNSUBSCRIBE"
+  1793681094.006334 [0 172.17.0.1:57776] "HELLO" "3"
+  1793681094.008125 [0 172.17.0.1:57776] "CLIENT" "SETINFO" "LIB-NAME"
+  "redis-py"
+  1793681094.009247 [0 172.17.0.1:57776] "CLIENT" "SETINFO" "LIB-VER" "8.1.0"
+  1793681094.010519 [0 172.17.0.1:57776] "GET"
+  "6b323226-1bfd-4ae0-89f9-699087f9b4aa"
+  1793681094.012070 [0 172.17.0.1:57776] "DEL"
+  "6b323226-1bfd-4ae0-89f9-699087f9b4aa"
+  1793681094.037196 [0 172.17.0.1:57760] "RPUSH" "image_queue" "{\"id\":
+  \"b2badb91-310f-4706-9de5-91a4faecceaa\", \"image\":
+  \"7HyAQZzEsUGuRz1Cdj4cQk7iPELXo4RC7HzYQU7iCEKuRz1C7HyAQZzEmUGuRzlC7HyYQZzEqU
+  1793681094.123432 [0 172.17.0.1:56218] "LPOP" "image_queue" "32"
+  1793681094.243864 [0 172.17.0.1:56218] "SET"
+  "b2badb91-310f-4706-9de5-91a4faecceaa" "[{\"label\": \"beagle\",
+  \"probability\": 0.8606592416763306}, {\"label\": \"bluetick\",
+  \"probability\": 0.0651282
+  1793681094.245005 [0 172.17.0.1:57770] "UNSUBSCRIBE"
+  1793681094.248044 [0 172.17.0.1:57788] "HELLO" "3"
+  1793681094.250024 [0 172.17.0.1:57788] "CLIENT" "SETINFO" "LIB-NAME"
+  "redis-py"
+  1793681094.250865 [0 172.17.0.1:43316] "LPOP" "image_queue" "32"
+  1793681094.251038 [0 172.17.0.1:57788] "CLIENT" "SETINFO" "LIB-VER" "8.1.0"
+  1793681094.252116 [0 172.17.0.1:57788] "GET"
+  "b2badb91-310f-4706-9de5-91a4faecceaa"
+  1793681094.253149 [0 172.17.0.1:57788] "DEL"
+  "b2badb91-310f-4706-9de5-91a4faecceaa"
+  1793681094.493268 [0 172.17.0.1:56218] "LPOP" "image_queue" "32"
+  1793681094.500057 [0 172.17.0.1:43316] "LPOP" "image_queue" "32"
+  1793681094.743342 [0 172.17.0.1:56218] "LPOP" "image_queue" "32"
+  1793681094.749315 [0 172.17.0.1:43316] "LPOP" "image_queue" "32"
+  1793681094.993725 [0 172.17.0.1:56218] "LPOP" "image_queue" "32"
+  1793681094.998424 [0 172.17.0.1:43316] "LPOP" "image_queue" "32"
+  1793681095.242933 [0 172.17.0.1:56218] "LPOP" "image_queue" "32"
+  1793681095.247291 [0 172.17.0.1:43316] "LPOP" "image_queue" "32"
+  1793681095.492085 [0 172.17.0.1:56218] "LPOP" "image_queue" "32"
+  1793681095.496339 [0 172.17.0.1:43316] "LPOP" "image_queue" "32"
+  1793681095.741477 [0 172.17.0.1:56218] "LPOP" "image_queue" "32"
+  1793681095.745678 [0 172.17.0.1:43316] "LPOP" "image_queue" "32"
+  1793681095.990925 [0 172.17.0.1:56218] "LPOP" "image_queue" "32"
+
+● Before I write this up, I'll check the code you actually pasted.
+
+  Read 1 file (ctrl+o to expand)
+
+● Update(26-11-02 redis concurrency\submission_notes.md)
+  ⎿  Added 65 lines
+      116  
+      117  **Trade-off:** a too-short timeout re-queues a job from a slow
+            but still-running worker, so the job runs twice (**at-least-o
+           nce** delivery). That's safe here because classification is **
+           idempotent**: the same image writes the same result to the sam
+           e key. Leftover duplicate results can be cleaned up automatica
+           lly with a TTL (`SET key value EX 60`). The web server should 
+           also stop polling after a timeout and return an error instead 
+           of hanging forever.
+      118  
+      119 +## 5. Reducing polling overhead with keyspace notifications   
+      120 +                                                              
+      121 +Enabled with `CONFIG SET notify-keyspace-events KEA`:         
+      122 +- **K** = keyspace events: the channel is named after the key,
+          + and the message is the command that changed it.              
+      123 +- **E** = keyevent events: the channel is named after the comm
+          +and, and the message is the key.                              
+      124 +- **A** = all command types.                                  
+      125 +                                                              
+      126 +Instead of running `GET <uuid>` every 0.25 s, the web server s
+          +ubscribes to `__keyspace@0__:<uuid>` and waits inside `get_mes
+          +sage()` until Redis pushes a `set` event.                     
+      127 +                                                              
+      128 +```python                                                     
+      129 +# subscribe BEFORE pushing the work, so the notification can't
+          + fire before we're listening                                  
+      130 +p = db.pubsub()                                               
+      131 +p.subscribe(f"__keyspace@{settings.REDIS_DB}__:{k}")          
+      132 +db.rpush(settings.IMAGE_QUEUE, json.dumps(d))                 
+      133 +                                                              
+      134 +# block until Redis tells us our key changed; the first messag
+          +e is the subscribe confirmation                               
+      135 +while True:                                                   
+      136 +    message = p.get_message(timeout=30.0)                     
+      137 +    if message is None or message["type"] == "message":       
+      138 +        break                                                 
+      139 +                                                              
+      140 +p.unsubscribe()                                               
+      141 +p.close()                                                     
+      142 +                                                              
+      143 +# the notification carries no data, so fetch the result; this 
+          +also catches a missed notification                            
+      144 +output = db.get(k)                                            
+      145 +if output is not None:                                        
+      146 +    data["predictions"] = json.loads(output.decode("utf-8"))  
+      147 +    db.delete(k)                                              
+      148 +    data["success"] = True                                    
+      149 +```                                                           
+      150 +                                                              
+      151 +- I used `SUBSCRIBE` (exact channel name, a hash lookup) inste
+          +ad of the readme's `PSUBSCRIBE` (pattern), because Redis has t
+          +o check every event against every pattern subscriber.         
+      152 +- The 30 s timeout means a request whose worker crashed return
+          +s `success: false` instead of hanging forever.                
+      153 +                                                              
+      154 +### Results: before vs. after                                 
+      155 +                                                              
+      156 +| | Polling | Notifications |                                 
+      157 +|---|---|---|                                                 
+      158 +| Web server commands per request | `RPUSH`, `GET` × (wait / 0
+          +.25 s), `DEL` | `SUBSCRIBE`, `RPUSH`, `UNSUBSCRIBE`, **one** `
+          +GET`, `DEL` |                                                 
+      159 +| `simple_request.py` | 9 `GET`s that returned nothing | 0 |  
+      160 +| Stress test, 20 requests | ~240 `GET`s that returned nothing
+          + | 0 (one `GET` per request, always a hit) |                  
+      161 +| Delay from worker `SET` to the web server noticing | up to 2
+          +50 ms (170 ms measured) | ~1–2 ms (`SET` 043.0964 → `UNSUBSCRI
+          +BE` 043.0980) |                                               
+      162 +| Idle cost | 0 (waiting threads are blocked in `sleep`) | 0 (
+          +waiting threads are blocked in the socket) |                  
+      163 +                                                              
+      164 +```                                                           
+      165 +043.0964  worker  SET eb7254cd… [church, castle…]             
+      166 +043.0980  web     UNSUBSCRIBE                   ← notified 1.6
+          + ms later                                                     
+      167 +043.1074  web     GET eb7254cd…                 ← one GET, alw
+          +ays a hit                                                     
+      168 +043.1089  web     DEL eb7254cd…                               
+      169 +```                                                           
+      170 +                                                              
+      171 +The waiting thread is blocked inside a socket read, so it uses
+          + no CPU and sends no commands. The cost of waiting no longer g
+          +rows with how long the job takes.                             
+      172 +                                                              
+      173 +**What's still left (from the trace):**                       
+      174 +- **The workers still poll:** 2 workers × 4 `LPOP`s a second, 
+          +forever. The fix is `BLPOP`, a blocking pop that waits inside 
+          +Redis until an item arrives.                                  
+      175 +- **One pub/sub connection per request:** each request's `p.cl
+          +ose()` drops a connection, so the next request opens a new one
+          + (`HELLO` and `CLIENT SETINFO` every time). At scale, one long
+          +-lived subscriber per web server that hands each event to the 
+          +right waiting thread would avoid this.                        
+      176 +                                                              
+      177 +### What if the notification is missed, or the worker crashes?
+      178 +                                                              
+      179 +Pub/sub is **fire-and-forget**: Redis doesn't store events, so
+          + if nobody is subscribed when one fires, it's gone.           
+      180 +- **Subscribing before the push** removes the main way to miss
+          + one.                                                         
+      181 +- **If it's missed anyway** (for example, a dropped connection
+          +), the `GET` after the 30 s timeout still finds the result. A 
+          +missed notification costs latency, not correctness, because th
+          +e data lives in a key, not in the message.                    
+      182 +- **If the worker crashed**, no result ever arrives. The reque
+          +st times out with `success: false` instead of hanging, but the
+          + work itself is lost. To make sure no work is lost: use the re
+          +liable queue from Deliverable 4 (`LMOVE` to `processing`, ackn
+          +owledge with `LREM`, re-queue stale items), and have the web s
+          +erver retry or resubmit after a timeout. Because classificatio
+          +n is idempotent, running a job twice is safe.                 
+      183 +                                                              
+      184  ## 6. Stress test fix
+      185  
+      186  **Bug:** each request thread is a **daemon** thread, and Pytho
+           n kills daemon threads as soon as the main thread ends. The or
+           iginal code tried to keep the program alive with `time.sleep(3
+           00)`, which is only a guess. When I removed it, the loop start
+           ed all 20 threads in about 1 s and the program exited before a
+           ny response came back, so nothing printed. The server still di
+           d all 20 classifications and sent them to clients that no long
+           er existed. A fixed sleep wastes time when requests are fast, 
+           and kills them anyway when they take longer than 300 s.
+
+● Notifications work. Your trace shows exactly what we expected:
+
+  043.0964  worker  SET eb7254cd…      ← result written
+  043.0980  web     UNSUBSCRIBE        ← notified 1.6 ms later
+  043.1074  web     GET  → hit         ← one GET, not 9
+
+  - Wasted GETs: 9 → 0 for one request, and about 240 → 0 in the stress test.
+    Every request now does exactly SUBSCRIBE, RPUSH, UNSUBSCRIBE, one GET, DEL.
+  - Speed: with polling, the web server noticed the result up to 250 ms late
+    (170 ms in your first trace). Now it notices in about 1–2 ms.
+
+  Two leftovers in the trace that are worth mentioning in your write-up:
+  1. The workers still poll. The LPOP, LPOP, LPOP… lines at the bottom are 2
+     workers × 4 a second, forever. You moved the web server from polling to
+     push, but not the workers. BLPOP would fix that.
+  2. There's a HELLO handshake before every request. p.close() drops the pub/sub
+     connection, so each request opens a new one. That's the "one connection
+     per waiting request" scaling cost from your Q3 answer, and now you can see
+     it in the log.
+
+  I added Deliverable 5 to the notes, with the code, a before/after table, the
+  trace, and the missed-notification answer. The short version of that answer:
+  the result lives in a key, not in the message, so a missed notification only
+  costs you the 30 s timeout. The one GET after the timeout still finds the
+  result.
+
+  ---
+
+  Step 7: Deliverable 7, unified logging (~20 min)
+
+  I recommend a Redis logger. Every process (the web server and both workers)
+  writes to one Redis list, so you can read a single timeline of everything in
+  one place. It also reuses everything you've learned today.
+
+  Create redis_logger.py with one function, log(action). It should:
+  1. Build an entry with:
+     - Server name: socket.gethostname() plus the process ID (os.getpid()). Both
+       workers run on the same machine, so the hostname alone can't tell them
+       apart.
+     - Script name: os.path.basename(sys.argv[0]), e.g. run_model_server.py.
+     - Timestamp: datetime.now().isoformat(timespec="milliseconds").
+     - Action: whatever string was passed in.
+  2. print it, so it still shows in that process's terminal.
+  3. RPUSH it to a logs key as JSON.
+  4. Bonus, one line: cap the list with LTRIM logs -1000 -1 so it can't grow
+     forever. That's LTRIM used correctly this time, on a list only this code
+     appends to, and it doesn't matter which entries get dropped.
+  5. Wrap the Redis write in try/except, so a logging failure never crashes the
+     server.
+
+  Then call it at a few useful points:
+  - Web server: queued <uuid> after RPUSH, and done <uuid> or timeout <uuid> at
+    the end.
+  - Worker: model loaded at startup, batch of N when it pops a batch, and set
+    <uuid> after each result.
+
+  Test: run the stress test with both workers, then in redis-cli:
+  LRANGE logs 0 -1
+  You should see one interleaved timeline showing which worker processed which
+  request.
+
+  Write redis_logger.py and paste it here for review before you add the calls.
+
+> help me to werite the logger
+
+● I'll write the logger and a small viewer script, test them, and then show you
+  where to add the calls.
+
+● Write(26-11-02 redis concurrency\redis_logger.py)
+  ⎿  Wrote 44 lines to 26-11-02 redis concurrency\redis_logger.py
+      1 # unified logger: every process (web server, workers, clients) pu
+        shes its
+      2 # entries onto one Redis list, so the whole system reads as one t
+        imeline
+      3 import datetime
+      4 import json
+      5 import os
+      6 import socket
+      7 import sys
+      8
+     … +36 lines (ctrl+o to expand)
+
+● Write(26-11-02 redis concurrency\view_logs.py)
+  ⎿  Wrote 16 lines to 26-11-02 redis concurrency\view_logs.py
+       1 # USAGE
+       2 # python view_logs.py            (whole timeline)
+       3 # python view_logs.py <text>     (only entries containing <text>
+         , e.g. a UUID)
+       4
+       5 import json
+       6 import sys
+       7
+       8 from redis_logger import db, LOG_KEY
+       9
+     … +7 lines (ctrl+o to expand)
+
+  Ran 1 shell command (ctrl+o to expand)
+
+● Both files work. The test shows -c as the script name only because I ran it
+  with python -c. Your real scripts will show run_model_server.py and so on. I
+  cleared the test entries afterward.
+
+  How redis_logger.py (26-11-02%20redis%20concurrency/redis_logger.py) works
+
+  Piece: SERVER = hostname:PID
+  Why it's there: Both workers run on your laptop, so the hostname alone would
+  make them look identical. The process ID tells them apart. On real separate
+  machines, the hostname would differ too.
+  ────────────────────────────────────────
+  Piece: SCRIPT = basename(sys.argv[0])
+  Why it's there: The main script that started the process, even when log() is
+  called from inside an imported module.
+  ────────────────────────────────────────
+  Piece: sys.stdout.write(... + "\n")
+  Why it's there: One write per entry. print() writes the text and the newline
+  separately, so with many threads you'd get the jumbled output you saw in the
+  stress test.
+  ────────────────────────────────────────
+  Piece: pipeline() with rpush + ltrim
+  Why it's there: Sends both commands in one network round trip. redis-py also
+  wraps a pipeline in MULTI/EXEC by default, so the two commands run as one
+  atomic unit. That's the "make several commands atomic together" tool I
+  mentioned earlier.
+  ────────────────────────────────────────
+  Piece: LTRIM logs -1000 -1
+  Why it's there: Keeps the newest 1000 entries. This use of LTRIM is safe,
+  unlike the worker's: dropping the oldest log entries is exactly what we want,
+   whoever's entries they are.
+  ────────────────────────────────────────
+  Piece: try / except RedisError
+  Why it's there: If Redis is down, the server keeps running and the entry still
+
+  prints to the terminal. Logging should never be the thing that crashes a
+  server.
+
+  view_logs.py (26-11-02%20redis%20concurrency/view_logs.py) prints the shared
+  timeline. python view_logs.py <uuid> shows one request's path across every
+  process. That's the basic idea behind distributed tracing, and it's the
+  feature to highlight in your write-up.
+
+  Your part: add the calls (~5 min)
+
+  run_web_server.py (26-11-02%20redis%20concurrency/run_web_server.py):
+  - With the imports at the top: from redis_logger import log
+  - Right after db.rpush(...): log(f"queued {k}")
+  - After the if output is not None: block, at the same indent level as the if:
+    log(f"done {k}" if data["success"] else f"timeout {k}")
+  - In __main__, next to the existing print: log("web server starting")
+
+  run_model_server.py (26-11-02%20redis%20concurrency/run_model_server.py):
+  - Import at the top: from redis_logger import log
+  - After print("* Model loaded"): log("model loaded")
+  - Inside if len(imageIDs) > 0:, before model.predict: log(f"batch of
+    {len(imageIDs)}")
+  - Right after db.set(imageID, ...): log(f"set {imageID}")
+
+  Remember that the files use tabs for indentation.
+
+  Test:
+  1. Restart all 3 servers: the web server and both workers.
+  2. Run python stress_test.py.
+  3. Run python view_logs.py to see the full timeline.
+  4. Copy any UUID from the output and run python view_logs.py <that-uuid> to
+     follow one request: queued (web) → set (which worker?) → done (web).
+
+  Paste the output of step 4 here.
+
+> <ide_opened_file>The user opened the file
+  c:\Users\ethan\Documents\GitHub\CS-452 Database\26-11-02 redis
+  concurrency\run_model_server.py in the IDE. This may or may not be related to
+  the current task.</ide_opened_file>
+
+> why isnt redis being foudn in the imports?
+  Ethan@LAPTOP-EQBGA00L MINGW64 ~/Documents/GitHub/CS-452 Database/26-11-02
+  redis concurrency (main)
+  $ python view_logs.py
+  Traceback (most recent call last):
+    File "C:\Users\ethan\Documents\GitHub\CS-452 Database\26-11-02 redis
+  concurrency\view_logs.py", line 8, in <module>
+      from redis_logger import db, LOG_KEY
+    File "C:\Users\ethan\Documents\GitHub\CS-452 Database\26-11-02 redis
+  concurrency\redis_logger.py", line 9, in <module>
+      import redis
+  ModuleNotFoundError: No module named 'redis'
+  (.venv)
+  Ethan@LAPTOP-EQBGA00L MINGW64 ~/Documents/GitHub/CS-452 Database/26-11-02
+  redis concurrency (main)
+  $
+
+  Ran 1 shell command (ctrl+o to expand)
+
+● The terminal is using the wrong virtual environment. Both projects name their
+  venv .venv, so the (.venv) in your prompt looks identical either way. I
+  checked both:
+  - The redis project's .venv has redis installed.
+  - The neo4j project's .venv doesn't, and that's the error you got.
+
+  That terminal is almost certainly running the neo4j venv. Your VS Code setup
+  activates it automatically in new terminals, as I noted at the start.
+
+  Fix it in that terminal:
+  deactivate
+  source .venv/Scripts/activate
+  which python
+  which python should end in .../26-11-02 redis
+  concurrency/.venv/Scripts/python. Then run python view_logs.py again.
+
+  To stop this from happening in new terminals, press Ctrl+Shift+P → Python:
+  Select Interpreter, and choose the one under 26-11-02 redis concurrency/.venv.
+
+  Also check the terminals running your servers. If any of them started under
+  the neo4j venv, they would have crashed with the same error.
+
+> ahhh that makes sense. Hree i got the output of the logs now:
+  than@LAPTOP-EQBGA00L MINGW64 ~/Documents/GitHub/CS-452 Database/26-11-02
+  redis concurrency (main)
+  $ python view_logs.py
+  2026-11-02T21:55:20.402  LAPTOP-EQBGA00L:4568       run_web_server.py    web
+  server starting
+  2026-11-02T21:55:29.676  LAPTOP-EQBGA00L:8348       run_model_server.py
+  model loaded
+  2026-11-02T21:56:08.175  LAPTOP-EQBGA00L:9456       run_model_server.py
+  model loaded
+  2026-11-02T21:56:24.793  LAPTOP-EQBGA00L:4568       run_web_server.py
+  queued 7f43ffc9-e360-4855-8bf2-19958dc0f00e
+  2026-11-02T21:56:24.862  LAPTOP-EQBGA00L:9456       run_model_server.py
+  batch of 1
+  2026-11-02T21:56:24.962  LAPTOP-EQBGA00L:4568       run_web_server.py
+  queued 1289cc75-d7be-4125-98a1-b7b56d5eed34
+  2026-11-02T21:56:25.092  LAPTOP-EQBGA00L:4568       run_web_server.py
+  queued e163366c-1716-4bfe-b7e5-b02feb9a3a6d
+  2026-11-02T21:56:25.186  LAPTOP-EQBGA00L:8348       run_model_server.py
+  batch of 2
+  2026-11-02T21:56:25.340  LAPTOP-EQBGA00L:4568       run_web_server.py
+  queued 0e7722af-988c-40ea-b1b5-d128fec2700b
+  2026-11-02T21:56:25.546  LAPTOP-EQBGA00L:4568       run_web_server.py
+  queued d1d48c4a-8508-4927-a760-b7eea2746819
+  2026-11-02T21:56:25.728  LAPTOP-EQBGA00L:4568       run_web_server.py
+  queued 14d096c7-0e5d-4823-9141-0c78e2a074af
+  2026-11-02T21:56:25.942  LAPTOP-EQBGA00L:4568       run_web_server.py
+  queued 128b6406-2bd5-40b7-90f0-f0d2efed205d
+  2026-11-02T21:56:26.128  LAPTOP-EQBGA00L:4568       run_web_server.py
+  queued 5b137b51-def3-4597-8cad-c4d059e8ae6c
+  2026-11-02T21:56:26.330  LAPTOP-EQBGA00L:4568       run_web_server.py
+  queued 99d86e68-255c-4133-ae39-7a54790a3445
+  2026-11-02T21:56:26.470  LAPTOP-EQBGA00L:9456       run_model_server.py  set
+  7f43ffc9-e360-4855-8bf2-19958dc0f00e
+  2026-11-02T21:56:26.482  LAPTOP-EQBGA00L:4568       run_web_server.py    done
+  7f43ffc9-e360-4855-8bf2-19958dc0f00e
+  2026-11-02T21:56:26.531  LAPTOP-EQBGA00L:4568       run_web_server.py
+  queued 8b5fdae2-f681-463f-939e-d5ed8c402961
+  2026-11-02T21:56:26.682  LAPTOP-EQBGA00L:4568       run_web_server.py
+  queued 5ee34315-b4b1-4fd5-98f2-920b5d928e36
+  2026-11-02T21:56:26.813  LAPTOP-EQBGA00L:9456       run_model_server.py
+  batch of 8
+  2026-11-02T21:56:26.866  LAPTOP-EQBGA00L:8348       run_model_server.py  set
+  1289cc75-d7be-4125-98a1-b7b56d5eed34
+  2026-11-02T21:56:26.869  LAPTOP-EQBGA00L:8348       run_model_server.py  set
+  e163366c-1716-4bfe-b7e5-b02feb9a3a6d
+  2026-11-02T21:56:26.881  LAPTOP-EQBGA00L:4568       run_web_server.py    done
+  1289cc75-d7be-4125-98a1-b7b56d5eed34
+  2026-11-02T21:56:26.884  LAPTOP-EQBGA00L:4568       run_web_server.py    done
+  e163366c-1716-4bfe-b7e5-b02feb9a3a6d
+  2026-11-02T21:56:26.942  LAPTOP-EQBGA00L:4568       run_web_server.py
+  queued 17ff812b-8aef-4476-8a84-5e7afdfb47c1
+  2026-11-02T21:56:27.129  LAPTOP-EQBGA00L:4568       run_web_server.py
+  queued affa4db2-5d70-4f79-887d-f69b6053d2a8
+  2026-11-02T21:56:27.144  LAPTOP-EQBGA00L:8348       run_model_server.py
+  batch of 2
+  2026-11-02T21:56:27.320  LAPTOP-EQBGA00L:8348       run_model_server.py  set
+  17ff812b-8aef-4476-8a84-5e7afdfb47c1
+  2026-11-02T21:56:27.323  LAPTOP-EQBGA00L:8348       run_model_server.py  set
+  affa4db2-5d70-4f79-887d-f69b6053d2a8
+  2026-11-02T21:56:27.333  LAPTOP-EQBGA00L:4568       run_web_server.py    done
+  17ff812b-8aef-4476-8a84-5e7afdfb47c1
+  2026-11-02T21:56:27.338  LAPTOP-EQBGA00L:4568       run_web_server.py    done
+  affa4db2-5d70-4f79-887d-f69b6053d2a8
+  2026-11-02T21:56:27.366  LAPTOP-EQBGA00L:4568       run_web_server.py
+  queued d43cdb77-85ab-4070-8171-3d1aff453dd9
+  2026-11-02T21:56:27.521  LAPTOP-EQBGA00L:4568       run_web_server.py
+  queued b63c12a0-c7bf-4346-b897-bd124f3c488c
+  2026-11-02T21:56:27.587  LAPTOP-EQBGA00L:8348       run_model_server.py
+  batch of 2
+  2026-11-02T21:56:27.710  LAPTOP-EQBGA00L:4568       run_web_server.py
+  queued 505cabd0-664e-40b0-b10c-ade0f73d308c
+  2026-11-02T21:56:27.775  LAPTOP-EQBGA00L:8348       run_model_server.py  set
+  d43cdb77-85ab-4070-8171-3d1aff453dd9
+  2026-11-02T21:56:27.779  LAPTOP-EQBGA00L:8348       run_model_server.py  set
+  b63c12a0-c7bf-4346-b897-bd124f3c488c
+  2026-11-02T21:56:27.787  LAPTOP-EQBGA00L:4568       run_web_server.py    done
+  d43cdb77-85ab-4070-8171-3d1aff453dd9
+  2026-11-02T21:56:27.791  LAPTOP-EQBGA00L:4568       run_web_server.py    done
+  b63c12a0-c7bf-4346-b897-bd124f3c488c
+  2026-11-02T21:56:27.937  LAPTOP-EQBGA00L:4568       run_web_server.py
+  queued 97daf787-990f-4419-b7b7-414496b7737b
+  2026-11-02T21:56:28.043  LAPTOP-EQBGA00L:8348       run_model_server.py
+  batch of 2
+  2026-11-02T21:56:28.150  LAPTOP-EQBGA00L:4568       run_web_server.py
+  queued 80393e6b-a2a7-43fa-aece-8b500f9c4ae9
+  2026-11-02T21:56:28.233  LAPTOP-EQBGA00L:8348       run_model_server.py  set
+  505cabd0-664e-40b0-b10c-ade0f73d308c
+  2026-11-02T21:56:28.236  LAPTOP-EQBGA00L:8348       run_model_server.py  set
+  97daf787-990f-4419-b7b7-414496b7737b
+  2026-11-02T21:56:28.246  LAPTOP-EQBGA00L:4568       run_web_server.py    done
+  97daf787-990f-4419-b7b7-414496b7737b
+  2026-11-02T21:56:28.269  LAPTOP-EQBGA00L:4568       run_web_server.py    done
+  505cabd0-664e-40b0-b10c-ade0f73d308c
+  2026-11-02T21:56:28.334  LAPTOP-EQBGA00L:4568       run_web_server.py
+  queued ca3651a4-9b2c-4903-b672-3577aaade823
+  2026-11-02T21:56:28.500  LAPTOP-EQBGA00L:8348       run_model_server.py
+  batch of 2
+  2026-11-02T21:56:28.536  LAPTOP-EQBGA00L:4568       run_web_server.py
+  queued 5751bcdb-b6cc-47eb-9d8d-c220b8a5b7d3
+  2026-11-02T21:56:28.678  LAPTOP-EQBGA00L:8348       run_model_server.py  set
+  80393e6b-a2a7-43fa-aece-8b500f9c4ae9
+  2026-11-02T21:56:28.681  LAPTOP-EQBGA00L:8348       run_model_server.py  set
+  ca3651a4-9b2c-4903-b672-3577aaade823
+  2026-11-02T21:56:28.689  LAPTOP-EQBGA00L:4568       run_web_server.py    done
+  80393e6b-a2a7-43fa-aece-8b500f9c4ae9
+  2026-11-02T21:56:28.723  LAPTOP-EQBGA00L:4568       run_web_server.py    done
+  ca3651a4-9b2c-4903-b672-3577aaade823
+  2026-11-02T21:56:28.943  LAPTOP-EQBGA00L:8348       run_model_server.py
+  batch of 1
+  2026-11-02T21:56:29.062  LAPTOP-EQBGA00L:9456       run_model_server.py  set
+  0e7722af-988c-40ea-b1b5-d128fec2700b
+  2026-11-02T21:56:29.067  LAPTOP-EQBGA00L:9456       run_model_server.py  set
+  d1d48c4a-8508-4927-a760-b7eea2746819
+  2026-11-02T21:56:29.071  LAPTOP-EQBGA00L:9456       run_model_server.py  set
+  14d096c7-0e5d-4823-9141-0c78e2a074af
+  2026-11-02T21:56:29.075  LAPTOP-EQBGA00L:9456       run_model_server.py  set
+  128b6406-2bd5-40b7-90f0-f0d2efed205d
+  2026-11-02T21:56:29.079  LAPTOP-EQBGA00L:4568       run_web_server.py    done
+  0e7722af-988c-40ea-b1b5-d128fec2700b
+  2026-11-02T21:56:29.079  LAPTOP-EQBGA00L:9456       run_model_server.py  set
+  5b137b51-def3-4597-8cad-c4d059e8ae6c
+  2026-11-02T21:56:29.082  LAPTOP-EQBGA00L:4568       run_web_server.py    done
+  d1d48c4a-8508-4927-a760-b7eea2746819
+  2026-11-02T21:56:29.083  LAPTOP-EQBGA00L:9456       run_model_server.py  set
+  99d86e68-255c-4133-ae39-7a54790a3445
+  2026-11-02T21:56:29.089  LAPTOP-EQBGA00L:9456       run_model_server.py  set
+  8b5fdae2-f681-463f-939e-d5ed8c402961
+  2026-11-02T21:56:29.094  LAPTOP-EQBGA00L:9456       run_model_server.py  set
+  5ee34315-b4b1-4fd5-98f2-920b5d928e36
+  2026-11-02T21:56:29.096  LAPTOP-EQBGA00L:4568       run_web_server.py    done
+  14d096c7-0e5d-4823-9141-0c78e2a074af
+  2026-11-02T21:56:29.101  LAPTOP-EQBGA00L:4568       run_web_server.py    done
+  5b137b51-def3-4597-8cad-c4d059e8ae6c
+  2026-11-02T21:56:29.108  LAPTOP-EQBGA00L:4568       run_web_server.py    done
+  99d86e68-255c-4133-ae39-7a54790a3445
+  2026-11-02T21:56:29.112  LAPTOP-EQBGA00L:4568       run_web_server.py    done
+  8b5fdae2-f681-463f-939e-d5ed8c402961
+  2026-11-02T21:56:29.100  LAPTOP-EQBGA00L:4568       run_web_server.py    done
+  128b6406-2bd5-40b7-90f0-f0d2efed205d
+  2026-11-02T21:56:29.125  LAPTOP-EQBGA00L:4568       run_web_server.py    done
+  5ee34315-b4b1-4fd5-98f2-920b5d928e36
+  2026-11-02T21:56:30.638  LAPTOP-EQBGA00L:8348       run_model_server.py  set
+  5751bcdb-b6cc-47eb-9d8d-c220b8a5b7d3
+  2026-11-02T21:56:30.648  LAPTOP-EQBGA00L:4568       run_web_server.py    done
+  5751bcdb-b6cc-47eb-9d8d-c220b8a5b7d3
+
+● Every request is accounted for: 20 queued, 20 done, and you can see which
+  worker handled each one. Before I write this up, I want to check how you
+  produced the PDF last time.
+
+  Searched for 1 pattern (ctrl+o to expand)
+
+● Update(26-11-02 redis concurrency\submission_notes.md)
+  ⎿  Added 41 lines
+      203  ```
+      204  
+      205  Result: all 20 threads returned OK, and `all done` printed las
+           t. Total time was about 3.2 s with one worker, from the first 
+           `RPUSH` to the last `DEL` in `MONITOR`.
+      206 +                                                              
+      207 +## 7. Unified logging: a Redis logger                         
+      208 +                                                              
+      209 +`redis_logger.py` gives every process the same `log(action)` f
+          +unction. Each entry is JSON with the **timestamp, server (host
+          +name:PID), main script name, and action**. It's printed to the
+          + process's own terminal and pushed onto one shared Redis list 
+          +called `logs`, so the web server and every worker write to a s
+          +ingle timeline.                                               
+      210 +                                                              
+      211 +```python                                                     
+      212 +SERVER = f"{socket.gethostname()}:{os.getpid()}"              
+      213 +SCRIPT = os.path.basename(sys.argv[0])                        
+      214 +                                                              
+      215 +def log(action):                                              
+      216 +  entry = {"time": datetime.datetime.now().isoformat(timespec=
+          +"milliseconds"),                                              
+      217 +    "server": SERVER, "script": SCRIPT, "action": action}     
+      218 +  sys.stdout.write("[{time}] {server} {script}: {action}\n".fo
+          +rmat(**entry))                                                
+      219 +  try:                                                        
+      220 +    pipe = db.pipeline()                                      
+      221 +    pipe.rpush(LOG_KEY, json.dumps(entry))                    
+      222 +    pipe.ltrim(LOG_KEY, -MAX_ENTRIES, -1)                     
+      223 +    pipe.execute()                                            
+      224 +  except redis.RedisError as e:                               
+      225 +    sys.stdout.write(f"[logger] could not write to Redis: {e}\
+          +n")                                                           
+      226 +```                                                           
+      227 +                                                              
+      228 +**Features:**                                                 
+      229 +- **hostname:PID.** Both workers run on one laptop, so the hos
+          +tname alone can't tell them apart (`LAPTOP-EQBGA00L:8348` vs `
+          +:9456`).                                                      
+      230 +- **One write per entry.** The stress test's `print()` calls p
+          +roduced jumbled output, because each `print` writes the text a
+          +nd the newline separately, and threads take turns in between. 
+      231 +- **Pipeline (`MULTI`/`EXEC`).** `RPUSH` and `LTRIM` go in one
+          + round trip and run atomically.                               
+      232 +- **Capped list.** `LTRIM logs -1000 -1` keeps only the newest
+          + 1000 entries. Unlike the worker bug, trimming by position is 
+          +*correct* here, because dropping the oldest entries is exactly
+          + what we want.                                                
+      233 +- **Never crashes the caller.** Redis errors are caught, and t
+          +he entry still prints locally.                                
+      234 +- **Tracing.** `python view_logs.py <uuid>` filters the timeli
+          +ne to one request as it crosses processes:                    
+      235 +                                                              
+      236 +```                                                           
+      237 +21:56:25.942  :4568  run_web_server.py    queued 128b6406…    
+      238 +21:56:26.813  :9456  run_model_server.py  batch of 8          
+      239 +21:56:29.075  :9456  run_model_server.py  set 128b6406…       
+      240 +21:56:29.100  :4568  run_web_server.py    done 128b6406…      
+      241 +```                                                           
+      242 +                                                              
+      243 +**What the log showed:**                                      
+      244 +- **20 queued, 20 done.** Both workers share the load with no 
+          +losses (since the `LPOP` fix).                                
+      245 +- **Batching has a latency cost.** Worker `:9456` grabbed a ba
+          +tch of 8 at 26.813 and didn't finish until 29.06. Meanwhile wo
+          +rker `:8348` finished four batches of 2 in about 0.2 s each. T
+          +he requests in the big batch waited about 2 s while a worker w
+          +as free. Also, each worker's *first* batch of a new size took 
+          +about 1.6–2.2 s and repeat sizes took about 0.2 s, which looks
+          + like the model warming up for each new input shape.          
+      246 +- **The log is not perfectly ordered.** `done 128b6406` (29.10
+          +0) is stored *after* `done 8b5fdae2` (29.112). The timestamp i
+          +s taken before the `RPUSH`, and another thread's push got ther
+          +e first. So the list is in **arrival order at Redis**, not eve
+          +nt order. Across real machines with slightly different clocks 
+          +this gets worse, which is why distributed systems use synchron
+          +ized clocks, or sort by timestamp, or use logical clocks.     
+
+● I've logged Deliverable 7 from the logger findings and will detail it shortly.
+  Now I'll move to the final deliverable—the visual explanation—building it as
+  a single HTML page with code snippets that explains the project and can be
+  printed to PDF.
+
+● Write(26-11-02 redis concurrency\submission.html)  ⎿  Wrote 418 lines to 26-11-02 redis concurrency\submission.html
+       1 <!doctype html>
+       2 <html lang="en">
+       3 <head>
+       4 <meta charset="utf-8">
+       5 <meta name="viewport" content="width=device-width, initial-scale
+         =1">
+       6 <title>Redis Work Queue</title>
+       7 <style>
+       8   :root {
+       9     --ink: #1d2433;
+     … +409 lines (ctrl+o to expand)
+
+● Now I'll render it with headless Chrome to check the diagrams.
+
+  Read 4 files, ran 2 shell commands (ctrl+o to expand)
+
+● The first part looks good. I'll fix the misaligned trace in section 2, then
+  check the rest of the page.
+
+● Update(26-11-02 redis concurrency\submission.html)
+  ⎿  Added 8 lines, removed 8 lines
+      162  
+      163  <h2>2. Web server ↔ worker communication</h2>
+      164  <p>The web server makes up a UUID, pushes the job, and keeps t
+           he HTTP request open until a result shows up under that UUID. 
+           Here is the original polling version, captured with <code>MONI
+           TOR</code>:</p>
+      165 -<pre>815.056  web     RPUSH image_queue {"id": "8e02…", "image
+          -": "…"}   hand off the work                                   
+      166 -815.066  web     GET 8e02…   → nil                            
+          -      start polling                                           
+      167 -815.085  worker  LRANGE image_queue 0 31                      
+          -      read up to 32 items                                     
+      168 -         web     GET 8e02… ×8, every 0.25 s, all nil          
+          -      still waiting                                           
+      169 -817.163  worker  SET 8e02… [{"label": "church", …}]           
+          -      write the result                                        
+      170 -817.165  worker  LTRIM image_queue 1 -1                       
+          -      remove the processed item                               
+      171 -817.333  web     GET 8e02… → result                           
+          -      found it                                                
+      172 -817.334  web     DEL 8e02…                                    
+          -      clean up</pre>                                          
+      165 +<pre>815.056  web     RPUSH image_queue {id, image}       hand
+          + off the work                                                 
+      166 +815.066  web     GET 8e02 → nil                      start pol
+          +ling                                                          
+      167 +815.085  worker  LRANGE image_queue 0 31             read up t
+          +o 32 items                                                    
+      168 +         web     GET 8e02 ×8, all nil                still wai
+          +ting (every 0.25 s)                                           
+      169 +817.163  worker  SET 8e02 [{"label": "church" …}]    write the
+          + result                                                       
+      170 +817.165  worker  LTRIM image_queue 1 -1              remove th
+          +e processed item                                              
+      171 +817.333  web     GET 8e02 → result                   found it 
+      172 +817.334  web     DEL 8e02                            clean up<
+          +/pre>                                                         
+      173  <p>Both sides poll. The worker runs <code>LRANGE</code> every 
+           0.25 s even when idle (about 14,400 empty commands an hour), a
+           nd each waiting request runs <code>GET</code> 4 times a second
+           . The Flask handler thread blocks in that loop, so the HTTP co
+           nnection stays open until the result arrives.</p>
+      174  
+      175  <h2>3. Model output for <code>castle_image.jpg</code></h2>
+
+  Read 3 files, ran 1 shell command (ctrl+o to expand)
+
+● Two small fixes: a long line in the logger code that would get cut off in the
+  PDF, and the removed sleep(300) line needs a label.
+
+● Update(26-11-02 redis concurrency\submission.html)
+  ⎿  Added 2 lines, removed 1 line
+      391  def log(action):
+      392    entry = {"time": datetime.datetime.now().isoformat(timespec=
+           "milliseconds"),
+      393      "server": SERVER, "script": SCRIPT, "action": action}
+      394 -  sys.stdout.write("[{time}] {server} {script}: {action}\n".fo
+          -rmat(**entry))  # one write = no interleaving                 
+      394 +  # one write per entry, so lines from concurrent threads can'
+          +t interleave                                                  
+      395 +  sys.stdout.write("[{time}] {server} {script}: {action}\n".fo
+          +rmat(**entry))                                                
+      396    try:
+      397      pipe = db.pipeline()                       # one round tri
+           p, MULTI/EXEC
+      398      pipe.rpush(LOG_KEY, json.dumps(entry))
+
+● Update(26-11-02 redis concurrency\submission.html)
+  ⎿  Added 1 line, removed 1 line
+      380  
+      381  <span class="add">for t in threads:
+      382    t.join()</span>
+      383 -<span class="del">time.sleep(300)</span></code></pre>         
+      383 +<span class="del">time.sleep(300)      # removed</span></code>
+          +</pre>                                                        
+      384  <p>Joining every thread also made the Deliverable 4 bug visibl
+           e. Without <code>join()</code>, the lost requests would simply
+            have disappeared when the program exited.</p>
+      385  
+      386  <h2>7. Unified logging: a Redis logger</h2>
+
+● The visual explanation is built: submission.html
+  (26-11-02%20redis%20concurrency/submission.html). I rendered it in headless
+  Chrome and checked every section.
+
+  The two aha moments from your logger output (both are in the notes and on the
+  page):
+  1. The log is in arrival order, not event order. done 128b6406 is stamped
+     29.100, but it's stored after an entry stamped 29.112. Each process takes
+     its timestamp before it RPUSHes, so another thread's push can get there
+     first. With multiple machines whose clocks disagree slightly, this gets
+     worse. That's why distributed systems need synchronized clocks or ordering
+     based on something other than the clock.
+  2. Batching has a latency cost. Worker :9456 grabbed a batch of 8 and needed
+     about 2.2 s. Meanwhile worker :8348 finished four batches of 2 in about 0.2
+     s each. Those 8 requests sat waiting while a worker was free. Bigger
+     batches use the model more efficiently, but they make the waiting less
+     fair.
+
+  What's on the page:
+  - An architecture diagram with the steps numbered ① to ⑥.
+  - Deliverables 1–3.
+  - A step-by-step table of the race, with the lost items crossed out in red,
+    plus your orphan-keys screenshot.
+  - The LPOP fix as a diff.
+  - All the scaling and recovery answers.
+  - Polling vs. notification sequence diagrams side by side, with the code and a
+    before/after table.
+  - The thread join() fix.
+  - The logger code and a trace of one request.
+
+  The only thing left blank is "Explaining it to a person."
+
+  Step 8: Explain it to someone (~10 min)
+
+  Open submission.html (26-11-02%20redis%20concurrency/submission.html) in your
+  browser and walk a roommate, friend or family member through it. A good order:
+  1. The architecture diagram: "two programs that only communicate through
+     Redis."
+  2. The race table: this is the main story. Ask them to predict what happens at
+     step 4 before you show it.
+  3. The polling vs. notifications diagrams: "constantly asking 'is it ready?'
+     vs. being told when it's ready."
+
+  Then tell me:
+  - Who you explained it to, and how much technical background they have.
+  - What clicked for them right away.
+  - Where they got confused, and what you did to explain it differently.
+
+  I'll write that section, then create the PDF and the zip for Canvas. After
+  that, all that's left is running /export for the transcript and writing the
+  handwritten learning log.
+
+> can you generate a list of topics and aha moments i've had based on my
+  questions and our comnversataion so I can write my learning log. Write a
+  couple sentences from each topci with necesary context so i undersatdn it and
+  then provide a summary sentnce of each one
+
+● Write(26-11-02 redis concurrency\learning_log_notes.md)
+  ⎿  Wrote 110 lines to 26-11-02 redis concurrency\learning_log_notes.md
+      1 # Learning Log notes: Redis Concurrency
+      2
+      3 Ethan Hilton · CS 452 · Redis Project (Concurrency) · 11/2/2026
+      4
+      5 Each topic: what happened or what I asked, the context needed to
+        understand it, then a one-sentence summary.
+      6
+      7 ---
+      8
+      9 ## 1. Redis is a shared dictionary on a server
+     … +101 lines (ctrl+o to expand)
+
+● I wrote the full notes to learning_log_notes.md
+  (26-11-02%20redis%20concurrency/learning_log_notes.md). It has the same layout
+  as your neo4j log: 13 topics, each with the context you need, followed by one
+  summary sentence. Here are the summary sentences for quick reference:
+
+  1. Redis basics: Redis is an in-memory key-value store that several programs
+     share, and pushing on the right while popping on the left makes a list a
+     FIFO queue.
+  2. MONITOR: Watching the raw traffic showed that both sides poll constantly,
+     and that the two servers coordinate only through a queue and a UUID-named
+     result key.
+  3. Daemon threads: Daemon threads are killed at exit, so a program has to wait
+     for them on purpose, and sleep(300) is just a guess at how long.
+  4. join(): join() waits exactly as long as the slowest thread, no more and no
+     less, which replaces guessing with a sleep.
+  5. The race condition: A check-then-act race happens when there's a gap
+     between reading shared data and acting on it, and here one gap caused both
+     duplicate work and lost work.
+  6. Races are intermittent: Race conditions depend on timing, so a passing run
+     doesn't prove the code is correct, and you sometimes have to change the
+     timing to reproduce the bug.
+  7. Atomicity: The fix for a check-then-act race is to make "read and remove" a
+     single atomic command, which LPOP with a count does.
+  8. Busy loop: Any loop that waits for work needs a sleep or a blocking call on
+     every path, or it turns into a busy loop.
+  9. Reliable queues: Reliable queues trade possible duplicates for no lost
+     work, which is fine when the job is idempotent.
+  10. Scaling: "No conflicts" and "scales well" are different claims, and a
+      design can be correct but still get more expensive with every request
+      that's waiting.
+  11. Polling vs. push: Push notifications remove wasted polling and cut
+      latency, but because events can be lost, the real data has to live in a
+      key, not in the message.
+  12. Two .venvs: When an import fails, check which Python is running before
+      assuming the package isn't installed.
+  13. Unified logging: A shared log makes a multi-process system observable, but
+      entries are stored in arrival order, not event order, so timestamps from
+      many processes don't sort themselves.
+
+  The big pattern, a good closing line for the log: the same bug shape kept
+  coming back (LRANGE then LTRIM, "copy then pop," print then newline). Each one
+  has a gap where another worker or thread can act, and the fix is always to
+  make the step indivisible.
+
+  For the handwritten version, I'd focus on topics 5, 7, 9 and 11. Those are the
+  core of the project and where your own reasoning shows most: you explained
+  the race in your own words, asked whether pop was atomic, and came up with the
+  reliable-queue idea yourself.
+
+  Still open: the "Explaining it to a person" section of the submission. Once
+  you've explained it to someone and told me how it went, I'll fill it in and
+  create the PDF and zip.
+
+> explain this to me again very simlpy like i dont undersatdn whats going on:
+  9. Losing work vs. doing it twice (reliable queues)
+  With LPOP, the item leaves the queue before the work is done, so a worker
+  crash loses it (at-most-once). I came up with the idea myself: keep a "being
+  worked on" list and re-queue items that sit there too long. That's the
+  standard reliable-queue pattern. The catch is that "copy, then pop" as two
+  steps has the same gap as the original bug, so you use LMOVE, which moves the
+  item atomically. You acknowledge with LREM, and track claim times in a
+  sorted set so stuck items can be re-queued. Redis Streams with consumer
+  groups have this built in. Re-queuing means a slow job might run twice
+  (at-least-once). That's safe here because classification is idempotent: the
+  same image always writes the same result.
+
+  Summary: Reliable queues trade possible duplicates for no lost work, which is
+  fine when the job is idempotent.
+
+● Here's the same idea as a restaurant kitchen.
+
+  The setup
+
+  - The queue is the rail of order tickets.
+  - A worker is a cook.
+  - LPOP is a cook pulling a ticket off the rail.
+
+  The problem: losing work
+
+  With LPOP, the cook pulls the ticket off the rail and puts it in his pocket,
+  then starts cooking. If he faints halfway through, the ticket is in his
+  pocket. It's no longer on the rail, so no other cook knows the order exists,
+  and the customer never gets food.
+
+  That's "at-most-once": each order gets cooked once or not at all.
+
+  The fix: a "cooking now" board
+
+  Instead of pocketing the ticket, the cook clips it onto a "cooking now" board:
+  1. Take a ticket: move it from the rail to the board.
+  2. Finish cooking: throw the ticket away. That's the "acknowledge" step
+     (LREM).
+  3. The manager checks the board every so often. If a ticket has been there 10
+     minutes with no food, the cook probably fainted, so the manager puts the
+     ticket back on the rail for another cook.
+
+  Now an order can't disappear. Either it's on the rail, or it's on the board
+  where someone is watching it.
+
+  To know how long a ticket has been on the board, write the time on it when
+  it's clipped up. That's what the "sorted set with timestamps" does.
+
+  The catch: one motion, not two
+
+  Moving the ticket has to be one motion. If the cook first copies it onto the
+  board and then takes it off the rail, another cook could grab the same ticket
+  in between. That's the same gap as the original bug. LMOVE does "off the rail
+  and onto the board" in a single motion that nobody can interrupt.
+
+  The new downside: sometimes cooking twice
+
+  What if the cook didn't faint and was just slow? The manager sees the old
+  ticket, puts it back on the rail, and a second cook makes the same dish. The
+  order gets cooked twice.
+
+  That's "at-least-once": every order gets cooked, but some might get cooked
+  twice.
+
+  Is cooking twice bad?
+
+  It depends on the job:
+  - In this project, it's harmless. Classifying the same castle photo twice
+    gives the same answer ("church, 0.41"), written to the same key. The second
+    copy overwrites the first with identical data. A job you can safely repeat
+    like this is called idempotent.
+  - For charging a credit card, it would be bad. Doing it twice charges twice.
+    That job is not idempotent and needs extra protection, such as checking "did
+    I already charge for this order ID?"
+
+  Redis Streams
+
+  Redis has a feature called Streams that includes the board, the throw-away
+  step and the manager's checks, so you don't have to build them yourself.
+
+  One-sentence version
+
+  Without a "cooking now" board, a crashed worker's job disappears. With one,
+  nothing disappears, but a slow job might get done twice, which is fine when
+  doing it twice gives the same result.
+
+> what does this word mena?
+
+  idempotent
+
+● Idempotent (eye-dem-POH-tent) means doing it twice has the same effect as
+  doing it once.
+
+  Everyday examples:
+  - ✅ An elevator button. Press "3" once or five times, and you still go to
+    floor 3. Idempotent.
+  - ✅ Setting your thermostat to 70°. Set it once or ten times, and it's still
+    70°. Idempotent.
+  - ❌ "Add $20 to my account." Do it twice and you've added $40. Not
+    idempotent.
+  - ❌ "Turn the thermostat up 2°." Twice gets you +4°. Not idempotent.
+
+  In Redis terms:
+  - SET key "church" is idempotent. Run it twice and the key still says
+    "church."
+  - RPUSH queue item is not. Run it twice and the item is in the queue twice.
+
+  In this project, the worker classifies an image and runs SET <uuid> <result>.
+  If a slow job gets re-queued and runs again, it writes the exact same result
+  to the exact same key. Nothing changes, so running it twice is harmless.
+
+  Rule of thumb: "set it to X" is usually idempotent. "Add X" or "do X again"
+  usually isn't.
+
+> ok, generate again a lost i cAN USE FOR MY LEARNING LOG
+
+● Write(26-11-02 redis concurrency\learning_log_notes.md)
+  ⎿  Added 51 lines, removed 85 lines
+        2  
+        3  Ethan Hilton · CS 452 · Redis Project (Concurrency) · 11/2/202
+           6
+        4  
+        5 -Each topic: what happened or what I asked, the context needed 
+          -to understand it, then a one-sentence summary.                
+        6 -                                                              
+        5  ---
+        6  
+        9 -## 1. Redis is a shared dictionary on a server                
+        7 +## Aha moments                                                
+        8  
+       11 -I didn't know the commands, so I started with a toy list in `r
+          -edis-cli`. Redis maps keys to typed values (string, list, …), 
+          -and any process connected to it can read and change them. That
+          -'s how the web server and the worker share data without talkin
+          -g to each other. `RPUSH` adds to the right end of a list, `LPO
+          -P` removes from the left, `LRANGE` reads without removing, and
+          - `SET`/`GET`/`DEL` work on strings. Gotcha: the L in `LPOP` me
+          -ans *left*, but the L in `LRANGE` and `LTRIM` just means *List
+          -*.                                                            
+        9 +**1. Redis is a shared dictionary that lives on a server.**   
+       10 +Keys map to values (strings, lists, …), and any program connec
+          +ted to Redis can read and change them. The web server and the 
+          +worker never talk to each other directly. They only communicat
+          +e through Redis.                                              
+       11 +*Summary: Redis is the middleman that lets separate programs s
+          +hare data.*                                                   
+       12  
+       13 -**Summary:** Redis is an in-memory key-value store that severa
+          -l programs share, and pushing on the right while popping on th
+          -e left makes a list a FIFO queue.                             
+       13 +**2. A list can be a line of jobs.**                          
+       14 +`RPUSH` adds a job to the back of the line, and `LPOP` takes o
+          +ne from the front: first in, first out. Watch out for the name
+          +s: the L in `LPOP` means "left," but the L in `LRANGE` and `LT
+          +RIM` just means "List."                                       
+       15 +*Summary: Push on the right and pop on the left, and a list be
+          +comes a work queue.*                                          
+       16  
+       15 -## 2. Watching the system with MONITOR                        
+       17 +**3. The UUID is a return address.**                          
+       18 +The web server makes up a random ID, puts it on the job, and w
+          +aits. The worker saves its answer under a key with that exact 
+          +name, so the web server knows where to look.                  
+       19 +*Summary: A random ID lets two programs match up a request wit
+          +h its answer.*                                                
+       20  
+       17 -`MONITOR` prints every command Redis receives. Two clients sho
+          -wed up, told apart by port number (the worker and the web serv
+          -er). The worker sent `LRANGE` every 0.25 s even when idle, and
+          - the web server sent 9 `GET`s that all returned nothing while 
+          -it waited for one result. The web server makes up a UUID and t
+          -he worker writes its answer to a key with that name, so the UU
+          -ID is the "return address."                                   
+       21 +**4. Polling is wasteful.**                                   
+       22 +`MONITOR` showed the web server asking "is it ready yet?" 9 ti
+          +mes for one request, and the workers checking the empty queue 
+          +4 times a second forever. The stress test produced about 240 u
+          +seless checks.                                                
+       23 +*Summary: Constantly asking "is it done?" costs work even when
+          + nothing is happening.*                                       
+       24  
+       19 -**Summary:** Watching the raw traffic showed that both sides p
+          -oll constantly, and that the two servers coordinate only throu
+          -gh a queue and a UUID-named result key.                       
+       25 +**5. Daemon threads die when the program ends.**              
+       26 +Without `sleep(300)`, the stress test printed nothing, because
+          + Python kills daemon threads as soon as the main program finis
+          +hes. The server still did all the work, but nobody was left to
+          + receive it.                                                  
+       27 +*Summary: Background threads get killed at exit unless you wai
+          +t for them.*                                                  
+       28  
+       21 -## 3. Daemon threads die when the program ends                
+       29 +**6. `join()` means "wait for this thread to finish."**       
+       30 +Start all the threads first, then `join()` each one. They stil
+          +l run at the same time, and the program waits exactly as long 
+          +as the slowest one. `sleep(300)` was just a guess.            
+       31 +*Summary: `join()` waits exactly as long as needed, no more an
+          +d no less.*                                                   
+       32  
+       23 -When I removed `time.sleep(300)` from the stress test, nothing
+          - printed and I didn't understand why. Python doesn't wait for 
+          -**daemon** threads when the main program exits; it kills them 
+          -on the spot. The loop started all 20 threads in about 1 s, the
+          -n the program ended while every request was still waiting. The
+          - server still did all 20 classifications and sent the results 
+          -to clients that no longer existed.                            
+       33 +**7. The race condition: reading and removing were two separat
+          +e steps.**                                                    
+       34 +The worker read jobs with `LRANGE`, spent about 2 seconds on t
+          +hem, then deleted "the first N" with `LTRIM`. With two workers
+          +, both read the same jobs, and then their deletes removed new 
+          +jobs nobody had done. Those requests hung forever (threads 10,
+          + 13, 17, 19). The jobs both workers did left extra result keys
+          + that nobody would ever read ("orphans").                     
+       35 +*Summary: When there's a gap between reading something and act
+          +ing on it, another worker can change things in that gap.*     
+       36  
+       25 -**Summary:** Daemon threads are killed at exit, so a program h
+          -as to wait for them on purpose, and `sleep(300)` is just a gue
+          -ss at how long.                                               
+       37 +**8. Race conditions don't happen every time.**               
+       38 +My first two-worker test passed. The bug only showed up when n
+          +ew jobs arrived while the workers were busy, so I had to sprea
+          +d out the requests to catch it.                               
+       39 +*Summary: A passing test doesn't prove there's no race; it mig
+          +ht just be lucky timing.*                                     
+       40  
+       27 -## 4. What `join()` does                                      
+       41 +**9. One Redis command can't be interrupted (it's atomic).**  
+       42 +Redis runs one command at a time, so nothing can happen in the
+          + middle of a single command. `LPOP` takes *and* removes a job 
+          +in one step, so two workers can never get the same job.       
+       43 +*Summary: Fix a race by turning "read, then remove" into one a
+          +tomic command.*                                               
+       44  
+       29 -`t.join()` pauses the main thread until thread `t` finishes. Y
+          -ou start **all** the threads first and then join each one, so 
+          -they still run in parallel. Calling `start()` then `join()` in
+          -side the loop would run them one at a time. I asked whether I 
+          -could add the thread to the list before `start()`: yes, becaus
+          -e the list holds a reference to the same object. The only rule
+          - is that you can't `join()` a thread that hasn't been started.
+          - Joining is also what made the next bug visible: the program h
+          -ung instead of quietly exiting.                               
+       45 +**10. My fix almost created a busy loop.**                    
+       46 +`if queue is None: continue` skipped the sleep at the bottom o
+          +f the loop, so an idle worker would have hammered Redis thousa
+          +nds of times a second. Changing it to `... or []` fixed that. 
+       47 +*Summary: Every path through a waiting loop needs a pause.*   
+       48  
+       31 -**Summary:** `join()` waits exactly as long as the slowest thr
+          -ead, no more and no less, which replaces guessing with a sleep
+          -.                                                             
+       49 +**11. Losing work vs. doing it twice (the kitchen analogy).** 
+       50 +`LPOP` is a cook putting the order ticket in his pocket. If he
+          + faints, the order is gone. The fix is a "cooking now" board: 
+          +move the ticket there in **one motion** (`LMOVE`), throw it aw
+          +ay when the food is done, and have a manager put back any tick
+          +et that's been sitting there too long. Now nothing is lost, bu
+          +t a slow cook's order might get made twice.                   
+       51 +*Summary: You can trade "might lose work" for "might do work t
+          +wice."*                                                       
+       52  
+       33 -## 5. The race condition: read and remove were two steps      
+       53 +**12. Idempotent = doing it twice has the same effect as doing
+          + it once.**                                                   
+       54 +Pressing an elevator button twice still takes you to the same 
+          +floor. Saving the same classification result twice writes the 
+          +same answer to the same key. So running a job twice is harmles
+          +s here. Charging a credit card twice would not be.            
+       55 +*Summary: Retrying is safe only when the job is idempotent.*  
+       56  
+       35 -With two workers, requests never came back (threads 10, 13, 17
+          - and 19), and Redis had leftover "orphan" result keys. In my o
+          -wn words: reading work from the queue (`LRANGE`) and removing 
+          -it (`LTRIM`) aren't atomic. Both workers read the same items, 
+          -and `LTRIM` removes by **position**, not by which items this w
+          -orker processed. If the queue changed in the meantime, the tri
+          -m deletes items nobody processed (lost requests). The duplicat
+          -e processing leaves results that were already read and deleted
+          - written again (orphans).                                     
+       57 +**13. Push notifications instead of polling.**                
+       58 +After `CONFIG SET notify-keyspace-events KEA`, Redis announces
+          + whenever a key changes. The web server subscribes to its own 
+          +result key and waits, sending no commands until Redis tells it
+          + the answer is ready. Empty checks went from 9 to 0, and respo
+          +nse time went from about 170 ms to about 1.6 ms. Rules: subscr
+          +ibe **before** sending the job, and do one final `GET` in case
+          + the announcement was missed.                                 
+       59 +*Summary: Being told when something's ready beats asking over 
+          +and over.*                                                    
+       60  
+       37 -**Summary:** A check-then-act race happens when there's a gap 
+          -between reading shared data and acting on it, and here one gap
+          - caused both duplicate work and lost work.                    
+       61 +**14. "No conflicts" is not the same as "scales well."**      
+       62 +Multiple web servers are safe, because each one only touches i
+          +ts own keys. UUIDs won't collide: you'd need about 2.7 × 10¹⁸ 
+          +of them for a 50% chance of a single collision. But notificati
+          +ons still cost more with every request that's waiting.        
+       63 +*Summary: Something can be correct and still get more expensiv
+          +e as it grows.*                                               
+       64  
+       39 -## 6. A race doesn't always show up                           
+       65 +**15. One shared log for all the programs.**                  
+       66 +Every program writes to one Redis list, so I can read a single
+          + timeline and follow one request across programs. I needed the
+          + PID to tell my two workers apart, since they run on the same 
+          +laptop. Log entries are stored in the order they *arrived*, no
+          +t the order they *happened*.                                  
+       67 +*Summary: A shared log shows the whole system, but its order i
+          +sn't perfectly reliable.*                                     
+       68  
+       41 -My first two-worker run finished fine, and all I saw was the m
+          -onitor scrolling faster. That was only two workers polling, no
+          -t stuck requests. Requests only get lost if **new** items arri
+          -ve during the ~2 s while both workers are processing. Raising 
+          -`SLEEP_COUNT` to 0.2 spread the requests out and made it happe
+          -n.                                                            
+       69 +**16. Check which Python you're running.**                    
+       70 +`No module named redis` happened because my terminal was using
+          + the neo4j project's `.venv`. Both folders are named `.venv`, 
+          +so they look the same. `which python` shows the real one.     
+       71 +*Summary: When an import fails, check which environment is act
+          +ive first.*                                                   
+       72  
+       43 -**Summary:** Race conditions depend on timing, so a passing ru
+          -n doesn't prove the code is correct, and you sometimes have to
+          - change the timing to reproduce the bug.                      
+       44 -                                                              
+       45 -## 7. Atomicity: Redis runs one command at a time             
+       46 -                                                              
+       47 -I asked whether pop is atomic. Yes: Redis runs commands one at
+          - a time on a single thread, so each single command can't be in
+          -terrupted. `LPOP image_queue 32` reads *and* removes in one st
+          -ep, so two workers can never get the same item. Atomicity cove
+          -rs one command, not a sequence of commands. To make several co
+          -mmands atomic together you need `MULTI`/`EXEC` (transactions) 
+          -or Lua scripts.                                               
+       48 -                                                              
+       49 -**Summary:** The fix for a check-then-act race is to make "rea
+          -d and remove" a single atomic command, which `LPOP` with a cou
+          -nt does.                                                      
+       50 -                                                              
+       51 -## 8. The busy loop                                           
+       52 -                                                              
+       53 -My first fix used `if queue is None: continue`. `continue` jum
+          -ps back to the top of the loop, which skipped the `sleep` at t
+          -he bottom, so on an empty queue the worker would send thousand
+          -s of `LPOP`s a second and pin a CPU core. `db.lpop(...) or []`
+          - lets the empty case fall through to the normal sleep.        
+       54 -                                                              
+       55 -**Summary:** Any loop that waits for work needs a sleep or a b
+          -locking call on every path, or it turns into a busy loop.     
+       56 -                                                              
+       57 -## 9. Losing work vs. doing it twice (reliable queues)        
+       58 -                                                              
+       59 -With `LPOP`, the item leaves the queue *before* the work is do
+          -ne, so a worker crash loses it (**at-most-once**). I came up w
+          -ith the idea myself: keep a "being worked on" list and re-queu
+          -e items that sit there too long. That's the standard reliable-
+          -queue pattern. The catch is that "copy, then pop" as two steps
+          - has the same gap as the original bug, so you use `LMOVE`, whi
+          -ch moves the item atomically. You acknowledge with `LREM`, and
+          - track claim times in a sorted set so stuck items can be re-qu
+          -eued. Redis Streams with consumer groups have this built in. R
+          -e-queuing means a slow job might run twice (**at-least-once**)
+          -. That's safe here because classification is **idempotent**: t
+          -he same image always writes the same result.                  
+       60 -                                                              
+       61 -**Summary:** Reliable queues trade possible duplicates for no 
+          -lost work, which is fine when the job is idempotent.          
+       62 -                                                              
+       63 -## 10. Scaling: what's safe and what costs more               
+       64 -                                                              
+       65 -- **Multiple web servers are safe.** They only `RPUSH` (atomic
+          -) and touch their own UUID keys, so there's no shared read-the
+          -n-act gap.                                                    
+       66 -- **UUID collisions:** `uuid4` has 122 random bits. By the bir
+          -thday problem, you'd need about 2.7 × 10¹⁸ IDs for a 50% chanc
+          -e of a single collision.                                      
+       67 -- **Notifications:** I said they'd scale fine. Correction: the
+          -re are no *conflicts*, but there are *costs*. `KEA` publishes 
+          -an event for every key change. `PSUBSCRIBE` makes Redis check 
+          -every event against every pattern, so the cost grows with the 
+          -number of waiting requests (exact `SUBSCRIBE` doesn't). Each w
+          -aiting request also holds its own connection.                 
+       68 -                                                              
+       69 -**Summary:** "No conflicts" and "scales well" are different cl
+          -aims, and a design can be correct but still get more expensive
+          - with every request that's waiting.                           
+       70 -                                                              
+       71 -## 11. Polling vs. push notifications (pub/sub)               
+       72 -                                                              
+       73 -`CONFIG SET notify-keyspace-events KEA` makes Redis publish a 
+          -message whenever a key changes:                               
+       74 -- **K** = a channel named after the key (`__keyspace@0__:<uuid
+          ->`).                                                          
+       75 -- **E** = a channel named after the command.                  
+       76 -- **A** = all command types.                                  
+       77 -                                                              
+       78 -I tested it by hand: subscribe in one CLI, `SET` in another. R
+          -ules I learned:                                               
+       79 -- Subscribe **before** `RPUSH`, or the event can fire before y
+          -ou're listening.                                              
+       80 -- The first message is only the subscribe confirmation.       
+       81 -- The notification carries no data, so you still `GET` the res
+          -ult.                                                          
+       82 -- Pub/sub is fire-and-forget, so do one `GET` after a timeout 
+          -as a safety net.                                              
+       83 -                                                              
+       84 -Results: empty `GET`s went from 9 to 0 (and about 240 to 0 und
+          -er the stress test), and the time from `SET` to the web server
+          - noticing went from 170 ms to about 1.6 ms. The workers still 
+          -poll; `BLPOP` would fix that.                                 
+       85 -                                                              
+       86 -**Summary:** Push notifications remove wasted polling and cut 
+          -latency, but because events can be lost, the real data has to 
+          -live in a key, not in the message.                            
+       87 -                                                              
+       88 -## 12. Two venvs both named `.venv`                           
+       89 -                                                              
+       90 -`ModuleNotFoundError: redis` happened because my terminal had 
+          -the neo4j project's `.venv` active. Both are named `.venv`, so
+          - the prompt looked the same. `which python` shows which one is
+          - actually active. Also, TensorFlow didn't support my Python 3.
+          -13, so I used `uv` to make a Python 3.12 environment.         
+       91 -                                                              
+       92 -**Summary:** When an import fails, check *which* Python is run
+          -ning before assuming the package isn't installed.             
+       93 -                                                              
+       94 -## 13. Unified logging across processes                       
+       95 -                                                              
+       96 -I built a Redis logger: every process `RPUSH`es JSON entries (
+          -time, hostname:PID, script, action) onto one `logs` list, givi
+          -ng one combined timeline. `view_logs.py <uuid>` follows one re
+          -quest across processes (basic distributed tracing). What I lea
+          -rned:                                                         
+       97 -- **The hostname alone wasn't enough:** both workers are on my
+          - laptop, so I needed the PID to tell them apart.              
+       98 -- **One write per line:** the stress test's jumbled output cam
+          -e from threads interleaving separate `print` writes.          
+       99 -- **Pipeline:** `RPUSH` and `LTRIM` in one round trip, wrapped
+          - in `MULTI`/`EXEC`.                                           
+      100 -- **`LTRIM` used correctly:** capping a log at 1000 entries by
+          - position is exactly what we want.                            
+      101 -- **Arrival order isn't event order:** an entry stamped 29.100
+          - was stored after one stamped 29.112.                         
+      102 -- **Batching has a cost:** a batch of 8 took about 2.2 s while
+          - the other worker was idle.                                   
+      103 -                                                              
+      104 -**Summary:** A shared log makes a multi-process system observa
+          -ble, but entries are stored in arrival order, not event order,
+          - so timestamps from many processes don't sort themselves.     
+      105 -                                                              
+       73  ---
+       74  
+      108 -## The big pattern                                            
+      109 -                                                              
+      110 -The same bug shape kept coming back: `LRANGE` then `LTRIM`, "c
+          -opy then pop," and `print` then newline all have a gap where a
+          -nother worker or thread can act. The fix is always to make the
+          - step indivisible: one atomic command (`LPOP`, `LMOVE`), a tra
+          -nsaction (`MULTI`/`EXEC`), or one write.                      
+       75 +## The big lesson                                             
+       76 +The same bug kept coming back: **a gap between two steps** whe
+          +re someone else can change something. (`LRANGE` then `LTRIM`. 
+          +"Copy then pop." `print` text, then the newline.) The fix is a
+          +lways to **make it one step that can't be interrupted.**      
+
+● I rewrote learning_log_notes.md
+  (26-11-02%20redis%20concurrency/learning_log_notes.md) in simpler language,
+  with the kitchen analogy and the definition of idempotent. Here's the list to
+  copy from:
+
+  Ethan Hilton · CS 452 · Redis Concurrency · 11/2/2026
+
+  1. Redis is a shared dictionary on a server. The web server and the worker
+     never talk directly; they only communicate through Redis.
+     Redis is the middleman that lets separate programs share data.
+  2. A list can be a line of jobs. RPUSH adds to the back and LPOP takes from
+     the front. (The L in LPOP means "left," but the L in LRANGE means "List.")
+     Push on the right and pop on the left, and a list becomes a work queue.
+  3. The UUID is a return address. The web server makes up a random ID, and the
+     worker saves its answer under that exact name.
+     A random ID lets two programs match up a request with its answer.
+  4. Polling is wasteful. MONITOR showed 9 "is it ready yet?" checks for one
+     request, about 240 in the stress test, and idle workers checking 4 times a
+     second forever.
+     Constantly asking "is it done?" costs work even when nothing is happening.
+  5. Daemon threads die when the program ends. Without sleep(300), the program
+     exited and killed every request thread. The server did all the work for
+     nobody.
+     Background threads get killed at exit unless you wait for them.
+  6. join() means "wait for this thread to finish." Start all the threads, then
+     join each one.
+     join() waits exactly as long as needed, no more and no less.
+  7. The race condition. The worker read jobs, spent 2 seconds on them, then
+     deleted "the first N." With two workers, both did the same jobs, and the
+     deletes removed new jobs nobody had done. Threads 10, 13, 17 and 19 hung
+     forever, and extra "orphan" result keys were left behind.
+     When there's a gap between reading something and acting on it, another
+     worker can change things in that gap.
+  8. Race conditions don't happen every time. My first test passed. I had to
+     spread out the requests to catch the bug.
+     A passing test doesn't prove there's no race; it might just be lucky
+     timing.
+  9. One Redis command can't be interrupted. LPOP takes and removes in one step,
+     so two workers can never get the same job.
+     Fix a race by turning "read, then remove" into one atomic command.
+  10. My fix almost created a busy loop. continue skipped the sleep, so an idle
+      worker would have hammered Redis.
+      Every path through a waiting loop needs a pause.
+  11. Losing work vs. doing it twice. LPOP is a cook pocketing the ticket; if he
+      faints, the order is gone. The fix: a "cooking now" board (LMOVE, done in
+      one motion), and a manager who re-posts tickets that sit there too long.
+      Nothing gets lost, but a slow order might get made twice.
+      You can trade "might lose work" for "might do work twice."
+  12. Idempotent = doing it twice has the same effect as doing it once. Like an
+      elevator button. Saving the same result twice is harmless; charging a card
+      twice is not.
+      Retrying is safe only when the job is idempotent.
+  13. Push notifications instead of polling. The web server subscribes to its
+      result key and waits until Redis tells it the answer is ready. Empty
+      checks: 9 → 0. Response: 170 ms → 1.6 ms. Subscribe before sending the
+      job.
+      Being told when something's ready beats asking over and over.
+  14. "No conflicts" is not the same as "scales well." Multiple web servers are
+      safe, and UUIDs won't collide, but notifications still cost more with
+      every request that's waiting.
+      Something can be correct and still get more expensive as it grows.
+  15. One shared log for all the programs. It gives one timeline across every
+      program. I needed the PID to tell the two workers apart. Entries are
+      stored in the order they arrived, not the order they happened.
+      A shared log shows the whole system, but its order isn't perfectly
+      reliable.
+  16. Check which Python you're running. Both projects have a folder named
+      .venv, and the wrong one was active.
+      When an import fails, check which environment is active first.
+
+  The big lesson: the same bug kept coming back, a gap between two steps where
+  someone else can change things. The fix is always to make it one step that
+  can't be interrupted.
+
+  To finish the project: explain it to someone using submission.html
+  (26-11-02%20redis%20concurrency/submission.html), and tell me how it went.
+  Then I'll fill in that last section and create the PDF and zip, and you'll run
+  /export for the transcript.
+
+> ok i finished the learning log. i don think i have to explain it to another
+  person. can i just submit? what do i have left to do / learn?
+
+● The Canvas page says to explain it to a person "if possible" and then "submit
+  how that explanation worked," so skipping it is your call. It might cost a
+  little on the 3-point project portion, but nothing else depends on it. I won't
+  make up an explanation that didn't happen, so I'm removing that placeholder
+  section and building the files you'll submit.
+
+● Update(26-11-02 redis concurrency\submission.html)
+  ⎿  Removed 3 lines
+      411    <li><b>The log is in arrival order, not event order.</b> <co
+           de>done 128b6406</code> (29.100) is stored after an entry stam
+           ped 29.112, because the timestamp is taken before the <code>RP
+           USH</code> and another thread's push got there first. Across m
+           achines with different clocks this gets worse.</li>
+      412  </ul>
+      413  
+      414 -<h2>Explaining it to a person</h2>                            
+      415 -<p><i>[To be filled in after explaining the project with this 
+          -page.]</i></p>                                                
+      416 -                                                              
+      414  </main>
+      415  </body>
+      416  </html>
+
+  Ran 1 shell command (ctrl+o to expand)
+
+● The files are built, and settings.py contains no password. I'll check the
+  PDF's page breaks.
+
+  Read 1 file, ran 1 shell command (ctrl+o to expand)
+
+● The headless screenshot can't render PDFs, so I'll render the pages with
+  PyMuPDF in a throwaway environment instead.
+
+  Read 1 file, ran 1 shell command (ctrl+o to expand)
+
+● One code comment on page 6 gets cut off at the right edge. I'll shorten it and
+  regenerate the PDF.
+
+● Update(26-11-02 redis concurrency\submission.html)
+  ⎿  Added 2 lines, removed 1 line
+      351  p.unsubscribe()
+      352  p.close()
+      353  
+      354 -output = db.get(k)                                    # the ev
+          -ent carries no data; also catches a missed event              
+      354 +# the event carries no data; this GET also catches a missed ev
+          +ent                                                           
+      355 +output = db.get(k)                                            
+      356  if output is not None:
+      357    data["predictions"] = json.loads(output.decode("utf-8"))
+      358    db.delete(k)
+
+  Ran 2 shell commands (ctrl+o to expand)
+
+● Yes, you can submit. Everything is built and checked: I rendered all 8 PDF
+  pages, nothing gets cut off, and no secrets are in any of the files. I removed
+  the blank "Explaining it to a person" section, since you're skipping that
+  part.
+
+  What's left (about 10 min)
+
+  1. Redis Project (Concurrency), due Tue 11/3 at 11:59pm. Upload:
+  - redis_submission.pdf
+    (26-11-02%20redis%20concurrency/submission/redis_submission.pdf): all 7
+    deliverables, with diagrams, code and explanations.
+  - redis_explainer_html.zip
+    (26-11-02%20redis%20concurrency/submission/redis_explainer_html.zip): the
+    visual HTML page Canvas asks for, with the screenshot it uses.
+  - Optional: redis_code.zip
+    (26-11-02%20redis%20concurrency/submission/redis_code.zip), your modified
+    code plus the logger.
+
+  2. Agent Transcript: Redis Concurrency, same due date. Type /export in this
+  session and upload the file it saves. The Canvas key was never printed in this
+  session, so the transcript is safe to share.
+
+  3. Learning log: you've finished it. Bring it to class Wed 11/4.
+
+  4. Cleanup (optional): stop the servers with Ctrl+C in each terminal, and run
+  docker stop redis-cs452 to free the memory Redis is using.
+
+  Optional things to learn, if you have extra time
+
+  - BLPOP in the worker. This is the last polling in the system. It's about 3
+    lines, and the idle LPOPs in the monitor would disappear.
+  - Build the LMOVE reliable queue from Deliverable 4. Then kill a worker
+    mid-batch and watch the monitor process re-queue the stuck job.
+  - Redis Cloud and RedisInsight. The Canvas "Learning" section suggests setting
+    up a cloud database. We used Docker instead. The code already reads
+    REDIS_HOST, REDIS_PORT and REDIS_PASSWORD from environment variables, so
+    switching only takes those settings. Note that Redis Cloud blocks CONFIG
+    SET, so you'd turn on notifications in its web dashboard instead.
+
+  Commit
+
+  Like your earlier projects, I'd commit the whole 26-11-02 redis concurrency/
+  folder: the code, notes, submission.html, orphan_keys.png, the reference/
+  media, and the submission/ PDF and zips. That's 27 files. .venv and
+  __pycache__ are already ignored, and none of the files contain secrets.
+  Proposed message:
+
+  Add Redis concurrency work queue project
+
+  If you run /export first and save the transcript into that folder, it can go
+  in the same commit. Do you want me to commit with that message?
