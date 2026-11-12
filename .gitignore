@@ -4,3 +4,7 @@ secrets.json
 __pycache__/
 .venv/
 data/
+
+# datasets the Spark notebooks download with curl
+bible.txt
+bookOfMormon.txt
