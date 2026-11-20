@@ -8,3 +8,6 @@ data/
 # datasets the Spark notebooks download with curl
 bible.txt
 bookOfMormon.txt
+
+# separate repo: github.com/EthanHilton3/mtg-price-pipeline
+26-11-12 data pipeline/
