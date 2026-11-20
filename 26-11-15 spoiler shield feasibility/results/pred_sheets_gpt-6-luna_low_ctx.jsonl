@@ -1,0 +1,171 @@
+{"_meta": {"condition": "sheets", "model": "gpt-6-luna", "effort": "low", "batch": 10, "calls": 17, "input_tokens": 156311, "cached_tokens": 121545, "output_tokens": 9602, "cost_usd": 0.00949, "latency_ms_per_call": [3114, 3119, 3146, 3524, 4143, 4544, 4760, 5865, 6900, 7089, 7355, 8072, 8351, 8359, 8360, 9549, 10131], "missing_verdicts": 0, "malformed_retries": 0}}
+{"n": 0, "reveals": "S1E1", "rogue_one": false, "confidence": 0.72, "evidence": "Dead is dead."}
+{"n": 1, "reveals": "none", "rogue_one": false, "confidence": 0.98, "evidence": ""}
+{"n": 2, "reveals": "none", "rogue_one": false, "confidence": 1.0, "evidence": ""}
+{"n": 3, "reveals": "S1E3", "rogue_one": false, "confidence": 0.99, "evidence": "takes out several officers"}
+{"n": 4, "reveals": "none", "rogue_one": false, "confidence": 1.0, "evidence": ""}
+{"n": 5, "reveals": "S1E3", "rogue_one": false, "confidence": 0.77, "evidence": "learned what his motivations might be"}
+{"n": 6, "reveals": "none", "rogue_one": false, "confidence": 1.0, "evidence": ""}
+{"n": 7, "reveals": "none", "rogue_one": false, "confidence": 1.0, "evidence": ""}
+{"n": 8, "reveals": "none", "rogue_one": false, "confidence": 1.0, "evidence": ""}
+{"n": 9, "reveals": "none", "rogue_one": false, "confidence": 1.0, "evidence": ""}
+{"n": 10, "reveals": "none", "rogue_one": false, "confidence": 0.99, "evidence": ""}
+{"n": 11, "reveals": "none", "rogue_one": false, "confidence": 0.99, "evidence": ""}
+{"n": 12, "reveals": "none", "rogue_one": false, "confidence": 0.99, "evidence": ""}
+{"n": 13, "reveals": "none", "rogue_one": false, "confidence": 0.99, "evidence": ""}
+{"n": 14, "reveals": "none", "rogue_one": false, "confidence": 0.99, "evidence": ""}
+{"n": 15, "reveals": "none", "rogue_one": false, "confidence": 0.99, "evidence": ""}
+{"n": 16, "reveals": "none", "rogue_one": true, "confidence": 0.86, "evidence": "knowing the fate of Cassian"}
+{"n": 17, "reveals": "none", "rogue_one": false, "confidence": 0.99, "evidence": ""}
+{"n": 18, "reveals": "none", "rogue_one": false, "confidence": 0.99, "evidence": ""}
+{"n": 19, "reveals": "S1E6", "rogue_one": false, "confidence": 0.84, "evidence": "he definitely got shot and dropped"}
+{"n": 20, "reveals": "none", "rogue_one": false, "confidence": 1.0, "evidence": ""}
+{"n": 21, "reveals": "S1E6", "rogue_one": false, "confidence": 0.99, "evidence": "\u2018thank you for trying\u2019"}
+{"n": 22, "reveals": "none", "rogue_one": false, "confidence": 1.0, "evidence": ""}
+{"n": 23, "reveals": "none", "rogue_one": false, "confidence": 0.98, "evidence": ""}
+{"n": 24, "reveals": "none", "rogue_one": false, "confidence": 1.0, "evidence": ""}
+{"n": 25, "reveals": "none", "rogue_one": false, "confidence": 0.95, "evidence": ""}
+{"n": 26, "reveals": "S1E8", "rogue_one": false, "confidence": 0.99, "evidence": "\u201cYou can't stay, and I can't go!\u201d"}
+{"n": 27, "reveals": "none", "rogue_one": false, "confidence": 1.0, "evidence": ""}
+{"n": 28, "reveals": "none", "rogue_one": false, "confidence": 0.85, "evidence": ""}
+{"n": 29, "reveals": "none", "rogue_one": false, "confidence": 1.0, "evidence": ""}
+{"n": 30, "reveals": "none", "rogue_one": false, "confidence": 0.99, "evidence": ""}
+{"n": 31, "reveals": "none", "rogue_one": false, "confidence": 0.99, "evidence": ""}
+{"n": 32, "reveals": "none", "rogue_one": false, "confidence": 0.99, "evidence": ""}
+{"n": 33, "reveals": "S1E10", "rogue_one": false, "confidence": 0.88, "evidence": "an ally ship is going to be blown up"}
+{"n": 34, "reveals": "none", "rogue_one": false, "confidence": 0.99, "evidence": ""}
+{"n": 35, "reveals": "none", "rogue_one": false, "confidence": 0.99, "evidence": ""}
+{"n": 36, "reveals": "none", "rogue_one": false, "confidence": 0.99, "evidence": ""}
+{"n": 37, "reveals": "S1E7", "rogue_one": false, "confidence": 0.97, "evidence": "the scene ... got arrested"}
+{"n": 38, "reveals": "none", "rogue_one": false, "confidence": 0.99, "evidence": ""}
+{"n": 39, "reveals": "S1E8", "rogue_one": false, "confidence": 0.99, "evidence": "the prison on Narkina 5"}
+{"n": 40, "reveals": "S1E11", "rogue_one": false, "confidence": 0.93, "evidence": "the ship sprouted laser wings"}
+{"n": 41, "reveals": "S1E7", "rogue_one": false, "confidence": 0.87, "evidence": "Cassian was a loose end; Vel should kill him"}
+{"n": 42, "reveals": "none", "rogue_one": false, "confidence": 0.99, "evidence": ""}
+{"n": 43, "reveals": "none", "rogue_one": false, "confidence": 0.99, "evidence": ""}
+{"n": 44, "reveals": "none", "rogue_one": true, "confidence": 0.99, "evidence": "Cassian kills the mole that brought him intel"}
+{"n": 45, "reveals": "none", "rogue_one": false, "confidence": 0.99, "evidence": ""}
+{"n": 46, "reveals": "S1E12", "rogue_one": false, "confidence": 0.89, "evidence": "Cinta murdered the hostages"}
+{"n": 47, "reveals": "none", "rogue_one": false, "confidence": 0.99, "evidence": ""}
+{"n": 48, "reveals": "none", "rogue_one": false, "confidence": 0.99, "evidence": ""}
+{"n": 49, "reveals": "none", "rogue_one": false, "confidence": 0.98, "evidence": ""}
+{"n": 50, "reveals": "none", "rogue_one": false, "confidence": 1.0, "evidence": ""}
+{"n": 51, "reveals": "none", "rogue_one": false, "confidence": 0.99, "evidence": ""}
+{"n": 52, "reveals": "S2E1", "rogue_one": false, "confidence": 0.9, "evidence": "Leida crying"}
+{"n": 53, "reveals": "none", "rogue_one": false, "confidence": 1.0, "evidence": ""}
+{"n": 54, "reveals": "none", "rogue_one": false, "confidence": 0.98, "evidence": ""}
+{"n": 55, "reveals": "none", "rogue_one": false, "confidence": 1.0, "evidence": ""}
+{"n": 56, "reveals": "S2E2", "rogue_one": false, "confidence": 0.87, "evidence": "wife has left him"}
+{"n": 57, "reveals": "S1E7", "rogue_one": false, "confidence": 0.75, "evidence": "funding-wise resistance"}
+{"n": 58, "reveals": "none", "rogue_one": false, "confidence": 1.0, "evidence": ""}
+{"n": 59, "reveals": "none", "rogue_one": false, "confidence": 1.0, "evidence": ""}
+{"n": 60, "reveals": "S2E3", "rogue_one": false, "confidence": 0.91, "evidence": "he\u2019s known for it"}
+{"n": 61, "reveals": "none", "rogue_one": false, "confidence": 0.99, "evidence": ""}
+{"n": 62, "reveals": "S2E3", "rogue_one": false, "confidence": 1.0, "evidence": "Brasso ... he was dead"}
+{"n": 63, "reveals": "none", "rogue_one": false, "confidence": 0.98, "evidence": ""}
+{"n": 64, "reveals": "none", "rogue_one": false, "confidence": 0.99, "evidence": ""}
+{"n": 65, "reveals": "none", "rogue_one": false, "confidence": 0.99, "evidence": ""}
+{"n": 66, "reveals": "none", "rogue_one": false, "confidence": 0.99, "evidence": ""}
+{"n": 67, "reveals": "none", "rogue_one": false, "confidence": 0.99, "evidence": ""}
+{"n": 68, "reveals": "none", "rogue_one": false, "confidence": 0.99, "evidence": ""}
+{"n": 69, "reveals": "none", "rogue_one": false, "confidence": 0.99, "evidence": ""}
+{"n": 70, "reveals": "none", "rogue_one": false, "confidence": 0.99, "evidence": ""}
+{"n": 71, "reveals": "S1E9", "rogue_one": false, "confidence": 0.84, "evidence": "Gorst wants to torture Bix"}
+{"n": 72, "reveals": "none", "rogue_one": false, "confidence": 0.98, "evidence": ""}
+{"n": 73, "reveals": "none", "rogue_one": false, "confidence": 1.0, "evidence": ""}
+{"n": 74, "reveals": "none", "rogue_one": false, "confidence": 0.92, "evidence": ""}
+{"n": 75, "reveals": "none", "rogue_one": false, "confidence": 1.0, "evidence": ""}
+{"n": 76, "reveals": "none", "rogue_one": false, "confidence": 0.89, "evidence": ""}
+{"n": 77, "reveals": "none", "rogue_one": false, "confidence": 0.99, "evidence": ""}
+{"n": 78, "reveals": "S2E6", "rogue_one": false, "confidence": 0.96, "evidence": "removing the listening device"}
+{"n": 79, "reveals": "S2E6", "rogue_one": false, "confidence": 0.9, "evidence": "Lonni ... tells ... about Dr Gorst"}
+{"n": 80, "reveals": "S2E6", "rogue_one": false, "confidence": 0.99, "evidence": "blaster pointed at him"}
+{"n": 81, "reveals": "none", "rogue_one": false, "confidence": 1.0, "evidence": ""}
+{"n": 82, "reveals": "S2E6", "rogue_one": false, "confidence": 0.97, "evidence": "guy ... pointing a blaster"}
+{"n": 83, "reveals": "S2E6", "rogue_one": false, "confidence": 0.94, "evidence": "one of them was doomed"}
+{"n": 84, "reveals": "none", "rogue_one": false, "confidence": 1.0, "evidence": ""}
+{"n": 85, "reveals": "S2E7", "rogue_one": false, "confidence": 0.86, "evidence": "moment where they could kiss but don't"}
+{"n": 86, "reveals": "S2E7", "rogue_one": false, "confidence": 0.99, "evidence": "the place he needs to be wasn\u2019t with her"}
+{"n": 87, "reveals": "none", "rogue_one": false, "confidence": 0.99, "evidence": ""}
+{"n": 88, "reveals": "none", "rogue_one": false, "confidence": 1.0, "evidence": ""}
+{"n": 89, "reveals": "none", "rogue_one": false, "confidence": 1.0, "evidence": ""}
+{"n": 90, "reveals": "none", "rogue_one": false, "confidence": 0.99, "evidence": ""}
+{"n": 91, "reveals": "S2E5", "rogue_one": false, "confidence": 0.85, "evidence": "Tarkin did kill his dad"}
+{"n": 92, "reveals": "S2E8", "rogue_one": false, "confidence": 0.86, "evidence": "Dedra\u2019s breakdown scene"}
+{"n": 93, "reveals": "S2E8", "rogue_one": false, "confidence": 0.9, "evidence": "conversation with Cyril; following orders"}
+{"n": 94, "reveals": "S2E8", "rogue_one": true, "confidence": 0.96, "evidence": "Cass walking past the other martyrs of Scariff"}
+{"n": 95, "reveals": "none", "rogue_one": false, "confidence": 0.99, "evidence": ""}
+{"n": 96, "reveals": "none", "rogue_one": false, "confidence": 0.99, "evidence": ""}
+{"n": 97, "reveals": "none", "rogue_one": false, "confidence": 0.99, "evidence": ""}
+{"n": 98, "reveals": "none", "rogue_one": false, "confidence": 0.98, "evidence": ""}
+{"n": 99, "reveals": "none", "rogue_one": false, "confidence": 0.99, "evidence": ""}
+{"n": 100, "reveals": "S2E9", "rogue_one": false, "confidence": 0.99, "evidence": "removed/killed every Ghorman"}
+{"n": 101, "reveals": "none", "rogue_one": false, "confidence": 0.98, "evidence": ""}
+{"n": 102, "reveals": "S2E10", "rogue_one": false, "confidence": 0.99, "evidence": "Jung was already dead"}
+{"n": 103, "reveals": "none", "rogue_one": false, "confidence": 0.96, "evidence": ""}
+{"n": 104, "reveals": "none", "rogue_one": false, "confidence": 1.0, "evidence": ""}
+{"n": 105, "reveals": "none", "rogue_one": false, "confidence": 1.0, "evidence": ""}
+{"n": 106, "reveals": "S2E10", "rogue_one": false, "confidence": 0.98, "evidence": "Luthen tells her that he'll do it"}
+{"n": 107, "reveals": "none", "rogue_one": false, "confidence": 0.99, "evidence": ""}
+{"n": 108, "reveals": "none", "rogue_one": false, "confidence": 0.99, "evidence": ""}
+{"n": 109, "reveals": "S2E11", "rogue_one": false, "confidence": 0.99, "evidence": "Cass and Kleya ... arguing"}
+{"n": 110, "reveals": "none", "rogue_one": false, "confidence": 0.91, "evidence": "speculates that she dies"}
+{"n": 111, "reveals": "none", "rogue_one": false, "confidence": 1.0, "evidence": "Leia chase scene"}
+{"n": 112, "reveals": "none", "rogue_one": false, "confidence": 0.88, "evidence": "reaction to parent\u2019s quote"}
+{"n": 113, "reveals": "S2E8", "rogue_one": false, "confidence": 0.95, "evidence": "after syrils death"}
+{"n": 114, "reveals": "none", "rogue_one": false, "confidence": 0.98, "evidence": "compares pacing; no film plot"}
+{"n": 115, "reveals": "none", "rogue_one": false, "confidence": 0.99, "evidence": "watching them in sequence"}
+{"n": 116, "reveals": "none", "rogue_one": false, "confidence": 1.0, "evidence": ""}
+{"n": 117, "reveals": "S2E9", "rogue_one": false, "confidence": 0.86, "evidence": "Bail almost handed Mon to the ISB"}
+{"n": 118, "reveals": "S1E10", "rogue_one": false, "confidence": 0.79, "evidence": "ISB field agent defecting"}
+{"n": 119, "reveals": "S2E12", "rogue_one": false, "confidence": 0.96, "evidence": "child that wasn't his"}
+{"n": 120, "reveals": "none", "rogue_one": false, "confidence": 0.94, "evidence": ""}
+{"n": 121, "reveals": "S2E10", "rogue_one": false, "confidence": 0.88, "evidence": "whatever planet Luthen was on in that flashback"}
+{"n": 122, "reveals": "none", "rogue_one": true, "confidence": 0.9, "evidence": "Jyn ... leading excursions"}
+{"n": 123, "reveals": "none", "rogue_one": false, "confidence": 0.98, "evidence": ""}
+{"n": 124, "reveals": "none", "rogue_one": false, "confidence": 0.98, "evidence": ""}
+{"n": 125, "reveals": "none", "rogue_one": false, "confidence": 0.9, "evidence": "with Tarkin, he is insecure and petty"}
+{"n": 126, "reveals": "none", "rogue_one": false, "confidence": 0.98, "evidence": ""}
+{"n": 127, "reveals": "none", "rogue_one": false, "confidence": 0.99, "evidence": ""}
+{"n": 128, "reveals": "none", "rogue_one": false, "confidence": 0.99, "evidence": ""}
+{"n": 129, "reveals": "none", "rogue_one": true, "confidence": 0.84, "evidence": "Bail Organa shows up"}
+{"n": 130, "reveals": "S2E10", "rogue_one": false, "confidence": 0.98, "evidence": "Kleya adjusted her strategy"}
+{"n": 131, "reveals": "none", "rogue_one": false, "confidence": 1.0, "evidence": ""}
+{"n": 132, "reveals": "S2E10", "rogue_one": false, "confidence": 0.99, "evidence": "confront Luthen on her own"}
+{"n": 133, "reveals": "S2E10", "rogue_one": false, "confidence": 0.99, "evidence": "Kleya gets her and Luthan"}
+{"n": 134, "reveals": "S2E10", "rogue_one": true, "confidence": 1.0, "evidence": "Andor ... sparing Galen Erso"}
+{"n": 135, "reveals": "S2E10", "rogue_one": false, "confidence": 0.99, "evidence": "Luthen had him come along; Dedra\u2019s team"}
+{"n": 136, "reveals": "S2E10", "rogue_one": false, "confidence": 1.0, "evidence": "knew he was dead ... showed him on the bench alone"}
+{"n": 137, "reveals": "S2E10", "rogue_one": false, "confidence": 0.99, "evidence": "Heert puts dedra under arrest"}
+{"n": 138, "reveals": "S2E10", "rogue_one": false, "confidence": 0.99, "evidence": "stumbled on some Death Star related files"}
+{"n": 139, "reveals": "S2E10", "rogue_one": false, "confidence": 0.98, "evidence": "When this hospital is attacked"}
+{"n": 140, "reveals": "none", "rogue_one": false, "confidence": 1.0, "evidence": ""}
+{"n": 141, "reveals": "none", "rogue_one": false, "confidence": 1.0, "evidence": ""}
+{"n": 142, "reveals": "none", "rogue_one": false, "confidence": 1.0, "evidence": ""}
+{"n": 143, "reveals": "none", "rogue_one": false, "confidence": 1.0, "evidence": ""}
+{"n": 144, "reveals": "none", "rogue_one": false, "confidence": 1.0, "evidence": ""}
+{"n": 145, "reveals": "none", "rogue_one": false, "confidence": 1.0, "evidence": ""}
+{"n": 146, "reveals": "none", "rogue_one": false, "confidence": 1.0, "evidence": ""}
+{"n": 147, "reveals": "none", "rogue_one": false, "confidence": 1.0, "evidence": ""}
+{"n": 148, "reveals": "none", "rogue_one": false, "confidence": 1.0, "evidence": ""}
+{"n": 149, "reveals": "none", "rogue_one": false, "confidence": 1.0, "evidence": ""}
+{"n": 150, "reveals": "none", "rogue_one": false, "confidence": 1.0, "evidence": ""}
+{"n": 151, "reveals": "none", "rogue_one": false, "confidence": 1.0, "evidence": ""}
+{"n": 152, "reveals": "none", "rogue_one": false, "confidence": 1.0, "evidence": ""}
+{"n": 153, "reveals": "none", "rogue_one": false, "confidence": 1.0, "evidence": ""}
+{"n": 154, "reveals": "none", "rogue_one": false, "confidence": 1.0, "evidence": ""}
+{"n": 155, "reveals": "none", "rogue_one": false, "confidence": 1.0, "evidence": ""}
+{"n": 156, "reveals": "none", "rogue_one": false, "confidence": 0.99, "evidence": ""}
+{"n": 157, "reveals": "none", "rogue_one": false, "confidence": 1.0, "evidence": ""}
+{"n": 158, "reveals": "none", "rogue_one": false, "confidence": 1.0, "evidence": ""}
+{"n": 159, "reveals": "none", "rogue_one": false, "confidence": 1.0, "evidence": ""}
+{"n": 160, "reveals": "none", "rogue_one": false, "confidence": 0.99, "evidence": ""}
+{"n": 161, "reveals": "S2E6", "rogue_one": false, "confidence": 0.99, "evidence": "\u201cShe was everything you daydream of being\u201d"}
+{"n": 162, "reveals": "S2E6", "rogue_one": false, "confidence": 0.99, "evidence": "\u201cThe latter. It's talked about later\u201d"}
+{"n": 163, "reveals": "S2E6", "rogue_one": false, "confidence": 1.0, "evidence": "Cinta\u2019s death; stray shot"}
+{"n": 164, "reveals": "none", "rogue_one": false, "confidence": 0.99, "evidence": ""}
+{"n": 165, "reveals": "S2E5", "rogue_one": false, "confidence": 0.99, "evidence": "\u201cbreathing fumes with Saw Gerrera\u201d"}
+{"n": 166, "reveals": "none", "rogue_one": false, "confidence": 0.98, "evidence": ""}
+{"n": 167, "reveals": "S2E6", "rogue_one": false, "confidence": 0.99, "evidence": "\u201cAt the end of episode 6\u201d"}
+{"n": 168, "reveals": "S2E4", "rogue_one": false, "confidence": 0.99, "evidence": "\u201ctwo Ghorman massacres\u201d"}
+{"n": 169, "reveals": "none", "rogue_one": false, "confidence": 0.99, "evidence": ""}

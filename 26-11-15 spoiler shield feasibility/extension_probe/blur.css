@@ -1,0 +1,14 @@
+/* Loaded before the page paints (run_at document_start), so a comment is blurred the moment it exists.
+   The script reveals each one by adding .ss-safe. That ordering is what prevents a spoiler "flash". */
+shreddit-comment > [slot="comment"]:not(.ss-safe),
+.thing.comment > .entry .usertext-body:not(.ss-safe) {
+  filter: blur(6px);
+  transition: filter 0.2s;
+}
+.ss-spoiler { filter: blur(6px) !important; outline: 2px dashed #c0392b; cursor: pointer; }
+#ss-probe {
+  position: fixed; bottom: 12px; right: 12px; z-index: 99999; padding: 10px 12px; max-width: 320px;
+  font: 12px/1.4 system-ui, sans-serif; color: #fff; background: #1f2933; border-radius: 8px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, .3); white-space: pre-line;
+}
+#ss-probe button { margin-top: 6px; font: inherit; cursor: pointer; }

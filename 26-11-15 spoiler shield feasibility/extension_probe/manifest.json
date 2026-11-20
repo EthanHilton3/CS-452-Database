@@ -1,0 +1,14 @@
+{
+  "manifest_version": 3,
+  "name": "Spoiler Shield probe",
+  "version": "0.1",
+  "description": "Feasibility probe: can a content script find, blur and reveal Reddit comments without a spoiler flash?",
+  "content_scripts": [
+    {
+      "matches": ["https://www.reddit.com/*", "https://old.reddit.com/*"],
+      "css": ["blur.css"],
+      "js": ["content.js"],
+      "run_at": "document_start"
+    }
+  ]
+}
