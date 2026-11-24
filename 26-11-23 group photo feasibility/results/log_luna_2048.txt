@@ -1,0 +1,17 @@
+IMG_6608: 20 items, 1 unidentified (43.0s, $0.0015)
+IMG_1978: 8 items, 0 unidentified (43.4s, $0.0010)
+IMG_6907: 12 items, 0 unidentified (45.2s, $0.0014)
+IMG_6527: 12 items, 1 unidentified (46.2s, $0.0013)
+IMG_6607: 18 items, 1 unidentified (49.3s, $0.0016)
+IMG_8979: 3 items, 1 unidentified (19.9s, $0.0006)
+IMG_9165: 5 items, 1 unidentified (24.0s, $0.0009)
+IMG_9001: 3 items, 1 unidentified (25.2s, $0.0007)
+IMG_8635: 15 items, 5 unidentified (33.3s, $0.0013)
+IMG_9188: 11 items, 3 unidentified (27.2s, $0.0010)
+IMG_9410: 6 items, 4 unidentified (18.9s, $0.0011)
+IMG_9411: 16 items, 5 unidentified (20.1s, $0.0014)
+IMG_9414: 14 items, 4 unidentified (15.9s, $0.0012)
+IMG_9412: 19 items, 5 unidentified (22.2s, $0.0015)
+IMG_9413: 6 items, 7 unidentified (16.7s, $0.0010)
+
+15/15 photos, 168 items, $0.0174 total -> items_luna_2048.jsonl

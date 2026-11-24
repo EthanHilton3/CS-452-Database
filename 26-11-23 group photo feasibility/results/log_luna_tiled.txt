@@ -1,0 +1,6 @@
+IMG_6608: 48 tile items -> 22 merged, 3 unidentified ($0.0060, 131s)
+IMG_6527: 22 tile items -> 12 merged, 2 unidentified ($0.0046, 143s)
+IMG_1978: 14 tile items -> 7 merged, 1 unidentified ($0.0035, 148s)
+IMG_6607: 43 tile items -> 22 merged, 0 unidentified ($0.0064, 159s)
+
+4/4 photos, 63 items, $0.0206 total -> items_luna_tiled.jsonl

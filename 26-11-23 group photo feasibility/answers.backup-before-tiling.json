@@ -1,0 +1,210 @@
+{
+ "IMG_1978": {
+  "verdicts": {
+   "luna_1024": {
+    "0": "close",
+    "1": "right",
+    "2": "right",
+    "3": "close",
+    "4": "close",
+    "5": "wrong"
+   },
+   "sol_2048": {
+    "0": "right",
+    "1": "right",
+    "2": "right",
+    "3": "right",
+    "4": "close",
+    "5": "close",
+    "6": "right"
+   },
+   "luna_2048": {
+    "0": "wrong",
+    "1": "right",
+    "2": "right",
+    "3": "right",
+    "4": "wrong",
+    "5": "right",
+    "6": "right",
+    "7": "wrong"
+   }
+  },
+  "key_total": 9,
+  "missed": "it miseed the yugioh early days switch game next tot he final fantasy one. It didnt get the name right for the FF game, wiht is the pixel remaster of games 1-6. It said Trigun Maximum Vol 1-2 but its really 1 and 3. It missed the new bottle of colgne thats on the JJK hoddie. And it misclassified the popcorn container set as paper cups. also the pillow cushin is a navy blue and white BYU Y pillow."
+ },
+ "IMG_6527": {
+  "verdicts": {
+   "luna_1024": {
+    "0": "right",
+    "1": "right",
+    "2": "right",
+    "3": "right",
+    "4": "right",
+    "5": "right",
+    "6": "right",
+    "7": "right",
+    "8": "right",
+    "9": "right",
+    "10": "right",
+    "11": "wrong"
+   },
+   "sol_2048": {
+    "0": "right",
+    "1": "right",
+    "2": "right",
+    "3": "right",
+    "4": "right",
+    "5": "right",
+    "6": "right",
+    "7": "right",
+    "8": "right",
+    "9": "right",
+    "10": "right"
+   },
+   "luna_2048": {
+    "0": "right",
+    "1": "right",
+    "2": "right",
+    "3": "right",
+    "4": "right",
+    "5": "right",
+    "6": "right",
+    "7": "right",
+    "8": "wrong",
+    "9": "right",
+    "10": "right",
+    "11": "right"
+   }
+  },
+  "key_total": 13,
+  "missed": "technically therea belt on top of the avatr monolpoty but i dont really expect that anythig would recognmize that. Also the thing on the right of the photo is a holister winter sweater"
+ },
+ "IMG_6607": {
+  "key_total": 19,
+  "missed": "I like how b was pretty good at noticing which ones were steelbooks, namely all the Ghibli films, the spiderman colelction, the yugioh bonds beyond time, the pokemin diamon and pearl 4 movie collection, wayne's world and bumbleblee. It struggled ot know where ones were sealed still and which were not. all of the ghibli's were sleaed still except for howling moving castle, castle in the sky and princess mononoke. Also, some of them struggled ot name all the ppsiderman movies (veno, spiderman into the spiderverse, homecoming and far fro home). Also some struggled to get the pokemon movies, at least saying that on of the colelctions is from black and white and one is from diamon and pearl",
+  "verdicts": {
+   "luna_1024": {
+    "0": "right",
+    "1": "close",
+    "2": "close",
+    "3": "right",
+    "4": "right",
+    "5": "close",
+    "6": "close",
+    "7": "right",
+    "8": "close",
+    "9": "close",
+    "10": "close",
+    "11": "right",
+    "12": "right"
+   },
+   "sol_2048": {
+    "0": "close",
+    "1": "right",
+    "2": "right",
+    "3": "close",
+    "4": "right",
+    "5": "right",
+    "6": "right",
+    "7": "close",
+    "8": "close",
+    "9": "close",
+    "10": "close",
+    "11": "right",
+    "12": "close",
+    "13": "right",
+    "14": "right",
+    "15": "right",
+    "16": "right",
+    "17": "right"
+   },
+   "luna_2048": {
+    "0": "close",
+    "1": "right",
+    "2": "close",
+    "3": "close",
+    "4": "close",
+    "5": "close",
+    "6": "close",
+    "7": "close",
+    "8": "close",
+    "9": "close",
+    "10": "close",
+    "11": "close",
+    "12": "close",
+    "13": "close",
+    "14": "close",
+    "15": "close",
+    "16": "right",
+    "17": "right"
+   }
+  }
+ },
+ "IMG_6608": {
+  "verdicts": {
+   "luna_1024": {
+    "0": "right",
+    "1": "right",
+    "2": "wrong",
+    "3": "right",
+    "4": "close",
+    "5": "close",
+    "6": "right",
+    "7": "close",
+    "8": "close",
+    "9": "wrong",
+    "10": "wrong",
+    "11": "wrong",
+    "12": "close",
+    "13": "close",
+    "14": "close"
+   },
+   "sol_2048": {
+    "0": "right",
+    "1": "right",
+    "2": "right",
+    "3": "right",
+    "4": "right",
+    "5": "close",
+    "6": "right",
+    "7": "right",
+    "8": "close",
+    "9": "close",
+    "10": "right",
+    "11": "right",
+    "12": "right",
+    "13": "right",
+    "14": "right",
+    "15": "right",
+    "16": "right",
+    "17": "right",
+    "18": "right",
+    "19": "right"
+   },
+   "luna_2048": {
+    "0": "right",
+    "1": "right",
+    "2": "right",
+    "3": "wrong",
+    "4": "right",
+    "5": "close",
+    "6": "right",
+    "7": "right",
+    "8": "close",
+    "9": "close",
+    "10": "right",
+    "11": "right",
+    "12": "right",
+    "13": "right",
+    "14": "right",
+    "15": "wrong",
+    "16": "wrong",
+    "17": "close",
+    "18": "right",
+    "19": "right"
+   }
+  },
+  "key_total": 20,
+  "missed": "its the gaMECUBVE GAme star fox assult. And the avar adn koraa compleyte bluary sets are actually part of the same combined sety, but im not sure if that distinguishable from this angle. Also is it possible for this to figure what movies are inlcuded in that poemon 4 movie sest?"
+ }
+}
