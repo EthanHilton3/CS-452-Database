@@ -1,0 +1,66 @@
+{
+ "key": "0045496906788",
+ "queried_as": "045496906788",
+ "fetched_at": "2026-11-24T19:50:07+00:00",
+ "http_status": 200,
+ "rate_headers": {
+  "X-RateLimit-Limit": "100",
+  "X-RateLimit-Reset": "1795636139",
+  "X-RateLimit-Remaining": "93"
+ },
+ "response": {
+  "code": "OK",
+  "total": 1,
+  "offset": 0,
+  "items": [
+   {
+    "ean": "0045496906788",
+    "title": "Nintendo™ The Legend of Zelda: Ocarina of Time - Nintendo Switch 2",
+    "description": "Nintendo? The Legend of Zelda: Ocarina of Time - Nintendo Switch 2",
+    "upc": "045496906788",
+    "brand": "Nintendo",
+    "model": "1012827386",
+    "color": "",
+    "size": "",
+    "dimension": "",
+    "weight": "",
+    "category": "",
+    "currency": "",
+    "lowest_recorded_price": 69.99,
+    "highest_recorded_price": 69.99,
+    "images": [
+     "https://cms.gameflycdn.com/proxy/gf/boxart/640w/5054659.jpg",
+     "https://target.scene7.com/is/image/Target/GUEST_8a2a9171-5321-42b1-b121-e1d4e3d638e4?wid=1000&hei=1000"
+    ],
+    "offers": [
+     {
+      "merchant": "GameFly",
+      "domain": "gamefly.com",
+      "title": "The Legend of Zelda: Ocarina of Time",
+      "currency": "",
+      "list_price": "",
+      "price": 69.99,
+      "shipping": "",
+      "condition": "New",
+      "availability": "",
+      "link": "https://www.upcitemdb.com/norob/alink/?id=u2o253v233y29454r2t2&tid=1&seq=1795549808&plt=cc427170b2ac842caacdf02ff536673c",
+      "updated_t": 1795265831
+     },
+     {
+      "merchant": "Target",
+      "domain": "target.com",
+      "title": "Nintendo™ The Legend of Zelda: Ocarina of Time - Nintendo Switch 2",
+      "currency": "",
+      "list_price": "",
+      "price": 69.99,
+      "shipping": "",
+      "condition": "New",
+      "availability": "",
+      "link": "https://www.upcitemdb.com/norob/alink/?id=u2o253t2z2x264a4r2x2&tid=1&seq=1795549808&plt=b5d6d90a3becfe6f6f2f529c42fe172e",
+      "updated_t": 1795517547
+     }
+    ]
+   }
+  ]
+ }
+}

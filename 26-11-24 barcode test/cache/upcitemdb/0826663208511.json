@@ -1,0 +1,123 @@
+{
+ "key": "0826663208511",
+ "queried_as": "826663208511",
+ "fetched_at": "2026-11-24T19:49:21+00:00",
+ "http_status": 200,
+ "rate_headers": {
+  "X-RateLimit-Limit": "100",
+  "X-RateLimit-Reset": "1795636139",
+  "X-RateLimit-Remaining": "97"
+ },
+ "response": {
+  "code": "OK",
+  "total": 1,
+  "offset": 0,
+  "items": [
+   {
+    "ean": "0826663208511",
+    "title": "Nausicaa Of The Valley Of The Wind (Limited Edition Steelbook) (Blu-ray + DVD)",
+    "description": "Written and directed by Academy Award winner Hayao Miyazaki  Nausica? of the Valley of the Wind is an epic masterpiece of sweeping scope and grandeur that remains one of the most breathtaking and exhilarating animated films of all time. A thousand years after the Seven Days of Fire destroyed civilization  warring human factions survive in a world devastated by atmospheric poisons and swarming with gigantic insects. The peaceful Valley of the Wind is nestled on the edge of the Toxic Forest and led by the courageous Princess Nausica?  whose love of all living things leads her into terrible danger  as she fights to restore balance between humans and nature. Featuring the voices of Alison Lohman  Uma Thurman  Patrick Stewart  Edward James Olmos and Shia LaBeouf.",
+    "upc": "826663208511",
+    "brand": "SDS",
+    "model": "86512130000",
+    "color": "Ivory Leather",
+    "size": "",
+    "dimension": "",
+    "weight": "5 lb",
+    "category": "Media > DVDs & Videos",
+    "currency": "CAD",
+    "lowest_recorded_price": 16.19,
+    "highest_recorded_price": 62.41,
+    "images": [
+     "https://i5.walmartimages.com/asr/74223c49-b9c2-4ded-b1dd-9f22966a99f9.c229ef2df746e99fb50fb9fa71db3a56.jpeg?odnHeight=2000&odnWidth=2000&odnBg=ffffff",
+     "https://mediacdn.aent-m.com/prod-img/500/76/3829376-2572413.jpg",
+     "https://pisces.bbystatic.com/image2/BestBuy_US/images/products/6416/6416686_sa.jpg",
+     "https://target.scene7.com/is/image/Target/GUEST_4f2b13ad-d74a-4676-a57a-f58e18a0bdcf?wid=1000&hei=1000",
+     "https://c1.neweggimages.com/NeweggImage/productimage/A4M5D201029CCU2D.jpg",
+     "https://img.shop.com/Image/260000/260100/260166/products/1895937394__300x300__.jpg"
+    ],
+    "offers": [
+     {
+      "merchant": "Newegg Canada",
+      "domain": "Newegg Canada",
+      "title": "NAUSICAA OF THE VALLEY OF THE WIND (LTED EDITION STBK/BLU RAY/DVD COMB",
+      "currency": "CAD",
+      "list_price": "",
+      "price": 62.41,
+      "shipping": "Free Shipping",
+      "condition": "New",
+      "availability": "Out of Stock",
+      "link": "https://www.upcitemdb.com/norob/alink/?id=z2p263v21303d454z2&tid=1&seq=1795549761&plt=dfce4296de593e35003a9029595393b1",
+      "updated_t": 1613530199
+     },
+     {
+      "merchant": "BOOKSAMILLION.COM",
+      "domain": "booksamillion.com",
+      "title": "Nausicaa of the Valley of the Wind",
+      "currency": "",
+      "list_price": "",
+      "price": 26.99,
+      "shipping": "",
+      "condition": "New",
+      "availability": "",
+      "link": "https://www.upcitemdb.com/norob/alink/?id=23q233w2v2139454q2&tid=1&seq=1795549761&plt=ad24d89e9640b179db535b32206c346f",
+      "updated_t": 1760618328
+     },
+     {
+      "merchant": "Best Buy",
+      "domain": "bestbuy.com",
+      "title": "Nausicaä of the Valley of the Wind [SteelBook] [Blu-ray] [1984]",
+      "currency": "",
+      "list_price": "",
+      "price": 19.99,
+      "shipping": "",
+      "condition": "New",
+      "availability": "",
+      "link": "https://www.upcitemdb.com/norob/alink/?id=y2x203t2w203e474y2&tid=1&seq=1795549761&plt=2bda8b57396508b2722ca9bced3cd154",
+      "updated_t": 1636177174
+     },
+     {
+      "merchant": "Wal-Mart.com",
+      "domain": "walmart.com",
+      "title": "Nausicaa Of The Valley Of The Wind (Limited Edition Steelbook) (Blu-ray + DVD)",
+      "currency": "",
+      "list_price": "",
+      "price": 39.44,
+      "shipping": "Free Shipping",
+      "condition": "New",
+      "availability": "Out of Stock",
+      "link": "https://www.upcitemdb.com/norob/alink/?id=z2r2x21323y294d4u2&tid=1&seq=1795549761&plt=50eaecf720de20a6437678772f173168",
+      "updated_t": 1791828859
+     },
+     {
+      "merchant": "Target",
+      "domain": "target.com",
+      "title": "Nausicaä of the Valley of the Wind (Blu-ray)(1984)",
+      "currency": "",
+      "list_price": "",
+      "price": 19.99,
+      "shipping": "",
+      "condition": "New",
+      "availability": "",
+      "link": "https://www.upcitemdb.com/norob/alink/?id=y2w263x2v2336494y2&tid=1&seq=1795549761&plt=8443ff269731a4a7a3307059ccbdd29b",
+      "updated_t": 1717318794
+     },
+     {
+      "merchant": "Shop.com",
+      "domain": "shop.com",
+      "title": "Studio Distribution Servi Nausicaa Of The Valley Of The Wind Blu-ray/dvd/ltd Edition/steelbook Brsf20851 - All",
+      "currency": "",
+      "list_price": 33.96,
+      "price": 26.5,
+      "shipping": "US:::0.00 USD",
+      "condition": "New",
+      "availability": "",
+      "link": "https://www.upcitemdb.com/norob/alink/?id=z2r203u24353f464z2&tid=1&seq=1795549761&plt=f66ba217d550a3ee23c9c098825b3057",
+      "updated_t": 1647606332
+     }
+    ],
+    "elid": "267730607165"
+   }
+  ]
+ }
+}

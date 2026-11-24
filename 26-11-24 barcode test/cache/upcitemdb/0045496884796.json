@@ -1,0 +1,17 @@
+{
+ "key": "0045496884796",
+ "queried_as": "045496884796",
+ "fetched_at": "2026-11-24T19:50:32+00:00",
+ "http_status": 200,
+ "rate_headers": {
+  "X-RateLimit-Limit": "100",
+  "X-RateLimit-Reset": "1795636139",
+  "X-RateLimit-Remaining": "91"
+ },
+ "response": {
+  "code": "OK",
+  "total": 0,
+  "offset": 0,
+  "items": []
+ }
+}

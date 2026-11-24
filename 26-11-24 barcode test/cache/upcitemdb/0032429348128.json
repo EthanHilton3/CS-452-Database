@@ -1,0 +1,95 @@
+{
+ "key": "0032429348128",
+ "queried_as": "032429348128",
+ "fetched_at": "2026-11-24T19:49:32+00:00",
+ "http_status": 200,
+ "rate_headers": {
+  "X-RateLimit-Limit": "100",
+  "X-RateLimit-Reset": "1795636139",
+  "X-RateLimit-Remaining": "96"
+ },
+ "response": {
+  "code": "OK",
+  "total": 1,
+  "offset": 0,
+  "items": [
+   {
+    "ean": "0032429348128",
+    "title": "Star Trek: Stardate Collection (Blu-ray + Digital Copy) [Blu-ray]",
+    "description": "Ten-disc set includes: Star Trek: The Motion Picture (1979)Boarding the sleekly updated NCC-1701 starship  Admiral Kirk (William Shatner)  Mr. Spock (Leonard Nimoy)  and the rest of the Enterprise crew are reunited to stop an immense  destructive alien construct before it reaches Earth.  The human adventure is just beginning  in this epic relaunch of the  60s TV sci-fi classic brought to the big screen by director Robert Wise. DeForest Kelley  James Doohan  Walter Koenig  Nichelle Nichols  George Takei  Persis Khambatta co-star. Theatrical version; 131 min. C/Rtg: G Star Trek II: The Wrath Of Khan (1982)A terraforming project code-named Genesis becomes the key to revenge for Kirk s old nemesis-the genetically engineered Khan-who hatches a plot to get even with the admiral for marooning him 15 years earlier. The big-screen follow-up to the classic TV episode  Space Seed  also features the emotional (and permanent?) death of a crew member. William Shatner  Leonard Nimoy  DeForest Kelley  Kirstie Alley  and Ric",
+    "upc": "032429348128",
+    "brand": "Paramount Home Video",
+    "model": "40720777",
+    "color": "Grey",
+    "size": "",
+    "dimension": "",
+    "weight": "5 lb",
+    "category": "Media > DVDs & Videos",
+    "currency": "",
+    "lowest_recorded_price": 22.99,
+    "highest_recorded_price": 75.07,
+    "images": [
+     "https://pisces.bbystatic.com/image2/BestBuy_US/images/products/6428/6428930_sa.jpg",
+     "https://i5.walmartimages.com/asr/1b24ead2-4777-4c92-9797-c76915316cbb.5b89277bb5b38ed6c30ef592185cb632.jpeg?odnHeight=450&odnWidth=450&odnBg=ffffff",
+     "https://target.scene7.com/is/image/Target/GUEST_c870f629-3986-489f-828d-1e0af4df6251?wid=1000&hei=1000",
+     "https://img.shop.com/Image/260000/260100/260166/products/1895938486__300x300__.jpg"
+    ],
+    "offers": [
+     {
+      "merchant": "Best Buy",
+      "domain": "bestbuy.com",
+      "title": "Star Trek: Stardate Collection [Includes Digital Copy] [Blu-ray]",
+      "currency": "",
+      "list_price": "",
+      "price": 49.99,
+      "shipping": "",
+      "condition": "New",
+      "availability": "",
+      "link": "https://www.upcitemdb.com/norob/alink/?id=y2x263y2z233c4a4q2&tid=1&seq=1795549773&plt=6835cbc403db8763b44749acb85e0f15",
+      "updated_t": 1711953209
+     },
+     {
+      "merchant": "Wal-Mart.com",
+      "domain": "walmart.com",
+      "title": "Star Trek: Stardate Collection (Blu-ray + Digital Copy) [Blu-ray]",
+      "currency": "",
+      "list_price": 72,
+      "price": 59.99,
+      "shipping": "Free Shipping",
+      "condition": "New",
+      "availability": "Out of Stock",
+      "link": "https://www.upcitemdb.com/norob/alink/?id=03t2y213y203c464v2&tid=1&seq=1795549773&plt=7d9836d27bbfaff86e32225f1d56ab90",
+      "updated_t": 1774289511
+     },
+     {
+      "merchant": "Target",
+      "domain": "target.com",
+      "title": "Star Trek: Stardate Collection (Blu-ray)",
+      "currency": "",
+      "list_price": "",
+      "price": 54.99,
+      "shipping": "",
+      "condition": "New",
+      "availability": "",
+      "link": "https://www.upcitemdb.com/norob/alink/?id=y2x263z21323b4b4w2&tid=1&seq=1795549773&plt=c6bf902f72d95e522f2311542a90d6dd",
+      "updated_t": 1774857599
+     },
+     {
+      "merchant": "Shop.com",
+      "domain": "shop.com",
+      "title": "Paramount-sds Star Trek 1-10 Stardate Collection Blu-ray/with Digital/10 Disc/1979-2002 Br59213457 - All",
+      "currency": "",
+      "list_price": 69.76,
+      "price": 54.4,
+      "shipping": "US:::0.00 USD",
+      "condition": "New",
+      "availability": "",
+      "link": "https://www.upcitemdb.com/norob/alink/?id=z2p23313z2337454y2&tid=1&seq=1795549773&plt=47639ab08dea3db55e6bda9e1c5d4e0f",
+      "updated_t": 1648019150
+     }
+    ],
+    "elid": "137586008369"
+   }
+  ]
+ }
+}

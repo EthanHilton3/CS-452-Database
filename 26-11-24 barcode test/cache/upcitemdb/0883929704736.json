@@ -1,0 +1,137 @@
+{
+ "key": "0883929704736",
+ "queried_as": "883929704736",
+ "fetched_at": "2026-11-24T19:48:57+00:00",
+ "http_status": 200,
+ "rate_headers": {
+  "X-RateLimit-Limit": "100",
+  "X-RateLimit-Reset": "1795636139",
+  "X-RateLimit-Remaining": "99"
+ },
+ "response": {
+  "code": "OK",
+  "total": 1,
+  "offset": 0,
+  "items": [
+   {
+    "ean": "0883929704736",
+    "title": "The Lord of the Rings: Motion Picture Trilogy (Extended & Theatrical)(4K/UHD)",
+    "description": "Peter Jackson's award-winning \"The Lord of the Rings Trilogy\" - including The Fellowship of the Ring, The Two Towers and The Return of the King - in 4K in both theatrical and extended editions. This critically acclaimed epic trilogy follows the quest undertaken by the hobbit, Frodo Baggins, and his fellowship of companions to save Middle-earth by destroying the One Ring and defeating the evil forces of the Dark Lord Sauron.",
+    "upc": "883929704736",
+    "brand": "Warner",
+    "model": "1000756531",
+    "color": "Black,Monu,Soft Yellow",
+    "size": "",
+    "dimension": "",
+    "weight": "11.056 lb",
+    "category": "Media > DVDs & Videos",
+    "currency": "",
+    "lowest_recorded_price": 49.49,
+    "highest_recorded_price": 127.8,
+    "images": [
+     "https://target.scene7.com/is/image/Target/GUEST_65ba53d5-1d8c-431f-9f44-bab8bf74cf0f?wid=1000&hei=1000",
+     "https://mediacdn.aent-m.com/prod-img/500/81/3868981-3235060.jpg",
+     "https://pisces.bbystatic.com/prescaled/500/500/image2/BestBuy_US/images/products/f97acb27-cca5-4db2-af83-29c3e9491d20.jpg",
+     "https://i5.walmartimages.com/asr/834303f3-38ad-4cbc-8e0b-4a4372490ffd.dae42bfdafd0f52d15211a446df976e2.jpeg?odnHeight=450&odnWidth=450&odnBg=ffffff",
+     "https://i5.walmartimages.com/asr/69fbd964-76c2-4c57-ac09-a1ce0262d668.ad62f29394437d724236e10aa68e3171.jpeg?odnHeight=2000&odnWidth=2000&odnBg=ffffff",
+     "https://c1.neweggimages.com/ProductImageCompressAll640/A4M5D2102046L17U.jpg",
+     "https://img.shop.com/Image/260000/260100/260166/products/1895937898__300x300__.jpg"
+    ],
+    "offers": [
+     {
+      "merchant": "BOOKSAMILLION.COM",
+      "domain": "booksamillion.com",
+      "title": "The Lord of the Rings: The Motion Picture Trilogy",
+      "currency": "",
+      "list_price": "",
+      "price": 89.99,
+      "shipping": "",
+      "condition": "New",
+      "availability": "",
+      "link": "https://www.upcitemdb.com/norob/alink/?id=23v24303v26394b4t2&tid=1&seq=1795549738&plt=f58b4a8ac8aed89312a7bdfca0f2949f",
+      "updated_t": 1760618337
+     },
+     {
+      "merchant": "Newegg.com",
+      "domain": "newegg.com",
+      "title": "LORD OF THE RINGS-MOTION PICTURE TRILOGY (4K-UHD/DIG/EXTEND/THEATRICAL)",
+      "currency": "",
+      "list_price": "",
+      "price": 79.49,
+      "shipping": "Free Shipping",
+      "condition": "New",
+      "availability": "Out of Stock",
+      "link": "https://www.upcitemdb.com/norob/alink/?id=03w2y203x213b444v2&tid=1&seq=1795549738&plt=ac6889f1dd5893a750127439a80fc993",
+      "updated_t": 1678492533
+     },
+     {
+      "merchant": "Best Buy",
+      "domain": "bestbuy.com",
+      "title": "The Lord of the Rings: The Motion Picture Trilogy [Extended/Theatrical] [4K Ultra HD Blu-ray]",
+      "currency": "",
+      "list_price": "",
+      "price": 104.99,
+      "shipping": "",
+      "condition": "New",
+      "availability": "",
+      "link": "https://www.upcitemdb.com/norob/alink/?id=z2o23303w24384c4s2&tid=1&seq=1795549738&plt=7b9a094becf19edbee74522ce620b244",
+      "updated_t": 1711953201
+     },
+     {
+      "merchant": "Wal-Mart.com",
+      "domain": "walmart.com",
+      "title": "The Lord Of The Rings: The Motion Picture Trilogy (Theatrical & Extended Movies) (4K Ultra HD)  Adventure  New Line Cinema",
+      "currency": "",
+      "list_price": 64.49,
+      "price": 63.99,
+      "shipping": "Free Shipping",
+      "condition": "New",
+      "availability": "Out of Stock",
+      "link": "https://www.upcitemdb.com/norob/alink/?id=z2r2x2132323b4d4y2&tid=1&seq=1795549738&plt=b42aef6bb0e741d8bb59d9c35ba93a96",
+      "updated_t": 1771791464
+     },
+     {
+      "merchant": "WalMart Canada",
+      "domain": "walmart.ca",
+      "title": "New Line Turner The Lord Of The Rings Trilogy: Extended Editions (4k Ultra Hd + Blu-Ray) [uhd]",
+      "currency": "CAD",
+      "list_price": "",
+      "price": 79.99,
+      "shipping": "",
+      "condition": "New",
+      "availability": "",
+      "link": "https://www.upcitemdb.com/norob/alink/?id=u2o203w2v2x2f474t2y2&tid=1&seq=1795549738&plt=7d10fc9ef8cd5ca58ab987d8b94be22c",
+      "updated_t": 1794536006
+     },
+     {
+      "merchant": "Target",
+      "domain": "target.com",
+      "title": "The Lord of the Rings: Motion Picture Trilogy (Extended & Theatrical)(4K/UHD)",
+      "currency": "",
+      "list_price": "",
+      "price": 74.96,
+      "shipping": "",
+      "condition": "New",
+      "availability": "",
+      "link": "https://www.upcitemdb.com/norob/alink/?id=z2o243v2y263e4b4x2&tid=1&seq=1795549738&plt=a34799a2f2723e3431ac5127d7b61b0a",
+      "updated_t": 1793006587
+     },
+     {
+      "merchant": "Shop.com",
+      "domain": "shop.com",
+      "title": "Studio Distribution Servi Lord Of The Rings-motion Picture Trilogy 4K-uhd/dig/extend/theatrical Brn756531 - All",
+      "currency": "",
+      "list_price": 125.38,
+      "price": 101.16,
+      "shipping": "US:::0.00 USD",
+      "condition": "New",
+      "availability": "",
+      "link": "https://www.upcitemdb.com/norob/alink/?id=z2r203u2v2436444u2&tid=1&seq=1795549738&plt=4c6f347f5e309623aafea89372a1527a",
+      "updated_t": 1648019149
+     }
+    ],
+    "elid": "298665743883"
+   }
+  ]
+ }
+}

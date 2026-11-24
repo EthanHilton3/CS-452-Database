@@ -1,0 +1,36 @@
+{
+ "key": "0704400015601",
+ "queried_as": "704400015601",
+ "fetched_at": "2026-11-24T19:50:46+00:00",
+ "http_status": 200,
+ "rate_headers": {
+  "X-RateLimit-Limit": "100",
+  "X-RateLimit-Reset": "1795636139",
+  "X-RateLimit-Remaining": "90"
+ },
+ "response": {
+  "code": "OK",
+  "total": 1,
+  "offset": 0,
+  "items": [
+   {
+    "ean": "0704400015601",
+    "title": "Dragon Ball Z: Seasons 1-9 Collection (Amazon Exclusive) [Blu-ray] (B075KZBHD6)",
+    "description": "",
+    "upc": "704400015601",
+    "brand": "Funimation",
+    "model": "",
+    "color": "",
+    "size": "",
+    "dimension": "",
+    "weight": "",
+    "category": "Electronics > Video > Video Players & Recorders > DVD & Blu-ray Players",
+    "lowest_recorded_price": 35.98,
+    "highest_recorded_price": 419.99,
+    "images": [],
+    "offers": [],
+    "elid": "233036230404"
+   }
+  ]
+ }
+}

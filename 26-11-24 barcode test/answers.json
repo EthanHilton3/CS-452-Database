@@ -1,0 +1,71 @@
+{
+ "IMG_9420": {
+  "type": "movie",
+  "digits_match": "yes",
+  "verdict": "right",
+  "note": "It also included the digital codes"
+ },
+ "IMG_9421": {
+  "type": "movie",
+  "verdict": "right"
+ },
+ "IMG_9422": {
+  "type": "movie",
+  "verdict": "right"
+ },
+ "IMG_9423": {
+  "type": "movie",
+  "note": "the barcode reads: 0313982149 and possibley ending in 81. This is the Pokemon DVD Collector's Set 4 Films"
+ },
+ "IMG_9424": {
+  "type": "movie",
+  "verdict": "right"
+ },
+ "IMG_9425": {
+  "type": "movie",
+  "verdict": "right"
+ },
+ "IMG_9426": {
+  "digits_match": "yes",
+  "verdict": "close",
+  "note": "Its not restored. It's just Nintnedo's Super Smash Bros Melee for the GameCube",
+  "type": "game"
+ },
+ "IMG_9427": {
+  "type": "game",
+  "digits_match": "no",
+  "note": "the barcode is 045496900397 and its Super Smash Bro/s Brawl for the Nintendo Wii"
+ },
+ "IMG_9428": {
+  "type": "game",
+  "verdict": "right",
+  "note": "This has the special foil cover that is limited edition"
+ },
+ "IMG_9429": {
+  "verdict": "not_found",
+  "note": "This is the special Nintendo Siwtch 2 Pro controller for the 40th Aniversary of Legend of Zelda",
+  "type": "other"
+ },
+ "IMG_9430": {
+  "verdict": "not_found",
+  "note": "This is a Nintendo Switch 2 GameCube Pro controller only for Nintendo Online members",
+  "type": "other"
+ },
+ "IMG_9431": {
+  "type": "movie",
+  "digits_match": "yes",
+  "verdict": "right"
+ },
+ "IMG_9432": {
+  "type": "other",
+  "note": "This is an Xbox series X, black edition"
+ },
+ "IMG_9433": {
+  "note": "This is a chinese made ceramic/porcilian ocarina designed as the Ocarina of time from the game, bought off of amazon, so it doesnt surprise me that this barcode means nothing",
+  "type": "other"
+ },
+ "IMG_9435": {
+  "type": "other",
+  "note": "Yeah this is my asus a15 tuf gaming laptop. I want sure if any of these identifiers on the actual laptop would produce anythign so this was also just a test"
+ }
+}

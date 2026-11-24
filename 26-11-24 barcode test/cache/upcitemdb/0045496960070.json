@@ -1,0 +1,123 @@
+{
+ "key": "0045496960070",
+ "queried_as": "045496960070",
+ "fetched_at": "2026-11-24T19:49:56+00:00",
+ "http_status": 200,
+ "rate_headers": {
+  "X-RateLimit-Limit": "100",
+  "X-RateLimit-Reset": "1795636139",
+  "X-RateLimit-Remaining": "94"
+ },
+ "response": {
+  "code": "OK",
+  "total": 1,
+  "offset": 0,
+  "items": [
+   {
+    "ean": "0045496960070",
+    "title": "Restored Super Smash Bros Melee",
+    "description": "Video Game - Games play best on their original hardware. Many games are not backwards or forwards compatible. So please only play this game on it s original console it was released on.",
+    "upc": "045496960070",
+    "brand": "Nintendo GameCube",
+    "model": "DOLPGALE",
+    "color": "Multicoloured",
+    "size": "",
+    "dimension": "",
+    "weight": "1.00 lbs",
+    "category": "Software > Video Game Software",
+    "currency": "",
+    "lowest_recorded_price": 4.5,
+    "highest_recorded_price": 4999,
+    "images": [
+     "https://i5.walmartimages.com/seo/Super-Smash-Bros-Melee-Nintendo-GameCube-2001-Tested_dc217cdf-ac75-4e4b-96d8-8daa3021e586.ab89540531a8f8f01365c91292ec587e.jpeg?odnHeight=450&odnWidth=450&odnBg=ffffff",
+     "http://c.shld.net/rpx/i/s/pi/mp/24348/3173358208?src=http%3A%2F%2Fimg.reversede.com%2Fimages%2FI%2F51JVNG4P1DL.jpg&d=397a513af5b0f6fb219f8ad86fcb1892e501b155",
+     "http://img1.r10.io/PIC/51786410/0/1/250/51786410.jpg",
+     "http://www.wherehouse.com/amgcover/game/large/g1/21/g12152bqer1.jpg",
+     "http://www.secondspin.com/amgcover/game/large/g1/21/g12152bqer1.jpg",
+     "https://i15.onbuy.com/product/12287df4454e41838ae4be852f784f6d-l2035285.jpg"
+    ],
+    "offers": [
+     {
+      "merchant": "Sears",
+      "domain": "sears.com",
+      "title": "Super Smash Bros Melee",
+      "currency": "",
+      "list_price": "",
+      "price": 184.45,
+      "shipping": "",
+      "condition": "New",
+      "availability": "",
+      "link": "https://www.upcitemdb.com/norob/alink/?id=23p223x23363f4a4&tid=1&seq=1795549796&plt=c1b104261f94d52589ee1340f25a54d0",
+      "updated_t": 1415765082
+     },
+     {
+      "merchant": "Rakuten(Buy.com)",
+      "domain": "rakuten.com",
+      "title": "Super Smash Bros Melee(No Longer Available)",
+      "currency": "",
+      "list_price": "",
+      "price": 76.91,
+      "shipping": "Free Shipping",
+      "condition": "New",
+      "availability": "Out of Stock",
+      "link": "https://www.upcitemdb.com/norob/alink/?id=u2q213w20313e474q2&tid=1&seq=1795549796&plt=8fb2d3a512a6d87cd2a8504278380e65",
+      "updated_t": 1489093961
+     },
+     {
+      "merchant": "Fye.com",
+      "domain": "fye.com",
+      "title": "Super Smash Bros. Melee (used)",
+      "currency": "",
+      "list_price": "",
+      "price": 42.99,
+      "shipping": "",
+      "condition": "New",
+      "availability": "",
+      "link": "https://www.upcitemdb.com/norob/alink/?id=u2p203v2x2x2a494t2&tid=1&seq=1795549796&plt=d49ce695bf8cc9c519fbe1c19e54c35e",
+      "updated_t": 1460306336
+     },
+     {
+      "merchant": "SecondSpin.com",
+      "domain": "secondspin.com",
+      "title": "Super Smash Bros. Melee (used)",
+      "currency": "",
+      "list_price": "",
+      "price": 42.99,
+      "shipping": "",
+      "condition": "New",
+      "availability": "",
+      "link": "https://www.upcitemdb.com/norob/alink/?id=u2o223y2y2z26484z2&tid=1&seq=1795549796&plt=2a88409ac35f3290e01651dcb3d47115",
+      "updated_t": 1436546240
+     },
+     {
+      "merchant": "Wal-Mart.com",
+      "domain": "walmart.com",
+      "title": "Restored Super Smash Bros Melee",
+      "currency": "",
+      "list_price": "",
+      "price": 118.08,
+      "shipping": "Free Shipping",
+      "condition": "New",
+      "availability": "Out of Stock",
+      "link": "https://www.upcitemdb.com/norob/alink/?id=y2o203v2y2136464r2&tid=1&seq=1795549796&plt=2ae3444696a4c6f678d627b9041ed3a8",
+      "updated_t": 1791828173
+     },
+     {
+      "merchant": "OnBuy.com",
+      "domain": "onbuy.com",
+      "title": "Gamecube - Super Smash Bros Melee",
+      "currency": "GBP",
+      "list_price": "",
+      "price": 24.21,
+      "shipping": "GB:Mainland UK:Standard:0.00 GBP",
+      "condition": "New",
+      "availability": "",
+      "link": "https://www.upcitemdb.com/norob/alink/?id=x2x2531343x2d4b4w2&tid=1&seq=1795549796&plt=b06d2901d28dd1be32211cf6b70caf76",
+      "updated_t": 1569342668
+     }
+    ],
+    "elid": "192772699295"
+   }
+  ]
+ }
+}

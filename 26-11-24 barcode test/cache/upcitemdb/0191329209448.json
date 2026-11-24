@@ -1,0 +1,94 @@
+{
+ "key": "0191329209448",
+ "queried_as": "191329209448",
+ "fetched_at": "2026-11-24T19:49:09+00:00",
+ "http_status": 200,
+ "rate_headers": {
+  "X-RateLimit-Limit": "100",
+  "X-RateLimit-Reset": "1795636139",
+  "X-RateLimit-Remaining": "98"
+ },
+ "response": {
+  "code": "OK",
+  "total": 1,
+  "offset": 0,
+  "items": [
+   {
+    "ean": "0191329209448",
+    "title": "The Ultimate Aang & Korra Blu-ray Collection: Avatar: The Last Airbender: The Complete Series / Legend of Korra Complete Series",
+    "description": "The ultimate Aang and Korra Blu-ray collection features over an hour of all-new and exclusive bonus features including an Auditory Exploration with the Avatarverse Creators  a conversation with Janet Varney and Dante Bosco  hosts of the Avatar: Braving the Elements podcast  and 8 collectible art cards! Experience the complete Avatar saga with Aang and Korra. From the discovery of Avatar Aang in the iceberg in Avatar: The Last Airbender to Korra s heroic journey to set things right in Republic City through The Legend of Korra  relive all the epic air  earth  water and firebending in the ultimate Avatar Collection.",
+    "upc": "191329209448",
+    "brand": "Paramount",
+    "model": "84618358",
+    "color": "",
+    "size": "",
+    "dimension": "",
+    "weight": "",
+    "category": "Media > DVDs & Videos",
+    "currency": "",
+    "lowest_recorded_price": 25.1,
+    "highest_recorded_price": 98.99,
+    "images": [
+     "https://i5.walmartimages.com/asr/27caa549-a2c0-4ac5-80ff-a150e468c62d.a075f94407d695ad960daa2bec488af0.jpeg?odnHeight=450&odnWidth=450&odnBg=ffffff",
+     "https://mediacdn.aent-m.com/prod-img/500/95/4011995-2747413.jpg",
+     "https://pisces.bbystatic.com/image2/BestBuy_US/images/products/6482/6482776_sa.jpg",
+     "https://target.scene7.com/is/image/Target/GUEST_29115b3d-866d-431d-bc03-5c6823921be1?wid=1000&hei=1000"
+    ],
+    "offers": [
+     {
+      "merchant": "BOOKSAMILLION.COM",
+      "domain": "booksamillion.com",
+      "title": "Avatar & Legend of Korra: Complete Series Collection",
+      "currency": "",
+      "list_price": "",
+      "price": 44.99,
+      "shipping": "",
+      "condition": "New",
+      "availability": "",
+      "link": "https://www.upcitemdb.com/norob/alink/?id=23q23323v2y2c454q2&tid=1&seq=1795549749&plt=040ca64e7cc97a3baeb14057d8651a8d",
+      "updated_t": 1751285571
+     },
+     {
+      "merchant": "Best Buy",
+      "domain": "bestbuy.com",
+      "title": "Avatar & Legend of Korra: Complete Series Collection [Blu-ray]",
+      "currency": "",
+      "list_price": "",
+      "price": 47.99,
+      "shipping": "",
+      "condition": "New",
+      "availability": "",
+      "link": "https://www.upcitemdb.com/norob/alink/?id=z2t2332343y2b4d4w2&tid=1&seq=1795549749&plt=b583bcc9ddd0adc1a0c55fb7851cf479",
+      "updated_t": 1711953249
+     },
+     {
+      "merchant": "Wal-Mart.com",
+      "domain": "walmart.com",
+      "title": "The Ultimate Aang & Korra Blu-ray Collection: Avatar: The Last Airbender: The Complete Series / Legend of Korra Complete Series",
+      "currency": "",
+      "list_price": 55.52,
+      "price": 37.95,
+      "shipping": "Free Shipping",
+      "condition": "New",
+      "availability": "",
+      "link": "https://www.upcitemdb.com/norob/alink/?id=03t2y223v21394b4v2&tid=1&seq=1795549749&plt=9506a0169641bf096be2082a022ee796",
+      "updated_t": 1782152124
+     },
+     {
+      "merchant": "Target",
+      "domain": "target.com",
+      "title": "The Ultimate Aang & Korra Blu-ray Collection: Avatar: The Last Airbender: The Complete Series / Legend of Korra Complete Series",
+      "currency": "",
+      "list_price": "",
+      "price": 37.95,
+      "shipping": "",
+      "condition": "New",
+      "availability": "",
+      "link": "https://www.upcitemdb.com/norob/alink/?id=z2s213w2y223c4d4u2&tid=1&seq=1795549749&plt=233327b5a780998bd56a46bb1f47de3d",
+      "updated_t": 1778396461
+     }
+    ]
+   }
+  ]
+ }
+}

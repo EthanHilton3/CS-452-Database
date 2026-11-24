@@ -1,0 +1,151 @@
+{
+ "key": "0704400025105",
+ "queried_as": "704400025105",
+ "fetched_at": "2026-11-24T19:49:44+00:00",
+ "http_status": 200,
+ "rate_headers": {
+  "X-RateLimit-Limit": "100",
+  "X-RateLimit-Reset": "1795636139",
+  "X-RateLimit-Remaining": "95"
+ },
+ "response": {
+  "code": "OK",
+  "total": 1,
+  "offset": 0,
+  "items": [
+   {
+    "ean": "0704400025105",
+    "title": "Code Geass: The Complete Series [Blu-ray]",
+    "description": "Code Geass the Complete Series contains anime episodes 1-25 of Season 1 Lelouch of the Rebellion and episodes 1-25 of Lelouch of the Rebellion R2. The year is 2017 of the Imperial calendar and parts of the world are uner the control of the Holy Britannian Empire. Lelouch Lamperouge, an exiled Britannian prince, encounters a strange girl known as C.C, who gifts him with a great and terrible power. The Geass. With this powerful ability, Lelouch can get anyone to do as he wills. But the power of",
+    "upc": "704400025105",
+    "brand": "Funimation",
+    "model": "FMABRFN02510",
+    "color": "ravenstripejetblk",
+    "size": "",
+    "dimension": "",
+    "weight": "0.69 lb",
+    "category": "Electronics > Video > Televisions",
+    "currency": "",
+    "lowest_recorded_price": 4.12,
+    "highest_recorded_price": 110,
+    "images": [
+     "https://pisces.bbystatic.com/image2/BestBuy_US/images/products/6305/6305768_sa.jpg",
+     "https://i5.walmartimages.com/asr/613a4e32-b82a-43ac-9d96-bbed1e0a657e_1.125528887255f92998e4c212dd870481.jpeg?odnHeight=450&odnWidth=450&odnBg=ffffff",
+     "https://target.scene7.com/is/image/Target/GUEST_c62342a1-55c2-49b6-a4e7-e12f1e869d37?wid=1000&hei=1000",
+     "https://tshop.r10s.com/369/65a/9e5e/eb32/3050/e4fe/98f0/1101e99b110242ac110003.jpg?_ex=512x512",
+     "https://img.shop.com/Image/260000/260100/260166/products/1895938130__300x300__.jpg",
+     "http://www.rightstufanime.com/images/productImages/704400025105_anime-code-geass-complete-series-blu-ray-primary.jpg",
+     "http://images.jet.com/md5/500dfaad49360e25323b3622967281c1.500",
+     "https://d29pz51ispcyrv.cloudfront.net/images/I/oquYu2EJ57Ax650OL.MD256.JPEG"
+    ],
+    "offers": [
+     {
+      "merchant": "Rakuten(Buy.com)",
+      "domain": "rakuten.com",
+      "title": "Code Geass-complete Series [blu-ray/8 Disc/fun Digital] (Funimation)",
+      "currency": "",
+      "list_price": "",
+      "price": 53.79,
+      "shipping": "",
+      "condition": "New",
+      "availability": "",
+      "link": "https://www.upcitemdb.com/norob/alink/?id=x2p223z2z2038444r2&tid=1&seq=1795549784&plt=89724654f099e30169379427ed0c7433",
+      "updated_t": 1596636914
+     },
+     {
+      "merchant": "Best Buy",
+      "domain": "bestbuy.com",
+      "title": "Code Geass: The Complete Series [Blu-ray]",
+      "currency": "",
+      "list_price": "",
+      "price": 49.99,
+      "shipping": "",
+      "condition": "New",
+      "availability": "",
+      "link": "https://www.upcitemdb.com/norob/alink/?id=x2u243z22303c4b4r2&tid=1&seq=1795549784&plt=b17afc66e544cdecd4fef769207aa972",
+      "updated_t": 1673670124
+     },
+     {
+      "merchant": "Wal-Mart.com",
+      "domain": "walmart.com",
+      "title": "Code Geass: Lelouch of Rebellion - The Complete Series (Blu-ray + Digital)",
+      "currency": "",
+      "list_price": "",
+      "price": 46.49,
+      "shipping": "Free Shipping",
+      "condition": "New",
+      "availability": "Out of Stock",
+      "link": "https://www.upcitemdb.com/norob/alink/?id=x2v213u2x2237454q2&tid=1&seq=1795549784&plt=ace5ffc791f6fc36a84c0f3ca3fdf9a0",
+      "updated_t": 1661154774
+     },
+     {
+      "merchant": "Target",
+      "domain": "target.com",
+      "title": "Code Geass: The Complete Series (Blu-ray)(2018)",
+      "currency": "",
+      "list_price": "",
+      "price": 46.49,
+      "shipping": "",
+      "condition": "New",
+      "availability": "",
+      "link": "https://www.upcitemdb.com/norob/alink/?id=w2q213z20323c484u2&tid=1&seq=1795549784&plt=eb772dd2258077c0ded8257f43cbcfc6",
+      "updated_t": 1664510195
+     },
+     {
+      "merchant": "Shop.com",
+      "domain": "shop.com",
+      "title": "Funimation-sds Code Geass-complete Series Blu-ray/8 Disc/fun Digital Brfn02510 - All",
+      "currency": "",
+      "list_price": 69.99,
+      "price": 58.18,
+      "shipping": "US:::0.00 USD",
+      "condition": "New",
+      "availability": "",
+      "link": "https://www.upcitemdb.com/norob/alink/?id=z2p233w2z2y2c484y2&tid=1&seq=1795549784&plt=d841a5841213b2dc0051d79ec0f0d10d",
+      "updated_t": 1648019149
+     },
+     {
+      "merchant": "Right Stuf, Inc.",
+      "domain": "rightstufanime.com",
+      "title": "Code Geass Complete Series Blu-ray",
+      "currency": "",
+      "list_price": 69.98,
+      "price": 52.49,
+      "shipping": "",
+      "condition": "New",
+      "availability": "",
+      "link": "https://www.upcitemdb.com/norob/alink/?id=w2w233y233539464q2&tid=1&seq=1795549784&plt=38e31fefef02f3ff7c0214137e9b5f80",
+      "updated_t": 1542108790
+     },
+     {
+      "merchant": "Jet.com",
+      "domain": "jet.com",
+      "title": "Code Geass: The Complete Series",
+      "currency": "",
+      "list_price": "",
+      "price": 53.37,
+      "shipping": "",
+      "condition": "New",
+      "availability": "",
+      "link": "https://www.upcitemdb.com/norob/alink/?id=w2t213v2x203b484s2&tid=1&seq=1795549784&plt=418da307c40f9335cf701510d1cf0c31",
+      "updated_t": 1536543469
+     },
+     {
+      "merchant": "MassGenie",
+      "domain": "massgenie.com",
+      "title": "Code geass-complete series (blu-ray/8 disc/fun digital)",
+      "currency": "",
+      "list_price": 76.98,
+      "price": 54.83,
+      "shipping": "",
+      "condition": "New",
+      "availability": "",
+      "link": "https://www.upcitemdb.com/norob/alink/?id=w2w233z22343f4a4u2&tid=1&seq=1795549784&plt=e5a0c247485bb994da0fb7c2284fc2f2",
+      "updated_t": 1544095575
+     }
+    ],
+    "elid": "292902833119"
+   }
+  ]
+ }
+}
